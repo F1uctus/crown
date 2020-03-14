@@ -1,6 +1,6 @@
-package com.cotfk.Things;
+package com.crown.Things;
 
-import com.cotfk.Common.Thing;
+import com.crown.Common.Thing;
 
 public class Weapon extends Thing {
     public Weapon(String keyName) {

@@ -1,6 +1,6 @@
-package com.cotfk.Properties;
+package com.crown.Properties;
 
-import com.cotfk.Common.Property;
+import com.crown.Common.Property;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.function.Consumer;

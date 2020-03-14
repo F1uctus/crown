@@ -1,4 +1,4 @@
-package com.cotfk.Common;
+package com.crown.Common;
 
 import javafx.util.Pair;
 import org.jetbrains.annotations.NonNls;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-import static com.cotfk.Main.rb;
+import static com.crown.Main.rb;
 
 public class Property<T> extends NamedObject {
     protected T value;

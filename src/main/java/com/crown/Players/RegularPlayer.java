@@ -1,19 +1,19 @@
-package com.cotfk.Players;
+package com.crown.Players;
 
-import com.cotfk.Common.NamedObject;
-import com.cotfk.Common.Property;
-import com.cotfk.Constraints.Check;
-import com.cotfk.Constraints.NumRange;
-import com.cotfk.Properties.NumProperty;
-import com.cotfk.PropertiesCollection;
+import com.crown.Common.NamedObject;
+import com.crown.Common.Property;
+import com.crown.Constraints.Check;
+import com.crown.Constraints.NumRange;
+import com.crown.Properties.NumProperty;
+import com.crown.PropertiesCollection;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.MessageFormat;
 import java.util.stream.Collectors;
 
-import static com.cotfk.Main.random;
-import static com.cotfk.Main.rb;
+import static com.crown.Main.random;
+import static com.crown.Main.rb;
 
 public class RegularPlayer extends NamedObject {
     @NonNls

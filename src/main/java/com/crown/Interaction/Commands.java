@@ -1,12 +1,12 @@
-package com.cotfk.Interaction;
+package com.crown.Interaction;
 
-import com.cotfk.Common.ObjectCollection;
-import com.cotfk.Magic.Spell;
-import com.cotfk.Players.Wizard;
+import com.crown.Common.ObjectCollection;
+import com.crown.Magic.Spell;
+import com.crown.Players.Wizard;
 
 import java.text.MessageFormat;
 
-import static com.cotfk.Main.*;
+import static com.crown.Main.*;
 
 /**
  * Contains all built-in game commands.

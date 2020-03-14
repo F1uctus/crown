@@ -1,9 +1,9 @@
-package com.cotfk;
+package com.crown;
 
-import com.cotfk.Common.ObjectCollection;
-import com.cotfk.Common.Property;
+import com.crown.Common.ObjectCollection;
+import com.crown.Common.Property;
 
-import static com.cotfk.Interaction.CommandParser.clear;
+import static com.crown.Interaction.CommandParser.clear;
 
 public class PropertiesCollection extends ObjectCollection<Property> {
     public <T2> T2 get(Class<T2> cls, String name) {

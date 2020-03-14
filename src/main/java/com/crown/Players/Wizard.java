@@ -1,12 +1,12 @@
-package com.cotfk.Players;
+package com.crown.Players;
 
-import com.cotfk.Common.ObjectCollection;
-import com.cotfk.Magic.Spell;
+import com.crown.Common.ObjectCollection;
+import com.crown.Magic.Spell;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.MessageFormat;
 
-import static com.cotfk.Main.rb;
+import static com.crown.Main.rb;
 
 public class Wizard extends RegularPlayer {
     public ObjectCollection<Spell> knownSpells = new ObjectCollection<>();

@@ -1,6 +1,6 @@
-package com.cotfk.Constraints;
+package com.crown.Constraints;
 
-import com.cotfk.Common.Constraint;
+import com.crown.Common.Constraint;
 import javafx.util.Pair;
 
 import java.util.function.Consumer;

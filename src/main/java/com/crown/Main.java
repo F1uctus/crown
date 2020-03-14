@@ -1,6 +1,6 @@
-package com.cotfk;
+package com.crown;
 
-import com.cotfk.Interaction.CommandParser;
+import com.crown.Interaction.CommandParser;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

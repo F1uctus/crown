@@ -1,12 +1,12 @@
-package com.cotfk.Interaction;
+package com.crown.Interaction;
 
-import com.cotfk.Common.NamedObject;
+import com.crown.Common.NamedObject;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-import static com.cotfk.Main.rb;
+import static com.crown.Main.rb;
 
 class Command extends NamedObject {
     private final Consumer<String[]> action;

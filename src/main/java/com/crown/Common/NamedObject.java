@@ -1,4 +1,4 @@
-package com.cotfk.Common;
+package com.crown.Common;
 
 /**
  * Represents a localizable object with name and description.

@@ -1,12 +1,12 @@
-package com.cotfk.Magic;
+package com.crown.Magic;
 
-import com.cotfk.Common.NamedObject;
-import com.cotfk.Players.RegularPlayer;
+import com.crown.Common.NamedObject;
+import com.crown.Players.RegularPlayer;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.function.Consumer;
 
-import static com.cotfk.Main.rb;
+import static com.crown.Main.rb;
 
 public class Spell extends NamedObject {
     private Consumer<RegularPlayer> effect;

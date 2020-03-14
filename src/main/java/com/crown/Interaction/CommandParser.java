@@ -1,10 +1,10 @@
-package com.cotfk.Interaction;
+package com.crown.Interaction;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.cotfk.Main.*;
+import static com.crown.Main.*;
 
 public class CommandParser {
     static final Commands commands = new Commands().fromBuiltIn();

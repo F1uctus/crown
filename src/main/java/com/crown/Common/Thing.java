@@ -1,6 +1,6 @@
-package com.cotfk.Common;
+package com.crown.Common;
 
-import static com.cotfk.Main.rb;
+import static com.crown.Main.rb;
 
 public abstract class Thing extends NamedObject {
     public Thing(String keyName) {

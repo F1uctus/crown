@@ -1,16 +1,16 @@
-package com.cotfk;
+package com.crown;
 
-import com.cotfk.Common.ObjectCollection;
-import com.cotfk.Magic.Spell;
-import com.cotfk.Players.RegularPlayer;
-import com.cotfk.Players.Wizard;
+import com.crown.Common.ObjectCollection;
+import com.crown.Magic.Spell;
+import com.crown.Players.RegularPlayer;
+import com.crown.Players.Wizard;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Collectors;
 
-import static com.cotfk.Main.gameState;
-import static com.cotfk.Main.rb;
+import static com.crown.Main.gameState;
+import static com.crown.Main.rb;
 
 /**
  * Contains game state for current running session.
