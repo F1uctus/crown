@@ -1,41 +1,64 @@
 package com.cotfk.Magic;
 
 import com.cotfk.Common.NamedObject;
-import com.cotfk.Player;
+import com.cotfk.Players.RegularPlayer;
+import org.jetbrains.annotations.NonNls;
 
 import java.util.function.Consumer;
 
+import static com.cotfk.Main.rb;
+
 public class Spell extends NamedObject {
-    private final Consumer<Player> effect;
-    private final int energyCost;
-    private final int learnEnergyCost;
+    private Consumer<RegularPlayer> effect;
+    private double energyCost;
+    private double learnEnergyCost;
 
-    public Spell(String name, String description, Consumer<Player> effect) {
-        this(name, description, effect, 5);
+    // Required by bean
+    private Spell() {
     }
 
-    public Spell(String name, String description, Consumer<Player> effect, int energyCost) {
-        this(name, description, effect, energyCost, 10);
-    }
-
-    public Spell(String name, String description, Consumer<Player> effect, int energyCost, int learnEnergyCost) {
-        super(name, description);
+    public Spell(@NonNls String keyName, Consumer<RegularPlayer> effect, double energyCost, double learnEnergyCost) {
+        super(keyName);
         this.effect = effect;
         this.energyCost = energyCost;
         this.learnEnergyCost = learnEnergyCost;
     }
 
-    public void apply(Player target) {
+    public void apply(RegularPlayer target) {
         new Thread(() -> {
             effect.accept(target);
         }).start();
     }
 
-    public int getEnergyCost() {
+    public String getName() {
+        return rb.getString("Spell." + getKeyName() + ".Name");
+    }
+
+    public String getDescription() {
+        return rb.getString("Spell." + getKeyName() + ".Description");
+    }
+
+    public double getEnergyCost() {
         return energyCost;
     }
 
-    public int getLearnEnergyCost() {
+    public double getLearnEnergyCost() {
         return learnEnergyCost;
+    }
+
+    @Override
+    public String toString() {
+        var descLines = getDescription().split("\n");
+        StringBuilder alignedDescription;
+        if (descLines.length > 1) {
+            alignedDescription = new StringBuilder(descLines[0]);
+            for (int i = 1; i < descLines.length; i++) {
+                // length calculation
+                alignedDescription.append("\n").append(" ".repeat(21)).append(descLines[i]);
+            }
+        } else {
+            alignedDescription = new StringBuilder(getDescription());
+        }
+        return String.format("%-20s %-10s", getName(), alignedDescription);
     }
 }

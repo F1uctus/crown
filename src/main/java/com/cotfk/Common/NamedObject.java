@@ -1,22 +1,23 @@
 package com.cotfk.Common;
 
 /**
- * Represents an object with name and description.
+ * Represents a localizable object with name and description.
  */
-public class NamedObject {
-    final private String name;
-    final private String description;
+public abstract class NamedObject {
+    private String keyName;
 
-    public NamedObject(String name, String description) {
-        this.name = name;
-        this.description = description;
+    public NamedObject(String keyName) {
+        this.keyName = keyName;
     }
 
-    public String getName() {
-        return name;
+    protected NamedObject() {
     }
 
-    public String getDescription() {
-        return description;
+    public String getKeyName() {
+        return keyName;
     }
+
+    public abstract String getName();
+
+    public abstract String getDescription();
 }

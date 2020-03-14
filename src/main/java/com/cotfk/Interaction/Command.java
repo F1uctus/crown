@@ -1,6 +1,7 @@
 package com.cotfk.Interaction;
 
 import com.cotfk.Common.NamedObject;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -11,10 +12,19 @@ class Command extends NamedObject {
     private final Consumer<String[]> action;
     private final String[] formalParameters;
 
-    public Command(String name, Consumer<String[]> action, String... formalParameters) {
-        super(name, rb.getString("Command.Description." + name));
+    public Command(@NonNls String keyName, Consumer<String[]> action, @NonNls String... formalParameters) {
+        super(keyName);
         this.action = action;
         this.formalParameters = formalParameters;
+    }
+
+    public String getName() {
+        return getKeyName();
+    }
+
+    @Override
+    public String getDescription() {
+        return rb.getString("Command.Description." + getName());
     }
 
     public String[] getFormalParameters() {
@@ -30,19 +40,6 @@ class Command extends NamedObject {
 
     @Override
     public String toString() {
-        String s = "`" + getName();
-        if (formalParameters.length > 0) {
-            s += (" <" + String.join("> <", formalParameters) + ">");
-        }
-        return s + "` - " + getDescription();
-    }
-
-    @Override
-    public String getDescription() {
-        return rb.getString("Command.Description." + getName());
-    }
-
-    public String toAlignedString() {
         String params = "";
         if (formalParameters.length > 0) {
             params = (" <" + String.join("> <", formalParameters) + ">");

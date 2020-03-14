@@ -1,7 +1,8 @@
 package com.cotfk.Interaction;
 
 import com.cotfk.Common.ObjectCollection;
-import com.cotfk.Magic.Wizard;
+import com.cotfk.Magic.Spell;
+import com.cotfk.Players.Wizard;
 
 import java.text.MessageFormat;
 
@@ -64,12 +65,13 @@ public class Commands extends ObjectCollection<Command> {
         add(new Command(
             "move",
             (args) -> {
-                if (gameState.getCurrentPlayer() == null) {
+                var curPlayer = gameState.getCurrentPlayer();
+                if (curPlayer == null) {
                     System.out.println(rb.getString("Commands.PlayerNotSelected"));
                     return;
                 }
-                gameState.getCurrentPlayer().moveX(Integer.parseInt(args[0]));
-                gameState.getCurrentPlayer().moveY(Integer.parseInt(args[1]));
+                curPlayer.props.change("x", Double.parseDouble(args[0]));
+                curPlayer.props.change("y", Double.parseDouble(args[1]));
             },
             "x",
             "y"
@@ -81,7 +83,7 @@ public class Commands extends ObjectCollection<Command> {
                     System.out.println(rb.getString("Commands.PlayerNotSelected"));
                     return;
                 }
-                gameState.getCurrentPlayer().sleep(Integer.parseInt(args[0]));
+                gameState.getCurrentPlayer().props.change("energy", Double.parseDouble(args[0]));
             },
             "time"
         ));
@@ -99,12 +101,12 @@ public class Commands extends ObjectCollection<Command> {
                     System.out.println(rb.getString("Commands.Cast.NotAWizard"));
                     return;
                 }
-                var spell = gameState.spells.all.get(args[0]);
+                var spell = gameState.spells.get(args[0]);
                 if (spell == null) {
                     System.out.println(rb.getString("Commands.Cast.UnknownSpell"));
                     return;
                 }
-                var target = gameState.players.all.get(args[1]);
+                var target = gameState.players.get(args[1]);
                 if (target == null) {
                     System.out.println(rb.getString("Commands.PlayerDoesntExist"));
                     return;
@@ -125,7 +127,7 @@ public class Commands extends ObjectCollection<Command> {
                     System.out.println(rb.getString("Commands.Cast.NotAWizard"));
                     return;
                 }
-                var spell = gameState.spells.all.get(args[0]);
+                var spell = gameState.spells.get(args[0]);
                 if (spell == null) {
                     System.out.println(rb.getString("Commands.Cast.UnknownSpell"));
                     return;
@@ -152,15 +154,23 @@ public class Commands extends ObjectCollection<Command> {
         add(new Command(
             "help",
             (args) -> {
-                if (args[0].equals("a")) {
+                switch (args[0]) {
+                case "a":
                     for (Command cmd : all.values()) {
-                        System.out.println(cmd.toAlignedString());
+                        System.out.println(cmd);
                     }
-                } else {
+                    break;
+                case "spells":
+                    for (Spell spell : gameState.spells.all.values()) {
+                        System.out.println(spell);
+                    }
+                    break;
+                default:
                     var cmd = all.get(args[0]);
                     if (cmd != null) {
                         System.out.println(cmd);
                     }
+                    break;
                 }
             },
             "subject"

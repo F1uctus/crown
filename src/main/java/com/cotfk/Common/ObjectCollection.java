@@ -10,6 +10,11 @@ public class ObjectCollection<T extends NamedObject> {
     }
 
     public void add(T obj) {
-        all.put(obj.getName(), obj);
+        all.put(obj.getKeyName(), obj);
+    }
+
+    public T get(String name) {
+        var result = all.values().stream().filter(x -> x.getName().equalsIgnoreCase(name)).findFirst();
+        return result.orElse(null);
     }
 }

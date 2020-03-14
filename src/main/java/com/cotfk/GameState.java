@@ -2,7 +2,8 @@ package com.cotfk;
 
 import com.cotfk.Common.ObjectCollection;
 import com.cotfk.Magic.Spell;
-import com.cotfk.Magic.Wizard;
+import com.cotfk.Players.RegularPlayer;
+import com.cotfk.Players.Wizard;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,9 +18,9 @@ import static com.cotfk.Main.rb;
  */
 public class GameState {
     public final ObjectCollection<Spell> spells = new ObjectCollection<>();
-    public final ObjectCollection<Player> players = new ObjectCollection<>();
+    public final ObjectCollection<RegularPlayer> players = new ObjectCollection<>();
 
-    private Player currentPlayer;
+    private RegularPlayer currentPlayer;
 
     public GameState() {
         initBuiltInSpells();
@@ -27,11 +28,10 @@ public class GameState {
 
     private void initBuiltInSpells() {
         spells.add(new Spell(
-            rb.getString("Spell.Fatigue.Name"),
-            rb.getString("Spell.Fatigue.Description"),
+            "Fatigue",
             (target) -> {
-                for (int i = 0; i < 10; i++) {
-                    target.changeEnergy(-10);
+                for (int i = 0; i < 5; i++) {
+                    target.props.change("energy", -10d);
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ignored) {
@@ -39,15 +39,26 @@ public class GameState {
                 }
             }, 15, 10
         ));
+        spells.add(new Spell(
+            "Snare",
+            (target) -> {
+                target.props.change("speed", -1d);
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException ignored) {
+                }
+                target.props.change("speed", 1d);
+            }, 15, 10
+        ));
     }
 
-    public Player getCurrentPlayer() {
+    public RegularPlayer getCurrentPlayer() {
         return currentPlayer;
     }
 
     public void removePlayer() {
         gameState.players.all.remove(currentPlayer.getName());
-        currentPlayer.die();
+        currentPlayer.props.change("health", Double.MIN_VALUE);
         unselectPlayer();
     }
 
@@ -65,7 +76,7 @@ public class GameState {
     }
 
     public void addPlayer(@NotNull @NonNls String type, String name) {
-        Player newPlayer;
+        RegularPlayer newPlayer;
         switch (type) {
         case "w":
         case "wizard":
@@ -73,7 +84,7 @@ public class GameState {
             break;
         case "p":
         case "player":
-            newPlayer = new Player(name);
+            newPlayer = new RegularPlayer(name);
             break;
         default:
             System.out.println(rb.getString("Player.InvalidType"));
@@ -84,6 +95,6 @@ public class GameState {
     }
 
     public String playersAsTable() {
-        return players.all.values().stream().map(Player::getName).collect(Collectors.joining("\n"));
+        return players.all.values().stream().map(RegularPlayer::getName).collect(Collectors.joining("\n"));
     }
 }

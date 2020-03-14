@@ -1,9 +1,12 @@
 package com.cotfk;
 
 import com.cotfk.Interaction.CommandParser;
+import com.esotericsoftware.yamlbeans.YamlWriter;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class Main {
@@ -15,7 +18,7 @@ public class Main {
     public static GameState gameState;
 
     @SuppressWarnings("HardCodedStringLiteral")
-    public static void main(@NotNull String[] args) {
+    public static void main(@NotNull String[] args) throws IOException {
         bundles.put("ru", ResourceBundle.getBundle("gameMessages", new Locale("ru_RU")));
         bundles.put("en", ResourceBundle.getBundle("gameMessages", new Locale("en_US")));
 
@@ -31,6 +34,10 @@ public class Main {
         var parser = new CommandParser();
         parser.beginInteraction();
         scanner.close();
+
+        YamlWriter writer = new YamlWriter(new FileWriter("last-game-state.yml"));
+        writer.write(gameState);
+        writer.close();
     }
 
     public static void setLang(String shortLangName) {

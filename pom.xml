@@ -6,7 +6,7 @@
 
     <groupId>org.f1uctusstudios</groupId>
     <artifactId>CrownOfTheFallenKing</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
     <build>
         <plugins>
             <plugin>
@@ -30,6 +30,11 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>28.2-jre</version>
+        </dependency>
+        <dependency>
+            <groupId>com.esotericsoftware.yamlbeans</groupId>
+            <artifactId>yamlbeans</artifactId>
+            <version>1.13</version>
         </dependency>
     </dependencies>
 </project>
