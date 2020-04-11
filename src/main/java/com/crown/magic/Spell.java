@@ -36,7 +36,7 @@ public class Spell extends NamedObject {
     }
 
     public String getName() {
-        return rb.getString("Spell." + getKeyName() + ".Name");
+        return rb.getString("spell." + getKeyName().toLowerCase() + ".name");
     }
 
     public String getDescription() {
