@@ -1,7 +1,7 @@
-package com.crown.Constraints;
+package com.crown.constraints;
 
-import com.crown.Common.Constraint;
-import javafx.util.Pair;
+import com.crown.common.Constraint;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.function.Consumer;
 
@@ -37,7 +37,7 @@ public class NumRange extends Constraint<Double> {
         } else if (newValue == max) {
             onMaxValue.accept(this);
         }
-        return new Pair(true, newValue);
+        return Pair.of(true, newValue);
     }
 
     @Override

@@ -1,6 +1,6 @@
-package com.crown.Common;
+package com.crown.common;
 
-import javafx.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class Property<T> extends NamedObject {
             ok = ok && pair.getKey();
             constrainedValue = pair.getValue();
         }
-        return new Pair(ok, constrainedValue);
+        return Pair.of(ok, constrainedValue);
     }
 
     public void change(T byValue) {
@@ -70,14 +70,14 @@ public class Property<T> extends NamedObject {
 
     @Override
     public String getName() {
-        return rb.getString("Props." + getKeyName() + ".Name");
+        return rb.getString("props." + getKeyName() + ".name");
     }
 
     @Override
     public String getDescription() {
         var kn = getKeyName();
         if (rb.containsKey(kn)) {
-            return rb.getString("Props." + kn + ".Description");
+            return rb.getString("props." + kn + ".description");
         } else {
             return null;
         }
@@ -86,7 +86,7 @@ public class Property<T> extends NamedObject {
     public String getOnChangeMessage() {
         var kn = getKeyName();
         if (rb.containsKey(kn)) {
-            return rb.getString("Props." + kn + ".OnChange");
+            return rb.getString("props." + kn + ".onChange");
         } else {
             return null;
         }

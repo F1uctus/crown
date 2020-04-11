@@ -1,6 +1,6 @@
-package com.crown.Interaction;
+package com.crown.interaction;
 
-import com.crown.Common.NamedObject;
+import com.crown.common.NamedObject;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +12,11 @@ class Command extends NamedObject {
     private final Consumer<String[]> action;
     private final String[] formalParameters;
 
-    public Command(@NonNls String keyName, Consumer<String[]> action, @NonNls String... formalParameters) {
+    public Command(
+        @NonNls String keyName,
+        Consumer<String[]> action,
+        @NonNls String... formalParameters
+    ) {
         super(keyName);
         this.action = action;
         this.formalParameters = formalParameters;
@@ -24,7 +28,7 @@ class Command extends NamedObject {
 
     @Override
     public String getDescription() {
-        return rb.getString("Command.Description." + getName());
+        return rb.getString("command." + getName() + ".description");
     }
 
     public String[] getFormalParameters() {

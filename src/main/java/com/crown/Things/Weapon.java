@@ -1,6 +1,6 @@
-package com.crown.Things;
+package com.crown.things;
 
-import com.crown.Common.Thing;
+import com.crown.common.Thing;
 
 public class Weapon extends Thing {
     public Weapon(String keyName) {

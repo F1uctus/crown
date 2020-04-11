@@ -1,4 +1,4 @@
-package com.crown.Common;
+package com.crown.common;
 
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
@@ -14,7 +14,10 @@ public class ObjectCollection<T extends NamedObject> {
     }
 
     public T get(String name) {
-        var result = all.values().stream().filter(x -> x.getName().equalsIgnoreCase(name)).findFirst();
+        var result = all.values()
+                        .stream()
+                        .filter(x -> x.getName().equalsIgnoreCase(name))
+                        .findFirst();
         return result.orElse(null);
     }
 }

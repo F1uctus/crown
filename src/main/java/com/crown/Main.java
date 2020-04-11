@@ -1,6 +1,6 @@
 package com.crown;
 
-import com.crown.Interaction.CommandParser;
+import com.crown.interaction.CommandParser;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -27,8 +27,8 @@ public class Main {
             rb = bundles.get("en");
         }
 
-        System.out.println(rb.getString("Welcome"));
-        System.out.println(rb.getString("TypeHelp"));
+        System.out.println(rb.getString("welcome"));
+        System.out.println(rb.getString("help"));
 
         gameState = new GameState();
         var parser = new CommandParser();

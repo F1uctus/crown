@@ -6,7 +6,7 @@
 
     <groupId>org.f1uctusstudios</groupId>
     <artifactId>CrownFramework</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
     <build>
         <plugins>
             <plugin>
@@ -15,6 +15,14 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <configuration>
+                    <mainClass>com.crown.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>
@@ -40,6 +48,11 @@
             <groupId>com.esotericsoftware.yamlbeans</groupId>
             <artifactId>yamlbeans</artifactId>
             <version>1.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
         </dependency>
     </dependencies>
 </project>

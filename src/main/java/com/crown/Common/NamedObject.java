@@ -1,4 +1,4 @@
-package com.crown.Common;
+package com.crown.common;
 
 /**
  * Represents a localizable object with name and description.

@@ -1,7 +1,7 @@
-package com.crown.Players;
+package com.crown.players;
 
-import com.crown.Common.ObjectCollection;
-import com.crown.Magic.Spell;
+import com.crown.common.ObjectCollection;
+import com.crown.magic.Spell;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.MessageFormat;
@@ -21,25 +21,34 @@ public class Wizard extends RegularPlayer {
 
     public void cast(@NotNull Spell spell, RegularPlayer target) {
         if (!knownSpells.all.containsKey(spell.getName())) {
-            System.out.println(rb.getString("Wizard.DontKnowSpell"));
+            System.out.println(rb.getString("wizard.dontKnowSpell"));
             return;
         }
         if (props.get(double.class, "energy") < spell.getEnergyCost()) {
-            System.out.println(rb.getString("Wizard.SpellLowEnergy"));
+            System.out.println(rb.getString("wizard.spell.lowEnergy"));
             return;
         }
         spell.apply(target);
         props.change("energy", Math.abs(spell.getEnergyCost()) * -1);
-        System.out.println(MessageFormat.format(rb.getString("Wizard.SpellCasted"), getName(), target.getName(), spell.getName()));
+        System.out.println(MessageFormat.format(
+            rb.getString("wizard.spell.casted"),
+            getName(),
+            target.getName(),
+            spell.getName()
+        ));
     }
 
     public void learn(Spell spell) {
         if (props.get(double.class, "energy") < spell.getLearnEnergyCost()) {
-            System.out.println(rb.getString("Wizard.LearnSpellLowEnergy"));
+            System.out.println(rb.getString("wizard.learnSpellLowEnergy"));
             return;
         }
         props.change("energy", Math.abs(spell.getLearnEnergyCost()) * -1);
         knownSpells.add(spell);
-        System.out.println(MessageFormat.format(rb.getString("Wizard.SpellLearned"), getName(), spell.getName()));
+        System.out.println(MessageFormat.format(
+            rb.getString("wizard.spell.learned"),
+            getName(),
+            spell.getName()
+        ));
     }
 }

@@ -1,7 +1,7 @@
-package com.crown.Magic;
+package com.crown.magic;
 
-import com.crown.Common.NamedObject;
-import com.crown.Players.RegularPlayer;
+import com.crown.common.NamedObject;
+import com.crown.players.RegularPlayer;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.function.Consumer;
@@ -17,7 +17,12 @@ public class Spell extends NamedObject {
     private Spell() {
     }
 
-    public Spell(@NonNls String keyName, Consumer<RegularPlayer> effect, double energyCost, double learnEnergyCost) {
+    public Spell(
+        @NonNls String keyName,
+        Consumer<RegularPlayer> effect,
+        double energyCost,
+        double learnEnergyCost
+    ) {
         super(keyName);
         this.effect = effect;
         this.energyCost = energyCost;

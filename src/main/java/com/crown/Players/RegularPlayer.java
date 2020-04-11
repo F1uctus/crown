@@ -1,11 +1,11 @@
-package com.crown.Players;
+package com.crown.players;
 
-import com.crown.Common.NamedObject;
-import com.crown.Common.Property;
-import com.crown.Constraints.Check;
-import com.crown.Constraints.NumRange;
-import com.crown.Properties.NumProperty;
 import com.crown.PropertiesCollection;
+import com.crown.common.NamedObject;
+import com.crown.common.Property;
+import com.crown.constraints.Check;
+import com.crown.constraints.NumRange;
+import com.crown.properties.NumProperty;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,60 +26,63 @@ public class RegularPlayer extends NamedObject {
     public RegularPlayer(String name) {
         super(normalizeName(name));
 
-        props.add(new NumProperty("health", 100d)
-            .withConstraint(
-                new NumRange(0, 100)
-                    .withTriggerOnMinValue((c) -> {
+        props.add(
+            new NumProperty("health", 100d)
+                .withConstraint(
+                    new NumRange(0, 100).withTriggerOnMinValue((c) -> {
                         // health = 0: death
-                        System.out.println(getName() + ": " + rb.getString("Player.Death." + (random.nextInt(10) + 1)));
+                        System.out.println(
+                            getName()
+                            + ": "
+                            + rb.getString("player.death." + (random.nextInt(10) + 1)));
                     })
-            )
-        );
-
-        props.add(new NumProperty("energy", 100d)
-            .withTriggerOnGrow((newValue) -> {
-                // noinspection HardCodedStringLiteral
-                System.out.println(getName() + ": z-z-z...");
-            })
-            .withConstraint(
-                new NumRange(0, 100)
-                    .withTriggerOnMinValue((c) -> {
-                        System.out.println(MessageFormat.format(rb.getString("Player.Tired"), getName()));
-                    })
-            )
-        );
-
-        props.add(new NumProperty("speed", 1d)
-            .withConstraint(new NumRange(0, 10))
-        );
-
-        props.add(new NumProperty("x", 0d)
-            .withConstraint(new NumRange(0, 100))
-            .withConstraint(
-                new Check<>(
-                    (oldValue, newValue) -> props.get(double.class, "energy") >= Math.abs(oldValue - newValue)
                 )
-            )
-            .withTransformer((value, delta) -> value + delta * props.get(double.class, "speed"))
-            .withTriggerOnChange((newValue) -> {
-                props.change("energy", Math.abs(newValue) * -1d);
-            })
         );
 
-        props.add(new NumProperty("y", 0d)
-            .withConstraint(new NumRange(0, 100))
-            .withConstraint(
-                new Check<>(
-                    (oldValue, newValue) -> props.get(double.class, "energy") >= Math.abs(oldValue - newValue)
-                )
-            )
-            .withTransformer((value, delta) -> value + delta * props.get(double.class, "speed"))
-            .withTriggerOnChange((newValue) -> {
-                props.change("energy", Math.abs(newValue) * -1d);
-            })
+        props.add(
+            new NumProperty("energy", 100d)
+                .withTriggerOnGrow((newValue) -> {
+                    // noinspection HardCodedStringLiteral
+                    System.out.println(getName() + ": z-z-z...");
+                })
+                .withConstraint(new NumRange(0, 100).withTriggerOnMinValue((c) -> {
+                    System.out.println(MessageFormat.format(
+                        rb.getString("player.tired"),
+                        getName()
+                    ));
+                }))
         );
 
-        System.out.println(MessageFormat.format(rb.getString("Player.Created"), getName()));
+        props.add(
+            new NumProperty("speed", 1d)
+                .withConstraint(new NumRange(0, 10))
+        );
+
+        props.add(
+            new NumProperty("x", 0d)
+                .withConstraint(new NumRange(0, 100))
+                .withConstraint(new Check<>((oldValue, newValue) -> {
+                    return props.get(double.class, "energy")
+                           >= Math.abs(oldValue - newValue);
+                }))
+                .withTransformer((value, delta) -> value + delta * props.get(double.class, "speed"))
+                .withTriggerOnChange((newValue) -> {
+                    props.change("energy", Math.abs(newValue) * -1d);
+                }));
+
+        props.add(
+            new NumProperty("y", 0d)
+                .withConstraint(new NumRange(0, 100))
+                .withConstraint(new Check<>((oldValue, newValue) -> {
+                    return props.get(double.class, "energy")
+                           >= Math.abs(oldValue - newValue);
+                }))
+                .withTransformer((value, delta) -> value + delta * props.get(double.class, "speed"))
+                .withTriggerOnChange((newValue) -> {
+                    props.change("energy", Math.abs(newValue) * -1d);
+                }));
+
+        System.out.println(MessageFormat.format(rb.getString("player.created"), getName()));
     }
 
     public String getName() {
@@ -92,7 +95,10 @@ public class RegularPlayer extends NamedObject {
     }
 
     public String getStats() {
-        return props.all.values().stream().map(Property::toString).collect(Collectors.joining("\n"));
+        return props.all.values()
+                        .stream()
+                        .map(Property::toString)
+                        .collect(Collectors.joining("\n"));
     }
 
     @NotNull

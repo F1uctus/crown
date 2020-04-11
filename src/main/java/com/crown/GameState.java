@@ -1,9 +1,9 @@
 package com.crown;
 
-import com.crown.Common.ObjectCollection;
-import com.crown.Magic.Spell;
-import com.crown.Players.RegularPlayer;
-import com.crown.Players.Wizard;
+import com.crown.common.ObjectCollection;
+import com.crown.magic.Spell;
+import com.crown.players.RegularPlayer;
+import com.crown.players.Wizard;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,29 +27,23 @@ public class GameState {
     }
 
     private void initBuiltInSpells() {
-        spells.add(new Spell(
-            "Fatigue",
-            (target) -> {
-                for (int i = 0; i < 5; i++) {
-                    target.props.change("energy", -10d);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ignored) {
-                    }
-                }
-            }, 15, 10
-        ));
-        spells.add(new Spell(
-            "Snare",
-            (target) -> {
-                target.props.change("speed", -1d);
+        spells.add(new Spell("Fatigue", (target) -> {
+            for (int i = 0; i < 5; i++) {
+                target.props.change("energy", -10d);
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException ignored) {
                 }
-                target.props.change("speed", 1d);
-            }, 15, 10
-        ));
+            }
+        }, 15, 10));
+        spells.add(new Spell("Snare", (target) -> {
+            target.props.change("speed", -1d);
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException ignored) {
+            }
+            target.props.change("speed", 1d);
+        }, 15, 10));
     }
 
     public RegularPlayer getCurrentPlayer() {
@@ -69,7 +63,7 @@ public class GameState {
     public void selectPlayer(String name) {
         var target = players.all.get(name);
         if (target == null) {
-            System.out.println(rb.getString("Commands.PlayerDoesntExist"));
+            System.out.println(rb.getString("command.playerDoesntExist"));
             return;
         }
         currentPlayer = target;
@@ -87,7 +81,7 @@ public class GameState {
             newPlayer = new RegularPlayer(name);
             break;
         default:
-            System.out.println(rb.getString("Player.InvalidType"));
+            System.out.println(rb.getString("player.invalidType"));
             return;
         }
         players.add(newPlayer);
@@ -95,6 +89,9 @@ public class GameState {
     }
 
     public String playersAsTable() {
-        return players.all.values().stream().map(RegularPlayer::getName).collect(Collectors.joining("\n"));
+        return players.all.values()
+                          .stream()
+                          .map(RegularPlayer::getName)
+                          .collect(Collectors.joining("\n"));
     }
 }

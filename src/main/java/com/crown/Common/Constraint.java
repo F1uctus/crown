@@ -1,6 +1,6 @@
-package com.crown.Common;
+package com.crown.common;
 
-import javafx.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 
 public abstract class Constraint<T> {
     protected abstract Pair<Boolean, T> apply(T oldValue, T newValue);

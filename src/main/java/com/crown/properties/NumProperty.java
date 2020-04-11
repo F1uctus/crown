@@ -1,6 +1,6 @@
-package com.crown.Properties;
+package com.crown.properties;
 
-import com.crown.Common.Property;
+import com.crown.common.Property;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.function.Consumer;
