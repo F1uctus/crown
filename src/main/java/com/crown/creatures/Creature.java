@@ -8,22 +8,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Creature extends MapObject {
-    private int maxHp;
-    private int hp;
+    protected int maxHp;
+    protected int hp;
 
-    private final int maxEnergy;
-    private int energy;
+    protected final int maxEnergy;
+    protected int energy;
 
-    private final int maxFov = 100;
-    private int fov;
+    protected final int maxFov = 100;
+    protected int fov;
 
-    private final int maxSpeed = 10;
-    private int speed;
+    protected final int maxSpeed = 10;
+    protected int speed;
 
-    private int level;
-    private int xp = 0;
-    private int maxXp = 10;
-    private int skillPoints = 0;
+    protected int level;
+    protected int xp = 0;
+    protected int maxXp = 10;
+    protected int skillPoints = 0;
 
     private final List<InventoryItem> inventory = new ArrayList<>();
 
