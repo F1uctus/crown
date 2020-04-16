@@ -24,9 +24,9 @@ public class Random {
      * (in bounds of {@link Integer} type - should be unique).
      */
     public static int getId() {
-        int id = getInt(Integer.MIN_VALUE + 2, Integer.MAX_VALUE);
+        int id = rnd.nextInt(Integer.MAX_VALUE);
         while (ids.contains(id)) {
-            id = getInt(Integer.MIN_VALUE + 2, Integer.MAX_VALUE);
+            id = rnd.nextInt(Integer.MAX_VALUE);
         }
         ids.add(id);
         return id;
