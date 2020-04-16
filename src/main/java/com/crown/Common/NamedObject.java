@@ -1,23 +1,33 @@
 package com.crown.common;
 
+import com.crown.common.utils.Random;
+import com.crown.i18n.ITemplate;
+import org.jetbrains.annotations.NotNull;
+
 /**
- * Represents a localizable object with name and description.
+ * Represents a localizable object
+ * with {@code id}, {@code name} and {@code description}.
  */
 public abstract class NamedObject {
-    private String keyName;
+    protected int id;
+    protected String name;
+    protected String description;
+    private final String keyName;
 
-    public NamedObject(String keyName) {
-        this.keyName = keyName;
+    public NamedObject(@NotNull String keyName) {
+        this.id = Random.getId();
+        this.keyName = keyName.toLowerCase();
     }
 
-    protected NamedObject() {
+    public int getId() {
+        return id;
     }
 
     public String getKeyName() {
         return keyName;
     }
 
-    public abstract String getName();
+    public abstract ITemplate getName();
 
-    public abstract String getDescription();
+    public abstract ITemplate getDescription();
 }
