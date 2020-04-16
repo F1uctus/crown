@@ -9,7 +9,7 @@ public abstract class Map extends NamedObject implements IBoard {
     public final int ySize;
     public final int zSize;
 
-    protected final MapObject[][][] container;
+    protected final MapObjectContainer[][][] container;
 
     private final IMapIcon<?> mapEndIcon;
 
@@ -24,7 +24,7 @@ public abstract class Map extends NamedObject implements IBoard {
         this.xSize = xSize;
         this.ySize = ySize;
         this.zSize = zSize;
-        this.container = new MapObject[zSize][ySize][xSize];
+        this.container = new MapObjectContainer[zSize][ySize][xSize];
         this.mapEndIcon = mapEndIcon;
     }
 
@@ -77,8 +77,9 @@ public abstract class Map extends NamedObject implements IBoard {
 
     public void move(@NotNull MapObject o) {
         if (contains(o.getPt())) {
-            if (contains(o.getLastPt())) {
-                set(o.getLastPt(), null);
+            var l = o.getLastPt();
+            if (contains(l)) {
+                set(l, container[l.z][l.y][l.x].previousObj);
             }
             add(o);
         }
@@ -98,7 +99,7 @@ public abstract class Map extends NamedObject implements IBoard {
     }
 
     public MapObject get(int x, int y, int z) {
-        return container[z][y][x];
+        return container[z][y][x].currentObj;
     }
 
     protected void set(@NotNull Point3D pt, MapObject value) {
@@ -106,7 +107,8 @@ public abstract class Map extends NamedObject implements IBoard {
     }
 
     protected void set(int x, int y, int z, MapObject value) {
-        container[z][y][x] = value;
+        container[z][y][x].previousObj = container[z][y][x].currentObj;
+        container[z][y][x].currentObj = value;
     }
 
     protected void clear() {
@@ -121,7 +123,7 @@ public abstract class Map extends NamedObject implements IBoard {
 
     /**
      * Used for player vision logic. Do not use it manually!
-     * Use contains(x, y, z) instead.
+     * Use {@code contains(pt)} instead.
      */
     @Override
     @Deprecated
@@ -133,13 +135,13 @@ public abstract class Map extends NamedObject implements IBoard {
     }
 
     /**
-     * Used for player vision logic. Do not use it manually!
+     * Used for player movement checks.
      */
     @Override
-    @Deprecated
     public boolean isObstacle(int x, int y) {
         for (int z = 0; z < zSize; z++) {
-            if (get(x, y, z).getMapWeight() == MapWeight.OBSTACLE) {
+            var o = get(x, y, z);
+            if (o != null && o.getMapWeight() == MapWeight.OBSTACLE) {
                 return true;
             }
         }
@@ -153,7 +155,8 @@ public abstract class Map extends NamedObject implements IBoard {
     @Deprecated
     public boolean blocksLight(int x, int y) {
         for (int z = 0; z < zSize; z++) {
-            if (get(x, y, z).getMapWeight() == MapWeight.BLOCKS_LIGHT) {
+            var o = get(x, y, z);
+            if (o != null && o.getMapWeight() == MapWeight.BLOCKS_LIGHT) {
                 return true;
             }
         }
@@ -167,7 +170,8 @@ public abstract class Map extends NamedObject implements IBoard {
     @Deprecated
     public boolean blocksStep(int x, int y) {
         for (int z = 0; z < zSize; z++) {
-            if (get(x, y, z).getMapWeight() == MapWeight.BLOCKS_STEP) {
+            var o = get(x, y, z);
+            if (o != null && o.getMapWeight() == MapWeight.BLOCKS_STEP) {
                 return true;
             }
         }
