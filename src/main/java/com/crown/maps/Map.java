@@ -25,6 +25,13 @@ public abstract class Map extends NamedObject implements IBoard {
         this.ySize = ySize;
         this.zSize = zSize;
         this.container = new MapObjectContainer[zSize][ySize][xSize];
+        for (int z = 0; z < zSize; z++) {
+            for (int y = 0; y < ySize; y++) {
+                for (int x = 0; x < xSize; x++) {
+                    container[z][y][x] = new MapObjectContainer();
+                }
+            }
+        }
         this.mapEndIcon = mapEndIcon;
     }
 
