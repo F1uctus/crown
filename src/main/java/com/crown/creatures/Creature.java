@@ -1,6 +1,5 @@
 package com.crown.creatures;
 
-import com.crown.i18n.I18n;
 import com.crown.i18n.ITemplate;
 import com.crown.items.InventoryItem;
 import com.crown.maps.*;
@@ -23,7 +22,7 @@ public abstract class Creature extends MapObject {
 
     private int level;
     private int xp = 0;
-    private int xpToNextLevel = 10;
+    private int maxXp = 10;
     private int skillPoints = 0;
 
     private final List<InventoryItem> inventory = new ArrayList<>();
@@ -73,203 +72,190 @@ public abstract class Creature extends MapObject {
         this.level = level;
     }
 
-    public ITemplate getStats() {
-        return I18n.fmtOf(
-            String.join(
-                "\n",
-                "{0}: {1}/{2}",
-                "{3}: {4}/{5}",
-                "{6}: {7}/{8}",
-                "{8}: {9}",
-                "{10}: {11}",
-                "{12}: {13}",
-                "{14}: {15}",
-                "{16}: {17}"
-            ),
-            "stats.hp", getHp(), getMaxHp(),
-            "stats.energy", getEnergy(), getMaxEnergy(),
-            "stats.speed", getSpeed(),
-            "stats.fov", getFov(),
-            "stats.xp", getXp(),
-            "stats.level", getLevel(),
-            "stats.skillPoints", getSkillPoints(),
-            "stats.xp.toNextLevel", getXpToNextLevel()
-        );
-    }
+    /**
+     * Returns creature's statistics
+     * (all it's properties & their values).
+     * Maybe, some additional data.
+     */
+    public abstract ITemplate getStats();
 
     // region HP
 
+    /**
+     * Maximal allowed health points
+     * of creature at current level.
+     */
     public int getMaxHp() {
         return maxHp;
     }
 
+    /**
+     * Returns creature's health points.
+     */
     public int getHp() {
         return hp;
     }
 
-    public ITemplate adjustHp(int delta) {
-        assert delta > 0;
-        if (skillPoints > 0) {
-            if (hp + delta > maxHp) {
-                hp = maxHp;
-                return I18n.of("stats.hp.max");
-            }
-            skillPoints -= 1;
-            return changeHp(delta);
-        } else {
-            return I18n.of("stats.xp.notEnough");
-        }
-    }
-
-    private ITemplate changeHp(int delta) {
-        maxHp += delta;
-        return I18n.changeableOf("stats.hp.{0}", delta);
-    }
+    /**
+     * Changes creature health points by {@code delta}.
+     */
+    public abstract ITemplate changeHp(int delta);
 
     // endregion
 
     // region Energy
 
+    /**
+     * Maximal allowed energy points of creature.
+     */
     public int getMaxEnergy() {
         return maxEnergy;
     }
 
+    /**
+     * Returns creature's energy points.
+     */
     public int getEnergy() {
         return energy;
     }
 
+    /**
+     * Fulfills creature's energy points.
+     */
     public ITemplate sleep() {
         return sleep(maxEnergy - energy);
     }
 
-    public ITemplate sleep(int delta) {
-        assert delta > 0 && energy + delta <= maxEnergy;
-        if (energy <= 50) {
-            return changeEnergy(delta);
-        } else {
-            return I18n.of("stats.energy.highEnough");
-        }
-    }
+    /**
+     * Fulfills creature's energy points by {@code delta}.
+     */
+    public abstract ITemplate sleep(int delta);
 
-    public ITemplate changeEnergy(int delta) {
-        energy += delta;
-        return I18n.changeableOf("stats.energy.{0}", delta);
-    }
+    public abstract ITemplate changeEnergy(int delta);
 
     // endregion
 
     // region Speed
 
+    /**
+     * Maximal allowed speed of creature.
+     */
     public int getMaxSpeed() {
         return maxSpeed;
     }
 
+    /**
+     * Returns creature's speed.
+     */
     public int getSpeed() {
         return speed;
     }
 
-    public ITemplate changeSpeed(int delta) {
-        speed += delta;
-        return I18n.changeableOf("stats.speed.{0}", delta);
-    }
+    /**
+     * Changes creature speed by {@code delta}.
+     */
+    public abstract ITemplate changeSpeed(int delta);
 
     // endregion
 
     // region FOV
 
+    /**
+     * Maximal allowed field of vision for creature.
+     */
     public int getMaxFov() {
         return maxFov;
     }
 
+    /**
+     * Returns creature's field of vision.
+     */
     public int getFov() {
         return fov;
     }
 
-    public ITemplate adjustFov(int delta) {
-        assert delta > 0;
-        if (skillPoints > 0) {
-            if (fov + delta > maxFov) {
-                fov = maxFov;
-                return I18n.of("stats.fov.max");
-            }
-            skillPoints -= 1;
-            return changeFov(delta);
-        } else {
-            return I18n.of("stats.xp.notEnough");
-        }
-    }
-
-    private ITemplate changeFov(int delta) {
-        fov += delta;
-        return I18n.changeableOf("stats.fov.{0}", delta);
-    }
+    /**
+     * Changes creature's field of vision by {@code delta}.
+     */
+    public abstract ITemplate changeFov(int delta);
 
     // endregion
 
     // region XP
 
+    /**
+     * Maximal allowed experience points
+     * of creature at current level.
+     */
+    public int getMaxXp() {
+        return maxXp;
+    }
+
+    /**
+     * Returns creature's experience points.
+     */
     public int getXp() {
         return xp;
     }
 
-    public int getXpToNextLevel() {
-        return xpToNextLevel;
-    }
-
-    public ITemplate adjustXp() {
-        return changeXp(1);
-    }
-
-    private ITemplate changeXp(int delta) {
-        assert delta > 0;
-        xp += delta;
-        if (xp >= xpToNextLevel) {
-            adjustLevel();
-        }
-        return I18n.fmtOf("stats.xp.increased", delta);
-    }
+    /**
+     * Changes creature experience points by {@code delta}.
+     */
+    public abstract ITemplate changeXp(int delta);
 
     // endregion
 
     // region Level
 
+    /**
+     * Returns creature's level.
+     */
     public int getLevel() {
         return level;
     }
 
-    public ITemplate adjustLevel() {
-        level += 1;
-        skillPoints += 1;
-        xp = 0;
-        xpToNextLevel = xpToNextLevel + (int) ((float) xpToNextLevel / 100 * 30);
-        return I18n.of("stats.level.next");
-    }
+    /**
+     * Changes creature level by {@code delta}.
+     */
+    public abstract ITemplate changeLevel();
 
     // endregion
 
+    // region Skill points
+
+    /**
+     * Returns creature's skill points.
+     */
     public int getSkillPoints() {
         return skillPoints;
     }
 
+    /**
+     * Changes creature skill points by {@code delta}.
+     */
+    public abstract ITemplate changeSkillPoints();
+
+    // endregion
+
+    /**
+     * Returns creature's inventory items.
+     */
     public List<InventoryItem> getInventory() {
         return inventory;
     }
 
+    /**
+     * Moves creature to specified location of map.
+     * Doesn't change energy or anything else.
+     */
     public void teleport(Point3D newPt) {
         lastPt = pt;
         pt = newPt;
         map.move(this);
     }
 
-    public ITemplate move(Point3D targetPos) {
-        // TODO insert path finder
-        if (getEnergy() >= 1) {
-            teleport(targetPos);
-            changeEnergy(-1);
-            adjustXp();
-            return I18n.of("Success!");
-        } else {
-            return I18n.of("stats.energy.low");
-        }
-    }
+    /**
+     * Moves character to specified target point.
+     */
+    public abstract ITemplate move(Point3D targetPt);
 }
