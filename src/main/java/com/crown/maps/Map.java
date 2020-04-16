@@ -48,7 +48,7 @@ public abstract class Map extends NamedObject implements IBoard {
             for (int y = 0; y < diameter; y++) {
                 for (int x = 0; x < diameter; x++) {
                     if (y > diffY - 1 && x > diffX - 1) {
-                        MapObject o = get(pt.z, pt.y + y - radius, pt.x + x - radius);
+                        MapObject o = get(pt.x + x - radius, pt.y + y - radius, pt.z);
                         if (o != null) {
                             area[y][x] = o.getMapIcon();
                         }
