@@ -39,7 +39,7 @@ public abstract class Map extends NamedObject implements IBoard {
      * Returns 2D area for map region with given radius.
      */
     public IMapIcon<?>[][] get2DArea(Point3D pt, int radius) {
-        final int diameter = radius * 2;
+        final int diameter = radius * 2 + 1;
         IMapIcon<?>[][] area = new IMapIcon[diameter][diameter];
 
         int diffX = 0;
