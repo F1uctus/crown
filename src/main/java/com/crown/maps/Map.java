@@ -48,9 +48,9 @@ public abstract class Map extends NamedObject implements IBoard {
         final int diameter = radius * 2 + 1;
         IMapIcon<?>[][] area = new IMapIcon[diameter][diameter];
 
-        int areaY = 0;
-        int areaX = 0;
         for (int z = 0; z <= pt.z; z++) {
+            int areaY = 0;
+            int areaX = 0;
             for (int y = pt.y - radius; y < pt.y + radius; y++, areaY++) {
                 for (int x = pt.x - radius; x < pt.x + radius; x++, areaX++) {
                     if (contains(pt)) {
