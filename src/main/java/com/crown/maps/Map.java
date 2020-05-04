@@ -2,7 +2,10 @@ package com.crown.maps;
 
 import com.crown.common.NamedObject;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import rlforj.IBoard;
+
+import java.util.stream.IntStream;
 
 public abstract class Map extends NamedObject implements IBoard {
     public final int xSize;
@@ -37,27 +40,23 @@ public abstract class Map extends NamedObject implements IBoard {
 
     /**
      * Returns 2D area for map region with given radius.
+     * Z coordinate is used to specify "view point height".
+     * e. g. if you pass z = 3 for each map point you will get
+     * object with the highest z position if it is <= 3.
      */
     public IMapIcon<?>[][] get2DArea(Point3D pt, int radius) {
         final int diameter = radius * 2 + 1;
         IMapIcon<?>[][] area = new IMapIcon[diameter][diameter];
 
-        int diffX = 0;
-        int diffY = 0;
-        if (pt.x - radius < 0) {
-            diffX = Math.abs(pt.x - radius);
-        }
-        if (pt.y - radius < 0) {
-            diffY = Math.abs(pt.y - radius);
-        }
-
-        for (int z = 0; z < diameter; z++) {
-            for (int y = 0; y < diameter; y++) {
-                for (int x = 0; x < diameter; x++) {
-                    if (y > diffY - 1 && x > diffX - 1) {
-                        MapObject o = get(pt.x + x - radius, pt.y + y - radius, pt.z);
-                        if (o != null) {
-                            area[y][x] = o.getMapIcon();
+        int areaY = 0;
+        int areaX = 0;
+        for (int z = 0; z <= pt.z; z++) {
+            for (int y = pt.y - radius; y < pt.y + radius; y++, areaY++) {
+                for (int x = pt.x - radius; x < pt.x + radius; x++, areaX++) {
+                    if (contains(pt)) {
+                        MapObject mapObj = get(x, y, z);
+                        if (mapObj != null) {
+                            area[areaX][areaY] = mapObj.getMapIcon();
                         }
                     }
                 }
@@ -74,21 +73,21 @@ public abstract class Map extends NamedObject implements IBoard {
         return area;
     }
 
-    public void add(MapObject o) {
-        set(o.getPt(), o);
+    public void add(MapObject mapObj) {
+        set(mapObj.getPt(), mapObj);
     }
 
-    public void remove(@NotNull MapObject o) {
-        set(o.getPt(), null);
+    public void remove(@NotNull MapObject mapObj) {
+        set(mapObj.getPt(), null);
     }
 
-    public void move(@NotNull MapObject o) {
-        if (contains(o.getPt())) {
-            var l = o.getLastPt();
+    public void move(@NotNull MapObject mapObj) {
+        if (contains(mapObj.getPt())) {
+            var l = mapObj.getLastPt();
             if (contains(l)) {
                 set(l, container[l.z][l.y][l.x].previousObj);
             }
-            add(o);
+            add(mapObj);
         }
     }
 
@@ -101,10 +100,12 @@ public abstract class Map extends NamedObject implements IBoard {
                && pt.z <= zSize;
     }
 
+    @Nullable
     public MapObject get(@NotNull Point3D pt) {
         return get(pt.x, pt.y, pt.z);
     }
 
+    @Nullable
     public MapObject get(int x, int y, int z) {
         return container[z][y][x].currentObj;
     }
@@ -146,13 +147,13 @@ public abstract class Map extends NamedObject implements IBoard {
      */
     @Override
     public boolean isObstacle(int x, int y) {
-        for (int z = 0; z < zSize; z++) {
-            var o = get(x, y, z);
-            if (o != null && o.getMapWeight() == MapWeight.OBSTACLE) {
-                return true;
-            }
-        }
-        return false;
+        return IntStream
+            .range(0, zSize)
+            .mapToObj(z -> get(x, y, z))
+            .anyMatch(
+                mapObj -> mapObj != null
+                          && mapObj.getMapWeight() == MapWeight.OBSTACLE
+            );
     }
 
     /**
@@ -161,13 +162,13 @@ public abstract class Map extends NamedObject implements IBoard {
     @Override
     @Deprecated
     public boolean blocksLight(int x, int y) {
-        for (int z = 0; z < zSize; z++) {
-            var o = get(x, y, z);
-            if (o != null && o.getMapWeight() == MapWeight.BLOCKS_LIGHT) {
-                return true;
-            }
-        }
-        return false;
+        return IntStream
+            .range(0, zSize)
+            .mapToObj(z -> get(x, y, z))
+            .anyMatch(
+                mapObj -> mapObj != null
+                          && mapObj.getMapWeight() == MapWeight.BLOCKS_LIGHT
+            );
     }
 
     /**
@@ -176,13 +177,13 @@ public abstract class Map extends NamedObject implements IBoard {
     @Override
     @Deprecated
     public boolean blocksStep(int x, int y) {
-        for (int z = 0; z < zSize; z++) {
-            var o = get(x, y, z);
-            if (o != null && o.getMapWeight() == MapWeight.BLOCKS_STEP) {
-                return true;
-            }
-        }
-        return false;
+        return IntStream
+            .range(0, zSize)
+            .mapToObj(z -> get(x, y, z))
+            .anyMatch(
+                mapObj -> mapObj != null
+                          && mapObj.getMapWeight() == MapWeight.BLOCKS_STEP
+            );
     }
 
     /**
