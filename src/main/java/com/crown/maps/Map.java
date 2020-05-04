@@ -96,11 +96,11 @@ public abstract class Map extends NamedObject implements IBoard {
 
     public boolean contains(@NotNull Point3D pt) {
         return pt.x >= 0
-               && pt.x <= xSize
+               && pt.x < xSize
                && pt.y >= 0
-               && pt.y <= ySize
+               && pt.y < ySize
                && pt.z >= 0
-               && pt.z <= zSize;
+               && pt.z < zSize;
     }
 
     @Nullable
@@ -140,9 +140,9 @@ public abstract class Map extends NamedObject implements IBoard {
     @Deprecated
     public boolean contains(int x, int y) {
         return x >= 0
-               && x <= xSize
+               && x < xSize
                && y >= 0
-               && y <= ySize;
+               && y < ySize;
     }
 
     /**
