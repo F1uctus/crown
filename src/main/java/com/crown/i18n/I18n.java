@@ -51,8 +51,8 @@ public class I18n {
      * from message with given {@code resourceKey}
      * formatted with specified {@code format} objects.
      */
-    public static ITemplate fmtOf(String resourceKey, Object... format) {
-        return new FormatTemplate(resourceKey, format);
+    public static ITemplate fmtOf(String message, Object... formatArgs) {
+        return new FormatTemplate(message, formatArgs);
     }
 
     /**

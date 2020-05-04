@@ -4,18 +4,18 @@ import java.text.MessageFormat;
 
 class FormatTemplate implements ITemplate {
     private final String message;
-    private final Object[] parts;
+    private final Object[] formatArgs;
 
-    public FormatTemplate(String message, Object... format) {
+    public FormatTemplate(String message, Object... formatArgs) {
         this.message = message;
-        this.parts = format;
+        this.formatArgs = formatArgs;
     }
 
     public String getLocalized(String langName) {
         var result = new StringBuilder();
-        String[] fArgs = new String[parts.length];
-        for (int i = 0, partsLength = parts.length; i < partsLength; i++) {
-            Object part = parts[i];
+        String[] fArgs = new String[formatArgs.length];
+        for (int i = 0; i < formatArgs.length; i++) {
+            Object part = formatArgs[i];
             if (part instanceof String) {
                 // try to get message from resource
                 var s = (String) part;
@@ -31,8 +31,9 @@ class FormatTemplate implements ITemplate {
             // if nothing succeeded, leave arg as-is
             fArgs[i] = part.toString();
         }
+        String pattern = I18n.has(langName, message) ? I18n.get(langName, message) : message;
         // noinspection RedundantCast
-        result.append(MessageFormat.format(message, (Object[]) fArgs));
+        result.append(MessageFormat.format(pattern, (Object[]) fArgs));
         return result.toString();
     }
 
