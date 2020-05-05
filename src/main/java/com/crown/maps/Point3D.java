@@ -33,6 +33,27 @@ public class Point3D {
     }
 
     /**
+     * Returns copy of this point with changed X.
+     */
+    public Point3D withX(int x) {
+        return new Point3D(x, y, z);
+    }
+
+    /**
+     * Returns copy of this point with changed Y.
+     */
+    public Point3D withY(int y) {
+        return new Point3D(x, y, z);
+    }
+
+    /**
+     * Returns copy of this point with changed Z.
+     */
+    public Point3D withZ(int z) {
+        return new Point3D(x, y, z);
+    }
+
+    /**
      * Get the distance between this point and another point.
      */
     public double getDistance(Point3D point) {
