@@ -53,13 +53,13 @@ public abstract class Map extends NamedObject implements IBoard {
 
         for (int z = 0; z < height; z++) {
             int areaY = 0;
-            int areaX = 0;
-            for (int y = pt.y - radius; y < pt.y + radius; y++) {
-                for (int x = pt.x - radius; x < pt.x + radius; x++) {
+            for (int y = pt.y - radius; y <= pt.y + radius; y++) {
+                int areaX = 0;
+                for (int x = pt.x - radius; x <= pt.x + radius; x++) {
                     if (contains(x, y)) {
                         MapObject mapObj = get(x, y, z);
                         if (mapObj != null) {
-                            area[areaX++][areaY++] = mapObj.getMapIcon();
+                            area[areaY++][areaX++] = mapObj.getMapIcon();
                         }
                     }
                 }
