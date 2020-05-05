@@ -7,4 +7,4 @@
 	</a>
 </p>
 
-<h3 align="center">A Java framework for fast &amp; easy RPG creation.</h3>
+<h3 align="center">A Java micro-framework for fast &amp; easy RPG creation.</h3>
