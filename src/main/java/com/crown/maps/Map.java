@@ -88,7 +88,7 @@ public abstract class Map extends NamedObject implements IBoard {
         return icons;
     }
 
-    protected void add(MapObject value) {
+    public void add(MapObject value) {
         getRaw(value.getPt()).objects.push(value);
     }
 
