@@ -11,10 +11,9 @@ public abstract class Map extends NamedObject implements IBoard {
     public final int xSize;
     public final int ySize;
     public final int zSize;
+    public final IMapIcon<?> mapEndIcon;
 
-    protected final MapObjectContainer[][][] container;
-
-    private final IMapIcon<?> mapEndIcon;
+    protected final MapObjectContainer[][][] containers;
 
     public Map(
         String name,
@@ -27,15 +26,16 @@ public abstract class Map extends NamedObject implements IBoard {
         this.xSize = xSize;
         this.ySize = ySize;
         this.zSize = zSize;
-        this.container = new MapObjectContainer[zSize][ySize][xSize];
+        this.mapEndIcon = mapEndIcon;
+
+        containers = new MapObjectContainer[zSize][ySize][xSize];
         for (int z = 0; z < zSize; z++) {
             for (int y = 0; y < ySize; y++) {
                 for (int x = 0; x < xSize; x++) {
-                    container[z][y][x] = new MapObjectContainer();
+                    containers[z][y][x] = new MapObjectContainer();
                 }
             }
         }
-        this.mapEndIcon = mapEndIcon;
     }
 
     /**
@@ -44,9 +44,9 @@ public abstract class Map extends NamedObject implements IBoard {
      * e. g. if you pass z = 3 for each map point you will get
      * object with the highest z position if it is <= 3.
      */
-    public IMapIcon<?>[][] get2DArea(Point3D pt, int radius) {
+    public @Nullable MapObject[][] getRaw2DArea(Point3D pt, int radius) {
         final int diameter = radius * 2 + 1;
-        IMapIcon<?>[][] area = new IMapIcon[diameter][diameter];
+        MapObject[][] area = new MapObject[diameter][diameter];
 
         int ptZ = pt.z + 1;
         int height = ptZ > 0 && ptZ < zSize ? ptZ : zSize;
@@ -57,45 +57,61 @@ public abstract class Map extends NamedObject implements IBoard {
                 int areaX = 0;
                 for (int x = pt.x - radius; x <= pt.x + radius; x++) {
                     if (contains(x, y)) {
-                        MapObject mapObj = get(x, y, z);
-                        if (mapObj != null) {
-                            area[areaY][areaX] = mapObj.getMapIcon();
-                        }
+                        area[areaY][areaX] = get(x, y, z);
                     }
                     areaX++;
                 }
                 areaY++;
             }
         }
-        for (int y = 0; y < diameter; y++) {
-            for (int x = 0; x < diameter; x++) {
-                if (area[y][x] == null) {
-                    area[y][x] = mapEndIcon;
-                }
-            }
-        }
-
         return area;
     }
 
-    public void add(MapObject mapObj) {
-        set(mapObj.getPt(), mapObj);
+    /**
+     * Returns icons of 2D area for map region with given radius.
+     * Z coordinate is used to specify "view point height".
+     * e. g. if you pass z = 3 for each map point you will get
+     * icon of object with the highest z position if it is <= 3.
+     */
+    public IMapIcon<?>[][] get2DArea(Point3D pt, int radius) {
+        var area = getRaw2DArea(pt, radius);
+        var icons = new IMapIcon<?>[area.length][area.length];
+        for (int y = 0; y < area.length; y++) {
+            for (int x = 0; x < area.length; x++) {
+                if (area[y][x] == null) {
+                    icons[y][x] = mapEndIcon;
+                } else {
+                    icons[y][x] = area[y][x].getMapIcon();
+                }
+            }
+        }
+        return icons;
+    }
+
+    protected void add(MapObject value) {
+        getRaw(value.getPt()).objects.push(value);
     }
 
     public void remove(@NotNull MapObject mapObj) {
-        set(mapObj.getPt(), null);
+        getRaw(mapObj.getPt()).objects.remove(mapObj);
     }
 
+    /**
+     * Removes specified object from it's last point,
+     * then adds it on the current point.
+     */
     public void move(@NotNull MapObject mapObj) {
         if (contains(mapObj.getPt())) {
-            var l = mapObj.getLastPt();
-            if (contains(l)) {
-                set(l, container[l.z][l.y][l.x].previousObj);
+            if (contains(mapObj.getLastPt())) {
+                getRaw(mapObj.getLastPt()).objects.pop();
             }
             add(mapObj);
         }
     }
 
+    /**
+     * Checks if specified point is inside this map's bounds.
+     */
     public boolean contains(@NotNull Point3D pt) {
         return pt.x >= 0
                && pt.x < xSize
@@ -112,23 +128,29 @@ public abstract class Map extends NamedObject implements IBoard {
 
     @Nullable
     public MapObject get(int x, int y, int z) {
-        return container[z][y][x].currentObj;
+        var cont = getRaw(x, y, z);
+        if (cont.objects.empty()) {
+            return null;
+        }
+        return cont.objects.peek();
     }
 
-    protected void set(@NotNull Point3D pt, MapObject value) {
-        set(pt.x, pt.y, pt.z, value);
+    protected MapObjectContainer getRaw(@NotNull Point3D pt) {
+        return getRaw(pt.x, pt.y, pt.z);
     }
 
-    protected void set(int x, int y, int z, MapObject value) {
-        container[z][y][x].previousObj = container[z][y][x].currentObj;
-        container[z][y][x].currentObj = value;
+    protected MapObjectContainer getRaw(int x, int y, int z) {
+        return containers[z][y][x];
     }
 
+    /**
+     * Removes all MapObject-s from map.
+     */
     protected void clear() {
         for (int z = 0; z < zSize; z++) {
             for (int y = 0; y < ySize; y++) {
                 for (int x = 0; x < xSize; x++) {
-                    set(x, y, z, null);
+                    getRaw(x, y, z).objects.clear();
                 }
             }
         }

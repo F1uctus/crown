@@ -1,6 +1,7 @@
 package com.crown.maps;
 
+import java.util.Stack;
+
 class MapObjectContainer {
-    public MapObject previousObj;
-    public MapObject currentObj;
+    public final Stack<MapObject> objects = new Stack<>();
 }

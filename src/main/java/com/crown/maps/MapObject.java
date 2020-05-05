@@ -1,6 +1,7 @@
 package com.crown.maps;
 
 import com.crown.common.NamedObject;
+import com.crown.common.utils.Random;
 
 public abstract class MapObject extends NamedObject {
     protected Map map;
@@ -10,6 +11,18 @@ public abstract class MapObject extends NamedObject {
 
     protected Point3D pt;
     protected Point3D lastPt;
+
+    /**
+     * Creates new map object on the random map point.
+     */
+    public MapObject(
+        String name,
+        Map map,
+        IMapIcon<?> mapIcon,
+        MapWeight mapWeight
+    ) {
+        this(name, map, mapIcon, mapWeight, Random.getPoint(map));
+    }
 
     public MapObject(
         String name,
@@ -47,12 +60,13 @@ public abstract class MapObject extends NamedObject {
 
     @Override
     public String toString() {
+        // noinspection HardCodedStringLiteral
         return getName()
                + " [#" + getId()
                + " | " + getMapIcon()
                + " | w=" + getMapWeight()
-               + " | at " + getPt()
-               + " of map #" + getMap().getId()
+               + " | @ " + getPt()
+               + " map #" + getMap().getId()
                + "]";
     }
 }

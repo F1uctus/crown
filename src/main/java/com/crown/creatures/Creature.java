@@ -1,5 +1,6 @@
 package com.crown.creatures;
 
+import com.crown.common.utils.Random;
 import com.crown.i18n.ITemplate;
 import com.crown.items.InventoryItem;
 import com.crown.maps.*;
@@ -26,6 +27,30 @@ public abstract class Creature extends MapObject {
     protected int skillPoints = 0;
 
     private final List<InventoryItem> inventory = new ArrayList<>();
+
+    /**
+     * Creates new creature on the random point of map.
+     */
+    public Creature(
+        String name,
+        Map map,
+        IMapIcon<?> mapIcon,
+        MapWeight mapWeight
+    ) {
+        // RULE: default creature parameters
+        this(
+            name,
+            map,
+            mapIcon,
+            mapWeight,
+            Random.getPoint(map),
+            200,
+            100,
+            1,
+            5,
+            1
+        );
+    }
 
     public Creature(
         String name,
