@@ -103,7 +103,7 @@ public abstract class Map extends NamedObject implements IBoard {
     public void move(@NotNull MapObject mapObj) {
         if (contains(mapObj.getPt())) {
             if (contains(mapObj.getLastPt())) {
-                getRaw(mapObj.getLastPt()).objects.pop();
+                getRaw(mapObj.getLastPt()).objects.remove(mapObj);
             }
             add(mapObj);
         }
