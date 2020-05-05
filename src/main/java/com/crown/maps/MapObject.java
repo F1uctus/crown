@@ -6,7 +6,7 @@ import com.crown.common.utils.Random;
 public abstract class MapObject extends NamedObject {
     protected Map map;
 
-    private final IMapIcon<?> mapIcon;
+    private final MapIcon<?> mapIcon;
     private final MapWeight mapWeight;
 
     protected Point3D pt;
@@ -18,7 +18,7 @@ public abstract class MapObject extends NamedObject {
     public MapObject(
         String name,
         Map map,
-        IMapIcon<?> mapIcon,
+        MapIcon<?> mapIcon,
         MapWeight mapWeight
     ) {
         this(name, map, mapIcon, mapWeight, Random.getPoint(map));
@@ -27,7 +27,7 @@ public abstract class MapObject extends NamedObject {
     public MapObject(
         String name,
         Map map,
-        IMapIcon<?> mapIcon,
+        MapIcon<?> mapIcon,
         MapWeight mapWeight,
         Point3D pt
     ) {
@@ -42,7 +42,7 @@ public abstract class MapObject extends NamedObject {
         return map;
     }
 
-    public IMapIcon<?> getMapIcon() {
+    public MapIcon<?> getMapIcon() {
         return this.mapIcon;
     }
 
@@ -56,6 +56,21 @@ public abstract class MapObject extends NamedObject {
 
     public Point3D getLastPt() {
         return lastPt;
+    }
+
+    /**
+     * Moves object to specified location of map.
+     * Doesn't change energy or anything else.
+     */
+    public void teleport(Point3D newPt) {
+        if (newPt.x > pt.x) {
+            mapIcon.flipped = true;
+        } else if (newPt.x < pt.x) {
+            mapIcon.flipped = false;
+        }
+        lastPt = pt;
+        pt = newPt;
+        map.move(this);
     }
 
     @Override

@@ -11,7 +11,7 @@ public abstract class Map extends NamedObject implements IBoard {
     public final int xSize;
     public final int ySize;
     public final int zSize;
-    public final IMapIcon<?> emptyIcon;
+    public final MapIcon<?> emptyIcon;
 
     protected final MapObjectContainer[][][] containers;
 
@@ -20,7 +20,7 @@ public abstract class Map extends NamedObject implements IBoard {
         int xSize,
         int ySize,
         int zSize,
-        IMapIcon<?> emptyIcon
+        MapIcon<?> emptyIcon
     ) {
         super(name);
         this.xSize = xSize;
@@ -71,9 +71,9 @@ public abstract class Map extends NamedObject implements IBoard {
      * Returns 3D area for map region with given radius.
      * Icons with Z-coordinate <= to point.z are returned.
      */
-    public IMapIcon<?>[][][] get3DArea(Point3D pt, int radius) {
+    public MapIcon<?>[][][] get3DArea(Point3D pt, int radius) {
         var area = getRaw3DArea(pt, radius);
-        var icons = new IMapIcon<?>[area.length][area[0].length][area[0][0].length];
+        var icons = new MapIcon<?>[area.length][area[0].length][area[0][0].length];
         for (int z = 0; z < area.length; z++) {
             for (int y = 0; y < area[0].length; y++) {
                 for (int x = 0; x < area[0][0].length; x++) {
@@ -123,9 +123,9 @@ public abstract class Map extends NamedObject implements IBoard {
      * e. g. if you pass z = 3 for each map point you will get
      * icon of object with the highest z position if it is <= 3.
      */
-    public IMapIcon<?>[][] get2DArea(Point3D pt, int radius) {
+    public MapIcon<?>[][] get2DArea(Point3D pt, int radius) {
         var area = getRaw2DArea(pt, radius);
-        var icons = new IMapIcon<?>[area.length][area.length];
+        var icons = new MapIcon<?>[area.length][area.length];
         for (int y = 0; y < area.length; y++) {
             for (int x = 0; x < area.length; x++) {
                 if (area[y][x] == null) {

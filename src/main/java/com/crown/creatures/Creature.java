@@ -34,7 +34,7 @@ public abstract class Creature extends MapObject {
     public Creature(
         String name,
         Map map,
-        IMapIcon<?> mapIcon,
+        MapIcon<?> mapIcon,
         MapWeight mapWeight
     ) {
         // RULE: default creature parameters
@@ -55,7 +55,7 @@ public abstract class Creature extends MapObject {
     public Creature(
         String name,
         Map map,
-        IMapIcon<?> mapIcon,
+        MapIcon<?> mapIcon,
         MapWeight mapWeight,
         Point3D position
     ) {
@@ -77,7 +77,7 @@ public abstract class Creature extends MapObject {
     public Creature(
         String name,
         Map map,
-        IMapIcon<?> mapIcon,
+        MapIcon<?> mapIcon,
         MapWeight mapWeight,
         Point3D position,
         int maxEnergy,
@@ -267,16 +267,6 @@ public abstract class Creature extends MapObject {
      */
     public List<InventoryItem> getInventory() {
         return inventory;
-    }
-
-    /**
-     * Moves creature to specified location of map.
-     * Doesn't change energy or anything else.
-     */
-    public void teleport(Point3D newPt) {
-        lastPt = pt;
-        pt = newPt;
-        map.move(this);
     }
 
     /**
