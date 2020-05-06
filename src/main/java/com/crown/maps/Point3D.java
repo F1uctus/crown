@@ -4,9 +4,9 @@ package com.crown.maps;
  * This class represents an integer-point in 3D space.
  */
 public class Point3D {
-    public final int x;
-    public final int y;
-    public final int z;
+    public int x;
+    public int y;
+    public int z;
 
     /**
      * Default constructor for a point.
@@ -58,9 +58,9 @@ public class Point3D {
      */
     public double getDistance(Point3D point) {
         return Math.sqrt(
-            (x - point.x) * (x - point.x) +
-            (y - point.y) * (y - point.y) +
-            (z - point.z) * (z - point.z)
+            Math.pow(x - point.x, 2) +
+            Math.pow(y - point.y, 2) +
+            Math.pow(z - point.z, 2)
         );
     }
 
@@ -89,6 +89,41 @@ public class Point3D {
             x - point.x,
             y - point.y,
             z - point.z
+        );
+    }
+
+    /**
+     * Returns new point from current with all coordinates > 0.
+     */
+    public Point3D abs() {
+        return new Point3D(
+            Math.abs(x),
+            Math.abs(y),
+            Math.abs(z)
+        );
+    }
+
+    /**
+     * Returns minimal point, composed from 2 provided points.
+     * (Math.min for each coordinate).
+     */
+    public Point3D min(Point3D other) {
+        return new Point3D(
+            Math.min(x, other.x),
+            Math.min(y, other.y),
+            Math.min(z, other.z)
+        );
+    }
+
+    /**
+     * Returns maximal point, composed from 2 provided points.
+     * (Math.max for each coordinate).
+     */
+    public Point3D max(Point3D other) {
+        return new Point3D(
+            Math.max(x, other.x),
+            Math.max(y, other.y),
+            Math.max(z, other.z)
         );
     }
 

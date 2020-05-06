@@ -13,7 +13,7 @@ public abstract class Map extends NamedObject implements IBoard {
     public final int zSize;
     public final MapIcon<?> emptyIcon;
 
-    protected final MapObjectContainer[][][] containers;
+    protected final MapCell[][][] containers;
 
     public Map(
         String name,
@@ -28,11 +28,11 @@ public abstract class Map extends NamedObject implements IBoard {
         this.zSize = zSize;
         this.emptyIcon = emptyIcon;
 
-        containers = new MapObjectContainer[zSize][ySize][xSize];
+        containers = new MapCell[zSize][ySize][xSize];
         for (int z = 0; z < zSize; z++) {
             for (int y = 0; y < ySize; y++) {
                 for (int x = 0; x < xSize; x++) {
-                    containers[z][y][x] = new MapObjectContainer();
+                    containers[z][y][x] = new MapCell();
                 }
             }
         }
@@ -138,12 +138,16 @@ public abstract class Map extends NamedObject implements IBoard {
         return icons;
     }
 
-    public void add(MapObject value) {
-        getRaw(value.getPt()).objects.push(value);
+    public void add(@NotNull MapObject mapObj) {
+        for (var pt : mapObj.particles) {
+            getRaw(pt).objects.push(mapObj);
+        }
     }
 
     public void remove(@NotNull MapObject mapObj) {
-        getRaw(mapObj.getPt()).objects.remove(mapObj);
+        for (var pt : mapObj.particles) {
+            getRaw(pt).objects.remove(mapObj);
+        }
     }
 
     /**
@@ -151,9 +155,11 @@ public abstract class Map extends NamedObject implements IBoard {
      * then adds it on the current point.
      */
     public void move(@NotNull MapObject mapObj) {
-        if (contains(mapObj.getPt())) {
-            if (contains(mapObj.getLastPt())) {
-                getRaw(mapObj.getLastPt()).objects.remove(mapObj);
+        if (contains(mapObj.getPt0())) {
+            if (contains(mapObj.getLastPt0())) {
+                for (var pt : mapObj.lastParticles) {
+                    getRaw(pt).objects.remove(mapObj);
+                }
             }
             add(mapObj);
         }
@@ -185,11 +191,11 @@ public abstract class Map extends NamedObject implements IBoard {
         return cont.objects.peek();
     }
 
-    protected MapObjectContainer getRaw(@NotNull Point3D pt) {
+    protected MapCell getRaw(@NotNull Point3D pt) {
         return getRaw(pt.x, pt.y, pt.z);
     }
 
-    protected MapObjectContainer getRaw(int x, int y, int z) {
+    protected MapCell getRaw(int x, int y, int z) {
         return containers[z][y][x];
     }
 
