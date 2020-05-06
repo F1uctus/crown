@@ -272,5 +272,5 @@ public abstract class Creature extends MapObject {
     /**
      * Moves character to specified target point.
      */
-    public abstract ITemplate move(Point3D targetPt);
+    public abstract ITemplate move(int deltaX, int deltaY, int deltaZ);
 }
