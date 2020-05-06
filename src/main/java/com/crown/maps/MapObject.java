@@ -92,6 +92,10 @@ public abstract class MapObject extends NamedObject {
         return bounds.getRight().y - bounds.getLeft().y + 1;
     }
 
+    public Point3D[] getParticles() {
+        return particles;
+    }
+
     /**
      * Returns pair of min & max points of this map object.
      */
