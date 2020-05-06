@@ -1,6 +1,7 @@
 package com.crown.maps;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * This class represents an integer-point in 3D space.
@@ -137,32 +138,33 @@ public class Point3D implements Serializable {
         return new Point3D(-x, -y, -z);
     }
 
-    /**
-     * Determines whether 'obj' is a Point3D
-     * that is equal to this point.
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        Point3D other = (Point3D) obj;
-
-        // comparing Integer object using equals()
-        // boxing this.x, this.y, this.z as Integer
-        return (((Integer) x).equals(other.x)
-                && ((Integer) y).equals(other.y)
-                && ((Integer) z).equals(other.z));
-    }
-
     @Override
     public String toString() {
         return "(" + x + ", " + y + ", " + z + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Point3D point3D = (Point3D) o;
+
+        if (x != point3D.x) {
+            return false;
+        }
+        if (y != point3D.y) {
+            return false;
+        }
+        return z == point3D.z;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
     }
 }
