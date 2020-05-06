@@ -5,5 +5,6 @@ package com.crown.maps;
  */
 public abstract class MapIcon<T> {
     protected boolean flipped = false;
+
     public abstract T get();
 }
