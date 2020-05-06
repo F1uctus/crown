@@ -84,12 +84,12 @@ public abstract class MapObject extends NamedObject {
 
     public int getWidth() {
         var bounds = getBounds();
-        return bounds.getRight().x - bounds.getLeft().x;
+        return bounds.getRight().x - bounds.getLeft().x + 1;
     }
 
     public int getHeight() {
         var bounds = getBounds();
-        return bounds.getRight().y - bounds.getLeft().y;
+        return bounds.getRight().y - bounds.getLeft().y + 1;
     }
 
     /**
