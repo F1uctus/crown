@@ -168,6 +168,13 @@ public abstract class Map extends NamedObject implements IBoard {
     /**
      * Checks if specified point is inside this map's bounds.
      */
+    public boolean contains(int x, int y, int z) {
+        return contains(new Point3D(x, y, z));
+    }
+
+    /**
+     * Checks if specified point is inside this map's bounds.
+     */
     public boolean contains(@NotNull Point3D pt) {
         return pt.x >= 0
                && pt.x < xSize
@@ -178,25 +185,28 @@ public abstract class Map extends NamedObject implements IBoard {
     }
 
     @Nullable
-    public MapObject get(@NotNull Point3D pt) {
-        return get(pt.x, pt.y, pt.z);
+    public MapObject get(int x, int y, int z) {
+        return get(new Point3D(x, y, z));
     }
 
     @Nullable
-    public MapObject get(int x, int y, int z) {
-        var cont = getRaw(x, y, z);
+    public MapObject get(@NotNull Point3D pt) {
+        if (!contains(pt)) {
+            return null;
+        }
+        var cont = getRaw(pt.x, pt.y, pt.z);
         if (cont.objects.empty()) {
             return null;
         }
         return cont.objects.peek();
     }
 
-    protected MapCell getRaw(@NotNull Point3D pt) {
-        return getRaw(pt.x, pt.y, pt.z);
+    protected MapCell getRaw(int x, int y, int z) {
+        return getRaw(new Point3D(x, y, z));
     }
 
-    protected MapCell getRaw(int x, int y, int z) {
-        return containers[z][y][x];
+    protected MapCell getRaw(@NotNull Point3D pt) {
+        return containers[pt.z][pt.y][pt.x];
     }
 
     /**
