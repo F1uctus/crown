@@ -9,7 +9,7 @@ public abstract class Action {
 
     public abstract ITemplate rollback();
 
-    public Action changeProperty(Function<Integer, ITemplate> changer, int delta) {
+    public static Action changeProperty(Function<Integer, ITemplate> changer, int delta) {
         return new Action() {
             @Override
             public ITemplate perform() {
