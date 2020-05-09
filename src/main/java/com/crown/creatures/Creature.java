@@ -124,7 +124,7 @@ public abstract class Creature extends MapObject {
     /**
      * Changes creature health points by {@code delta}.
      */
-    public abstract ITemplate changeHp(int delta);
+    protected abstract ITemplate changeHp(int delta);
 
     // endregion
 
@@ -144,7 +144,7 @@ public abstract class Creature extends MapObject {
         return energy;
     }
 
-    public abstract ITemplate changeEnergy(int delta);
+    protected abstract ITemplate changeEnergy(int delta);
 
     // endregion
 
@@ -167,7 +167,7 @@ public abstract class Creature extends MapObject {
     /**
      * Changes creature speed by {@code delta}.
      */
-    public abstract ITemplate changeSpeed(int delta);
+    protected abstract ITemplate changeSpeed(int delta);
 
     // endregion
 
@@ -190,7 +190,7 @@ public abstract class Creature extends MapObject {
     /**
      * Changes creature's field of vision by {@code delta}.
      */
-    public abstract ITemplate changeFov(int delta);
+    protected abstract ITemplate changeFov(int delta);
 
     // endregion
 
@@ -214,7 +214,7 @@ public abstract class Creature extends MapObject {
     /**
      * Changes creature experience points by {@code delta}.
      */
-    public abstract ITemplate changeXp(int delta);
+    protected abstract ITemplate changeXp(int delta);
 
     // endregion
 
@@ -230,7 +230,7 @@ public abstract class Creature extends MapObject {
     /**
      * Changes creature level by {@code delta}.
      */
-    public abstract ITemplate changeLevel();
+    protected abstract ITemplate changeLevel(int delta);
 
     // endregion
 
@@ -246,7 +246,7 @@ public abstract class Creature extends MapObject {
     /**
      * Changes creature skill points by {@code delta}.
      */
-    public abstract ITemplate changeSkillPoints();
+    protected abstract ITemplate changeSkillPoints(int delta);
 
     // endregion
 
