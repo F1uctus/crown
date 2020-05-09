@@ -8,18 +8,4 @@ public abstract class Action {
     public abstract ITemplate perform();
 
     public abstract ITemplate rollback();
-
-    public static Action changeProperty(Function<Integer, ITemplate> changer, int delta) {
-        return new Action() {
-            @Override
-            public ITemplate perform() {
-                return changer.apply(delta);
-            }
-
-            @Override
-            public ITemplate rollback() {
-                return changer.apply(-delta);
-            }
-        };
-    }
 }
