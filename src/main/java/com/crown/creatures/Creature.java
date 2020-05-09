@@ -144,18 +144,6 @@ public abstract class Creature extends MapObject {
         return energy;
     }
 
-    /**
-     * Fulfills creature's energy points.
-     */
-    public ITemplate sleep() {
-        return sleep(maxEnergy - energy);
-    }
-
-    /**
-     * Fulfills creature's energy points by {@code delta}.
-     */
-    public abstract ITemplate sleep(int delta);
-
     public abstract ITemplate changeEnergy(int delta);
 
     // endregion

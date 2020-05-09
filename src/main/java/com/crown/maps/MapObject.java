@@ -75,11 +75,15 @@ public abstract class MapObject extends NamedObject {
     }
 
     public MapIcon<?> getMapIcon() {
-        return this.mapIcon;
+        return mapIcon;
     }
 
     public MapWeight getMapWeight() {
         return mapWeight;
+    }
+
+    public Point3D[] getParticles() {
+        return particles;
     }
 
     public int getWidth() {
@@ -90,10 +94,6 @@ public abstract class MapObject extends NamedObject {
     public int getHeight() {
         var bounds = getBounds();
         return bounds.getRight().y - bounds.getLeft().y + 1;
-    }
-
-    public Point3D[] getParticles() {
-        return particles;
     }
 
     /**

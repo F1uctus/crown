@@ -88,12 +88,20 @@ public class Random {
         MapObject obj;
         long attempts = -1;
         do {
-            if (++attempts == maxAttempts) return null;
+            if (++attempts == maxAttempts) {
+                return null;
+            }
 
             pt = Random.getPoint(m);
-            if (fixedPt.x != -1) pt.x = fixedPt.x;
-            if (fixedPt.y != -1) pt.y = fixedPt.y;
-            if (fixedPt.z != -1) pt.z = fixedPt.z;
+            if (fixedPt.x != -1) {
+                pt.x = fixedPt.x;
+            }
+            if (fixedPt.y != -1) {
+                pt.y = fixedPt.y;
+            }
+            if (fixedPt.z != -1) {
+                pt.z = fixedPt.z;
+            }
             obj = m.get(pt);
         } while (obj != null && obj.getMapWeight() == MapWeight.OBSTACLE);
 
