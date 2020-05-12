@@ -83,4 +83,12 @@ class TimePoint {
                                || (minutes == point.minutes
                                    && seconds <= point.seconds)))));
     }
+
+    @Override
+    public String toString() {
+        return String.format("%04d", years) +
+               "/" + String.format("%02d", months) +
+               "/" + String.format("%02d", days)
+               + ", " + hours + ":" + minutes + ":" + seconds;
+    }
 }

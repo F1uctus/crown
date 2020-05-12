@@ -142,7 +142,7 @@ public class VirtualClock {
         }, 0, secondLength);
     }
 
-    TimePoint now() {
+    public TimePoint now() {
         return new TimePoint(years, months, weeks, days, hours, minutes, seconds);
     }
 }
