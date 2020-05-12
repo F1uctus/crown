@@ -1,5 +1,7 @@
 package com.crown.i18n;
 
+import org.jetbrains.annotations.NonNls;
+
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.ResourceBundle;
@@ -14,9 +16,12 @@ public class I18n {
      */
     protected static HashMap<String, ResourceBundle> bundles = new HashMap<>();
 
+    @NonNls
+    public static final ITemplate okMessage = I18n.of("message.ok");
+
     /**
-     * Initializes internationalization functions for game.
-     * NOTE: Invoke this function only once on game init.
+     * Initializes internationalization resources.
+     * NOTE: Invoke this function only once on app init.
      */
     public static void init(HashMap<String, ResourceBundle> bundles) {
         I18n.bundles = bundles;
@@ -42,7 +47,7 @@ public class I18n {
      * Returns a internationalization {@link Template}
      * from given {@code messageParts}.
      */
-    public static ITemplate of(Object... messageParts) {
+    public static ITemplate of(@NonNls Object... messageParts) {
         return new Template(messageParts);
     }
 
