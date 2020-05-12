@@ -5,10 +5,6 @@ import com.crown.i18n.I18n;
 import com.crown.i18n.ITemplate;
 import org.jetbrains.annotations.NonNls;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public abstract class Action<T extends Creature> {
@@ -21,14 +17,10 @@ public abstract class Action<T extends Creature> {
     }
 
     public static Action<Creature> change(Creature c, @NonNls String changerMethodName, int delta) {
-        MethodHandle m;
+        Method m;
         try {
-            m = MethodHandles.lookup().findSpecial(
-                Creature.class, changerMethodName,
-                MethodType.methodType(ITemplate.class),
-                c.getClass()
-            ).bindTo(c);
-        } catch (NoSuchMethodException | IllegalAccessException e) {
+            m = Creature.class.getDeclaredMethod(changerMethodName);
+        } catch (NoSuchMethodException e) {
             e.printStackTrace();
             return null;
         }
@@ -37,7 +29,7 @@ public abstract class Action<T extends Creature> {
             @Override
             public ITemplate perform() {
                 try {
-                    return (ITemplate) m.invoke(c);
+                    return (ITemplate) m.invoke(c, delta);
                 } catch (Throwable e) {
                     return I18n.of(e.getMessage());
                 }
@@ -46,7 +38,7 @@ public abstract class Action<T extends Creature> {
             @Override
             public ITemplate rollback() {
                 try {
-                    return (ITemplate) m.invoke(-delta);
+                    return (ITemplate) m.invoke(c, -delta);
                 } catch (Throwable e) {
                     return I18n.of(e.getMessage());
                 }
