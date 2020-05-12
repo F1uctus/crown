@@ -22,6 +22,7 @@ public class Timeline {
     private final ArrayList<Action<?>> actions = new ArrayList<>();
 
     public Timeline(VirtualClock clock, BaseGameState gameState) {
+        kryo.register(Timeline.class);
         this.clock = clock;
         this.gameState = gameState;
     }
