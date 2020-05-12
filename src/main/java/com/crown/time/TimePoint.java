@@ -9,7 +9,7 @@ public class TimePoint {
     public final int minutes;
     public final int seconds;
 
-    TimePoint(
+    public TimePoint(
         int years,
         int months,
         int weeks,
@@ -25,6 +25,30 @@ public class TimePoint {
         this.hours = hours;
         this.minutes = minutes;
         this.seconds = seconds;
+    }
+
+    public TimePoint plus(int seconds) {
+        return plus(0, 0, 0, seconds);
+    }
+
+    public TimePoint plus(int minutes, int seconds) {
+        return plus(0, 0, minutes, seconds);
+    }
+
+    public TimePoint plus(int hours, int minutes, int seconds) {
+        return plus(0, hours, minutes, seconds);
+    }
+
+    public TimePoint plus(int days, int hours, int minutes, int seconds) {
+        return new TimePoint(
+            years,
+            months,
+            weeks,
+            this.days + days,
+            this.hours + hours,
+            this.minutes + minutes,
+            this.seconds + seconds
+        );
     }
 
     public boolean gt(TimePoint point) {
