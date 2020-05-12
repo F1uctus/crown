@@ -18,7 +18,7 @@ public class Timeline {
     public static ArrayList<Timeline> alternativeLines = new ArrayList<>();
 
     public final VirtualClock clock;
-    private final BaseGameState gameState;
+    public final BaseGameState gameState;
     private final ArrayList<Action<?>> actions = new ArrayList<>();
 
     public Timeline(VirtualClock clock, BaseGameState gameState) {
