@@ -20,6 +20,7 @@ public abstract class Action<T extends Creature> {
         Method m;
         try {
             m = Creature.class.getDeclaredMethod(changerMethodName, int.class);
+            m.setAccessible(true);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
             return null;
