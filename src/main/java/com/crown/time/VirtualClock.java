@@ -1,57 +1,148 @@
 package com.crown.time;
 
+import com.crown.common.utils.Random;
+
+import java.time.Year;
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Simplified clock logic for virtual game time.
  */
 public class VirtualClock {
-    /**
-     * Virtual hours count in virtual day.
-     */
+    public final int maxYears = Integer.MAX_VALUE;
+    private int years;
+
+    public final int maxMonths;
+    private int months;
+
+    public final int maxWeeks;
+    private int weeks;
+
+    public final int maxDays;
+    private int days;
+
     public final int maxHours;
+    private int hours;
 
-    /**
-     * Virtual minutes count in virtual hour.
-     */
     public final int maxMinutes;
+    private int minutes;
 
-    /**
-     * Virtual seconds count in virtual minute.
-     */
     public final int maxSeconds;
+    private int seconds;
 
-    /**
-     * Virtual second length, specified in real milliseconds.
-     */
     public final int secondLength;
+    private Timer timer;
+    private final Runnable tickAction;
 
     /**
      * Creates new game clock with Earth-like timing
-     * (24h/60m/60s) with custom second length.
-     * If second length = 1000, then this clock day interval
-     * is even with Earth one (excluding leap years).
+     * (12m/4w/7d/24h/60m/60s) with custom second length.
      */
     public VirtualClock(
-        int secondLength
+        int secondLength,
+        Runnable tickAction
     ) {
-        this.maxHours = 24;
-        this.maxMinutes = 60;
-        this.maxSeconds = 60;
-        this.secondLength = secondLength;
+        this(
+            12,
+            4,
+            7,
+            24,
+            60,
+            60,
+            secondLength,
+            tickAction
+        );
     }
 
     public VirtualClock(
+        int maxMonths,
+        int maxWeeks,
+        int maxDays,
         int maxHours,
         int maxMinutes,
         int maxSeconds,
-        int secondLength
+        int secondLength,
+        Runnable tickAction
     ) {
+        this.maxMonths = maxMonths;
+        this.maxWeeks = maxWeeks;
+        this.maxDays = maxDays;
         this.maxHours = maxHours;
         this.maxMinutes = maxMinutes;
         this.maxSeconds = maxSeconds;
         this.secondLength = secondLength;
+        this.tickAction = tickAction;
     }
 
-    VirtualClock tick() {
+    public VirtualClock startAtRnd() {
+        return startAt(
+            new TimePoint(
+                Random.getInt(1000, Year.now().getValue() + 1),
+                Random.getInt(1, maxMonths + 1),
+                Random.getInt(1, maxWeeks + 1),
+                Random.getInt(1, maxDays + 1),
+                Random.getInt(1, maxHours),
+                Random.getInt(1, maxMinutes),
+                Random.getInt(1, maxSeconds)
+            )
+        );
+    }
+
+    /**
+     * Starts this instance of clock
+     */
+    public VirtualClock startAt(TimePoint point) {
+        if (timer != null) {
+            timer.cancel();
+        }
+        this.years = point.years;
+        this.months = point.months;
+        this.weeks = point.weeks;
+        this.days = point.days;
+        this.hours = point.hours;
+        this.minutes = point.minutes;
+        this.seconds = point.seconds;
+        start();
         return this;
+    }
+
+    private void start() {
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                seconds++;
+                if (seconds >= maxSeconds) {
+                    seconds = 0;
+                    minutes++;
+                    if (minutes >= maxMinutes) {
+                        minutes = 0;
+                        hours++;
+                        if (hours >= maxHours) {
+                            hours = 0;
+                            days++;
+                            if (days > maxDays) {
+                                days = 1;
+                                weeks++;
+                                if (weeks > maxWeeks) {
+                                    weeks = 1;
+                                    months++;
+                                    if (months > maxMonths) {
+                                        months = 1;
+                                        years++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                tickAction.run();
+            }
+        }, 0, secondLength);
+    }
+
+    TimePoint now() {
+        return new TimePoint(years, months, weeks, days, hours, minutes, seconds);
     }
 }

@@ -27,6 +27,7 @@ public abstract class Creature extends MapObject {
     protected int xp = 0;
     protected int skillPoints = 0;
 
+    public Timeline timeline;
     private final List<InventoryItem> inventory = new ArrayList<>();
 
     public Creature(
@@ -79,7 +80,7 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate changeHpBy(int delta) {
-        return Timeline.addPropertyChange(this::changeHp, delta);
+        return timeline.perform(Action.change(this, "changeHp", delta));
     }
 
     /**
@@ -124,7 +125,7 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate changeEnergyBy(int delta) {
-        return Timeline.addPropertyChange(this::changeEnergy, delta);
+        return timeline.perform(Action.change(this, "changeEnergy", delta));
     }
 
     /**
@@ -161,7 +162,7 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate changeSpeedBy(int delta) {
-        return Timeline.addPropertyChange(this::changeSpeed, delta);
+        return timeline.perform(Action.change(this, "changeSpeed", delta));
     }
 
     /**
@@ -198,7 +199,7 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate changeFovBy(int delta) {
-        return Timeline.addPropertyChange(this::changeFov, delta);
+        return timeline.perform(Action.change(this, "changeFov", delta));
     }
 
     /**
@@ -228,7 +229,7 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate changeXpBy(int delta) {
-        return Timeline.addPropertyChange(this::changeXp, delta);
+        return timeline.perform(Action.change(this, "changeXp", delta));
     }
 
     /**
@@ -268,7 +269,7 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate changeLevelBy(int delta) {
-        return Timeline.addPropertyChange(this::changeLevel, delta);
+        return timeline.perform(Action.change(this, "changeLevel", delta));
     }
 
     /**
@@ -299,7 +300,7 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate changeSkillPointsBy(int delta) {
-        return Timeline.addPropertyChange(this::changeSkillPoints, delta);
+        return timeline.perform(Action.change(this, "changeSkillPoints", delta));
     }
 
     /**
@@ -330,15 +331,15 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate moveBy(int deltaX, int deltaY, int deltaZ) {
-        return Timeline.add(new Action() {
+        return timeline.perform(new Action<>(this) {
             @Override
             public ITemplate perform() {
-                return move(deltaX, deltaY, deltaZ);
+                return performer.move(deltaX, deltaY, deltaZ);
             }
 
             @Override
             public ITemplate rollback() {
-                return move(-deltaX, -deltaY, -deltaZ);
+                return performer.move(-deltaX, -deltaY, -deltaZ);
             }
         });
     }
