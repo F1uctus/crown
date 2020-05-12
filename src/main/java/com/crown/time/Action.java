@@ -19,7 +19,7 @@ public abstract class Action<T extends Creature> {
     public static Action<Creature> change(Creature c, @NonNls String changerMethodName, int delta) {
         Method m;
         try {
-            m = Creature.class.getDeclaredMethod(changerMethodName);
+            m = Creature.class.getDeclaredMethod(changerMethodName, int.class);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
             return null;
