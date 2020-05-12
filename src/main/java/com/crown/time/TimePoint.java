@@ -1,6 +1,6 @@
 package com.crown.time;
 
-class TimePoint {
+public class TimePoint {
     public final int years;
     public final int months;
     public final int weeks;
