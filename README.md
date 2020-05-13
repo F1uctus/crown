@@ -11,7 +11,9 @@
 
 ## Usage
 
-### Maven dependency (Jitpack):
+### Maven dependency (Jitpack)
+
+Latest version is unstable, so use this commit instead:
 
 ```
 <dependency>
