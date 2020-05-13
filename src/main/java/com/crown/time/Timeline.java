@@ -1,9 +1,9 @@
 package com.crown.time;
 
 import com.crown.BaseGameState;
+import com.crown.common.Cloner;
 import com.crown.creatures.Creature;
 import com.crown.i18n.ITemplate;
-import com.esotericsoftware.kryo.kryo5.Kryo;
 
 import java.util.ArrayList;
 
@@ -12,17 +12,18 @@ import java.util.ArrayList;
  * The "heart" of time travelling implementation.
  */
 public class Timeline {
-    public static final Kryo kryo = new Kryo();
-
     public static Timeline main;
     public static ArrayList<Timeline> alternativeLines = new ArrayList<>();
 
-    public final VirtualClock clock;
-    public final BaseGameState gameState;
+    private VirtualClock clock;
+    private BaseGameState gameState;
     private final ArrayList<Action<?>> actions = new ArrayList<>();
 
+    @SuppressWarnings("unused")
+    Timeline() {
+    }
+
     public Timeline(VirtualClock clock, BaseGameState gameState) {
-        kryo.register(Timeline.class);
         this.clock = clock;
         this.gameState = gameState;
     }
@@ -53,7 +54,7 @@ public class Timeline {
      * Moves specified creature back in time to specified point in the new timeline.
      */
     public void beginChanges(Creature c, TimePoint point) {
-        var newTimeline = kryo.copy(main);
+        var newTimeline = Cloner.instance.kryo.copy(main);
         newTimeline.rollbackTo(point, newTimeline.gameState.players.get(c.getKeyName()));
         alternativeLines.add(newTimeline);
         main.gameState.removePlayer(c);
@@ -64,5 +65,13 @@ public class Timeline {
             return;
         }
         setMain(c.timeline);
+    }
+
+    public VirtualClock getClock() {
+        return clock;
+    }
+
+    public BaseGameState getGameState() {
+        return gameState;
     }
 }

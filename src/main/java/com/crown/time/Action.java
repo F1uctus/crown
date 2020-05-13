@@ -12,7 +12,7 @@ public abstract class Action<T extends Creature> {
     public T performer;
 
     public Action(T performer) {
-        point = performer.timeline.clock.now();
+        point = performer.timeline.getClock().now();
         this.performer = performer;
     }
 
