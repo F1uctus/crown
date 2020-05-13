@@ -1,22 +1,26 @@
 package com.crown.common;
 
-import com.crown.BaseGameState;
-import com.crown.time.Action;
-import com.crown.time.Timeline;
-import com.crown.time.VirtualClock;
-import com.esotericsoftware.kryo.kryo5.Kryo;
-
-import java.util.ArrayList;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class Cloner {
-    public final Kryo kryo = new Kryo();
-    public static final Cloner instance = new Cloner();
-
-    private Cloner() {
-        kryo.register(ArrayList.class);
-        kryo.register(Timeline.class);
-        kryo.register(VirtualClock.class);
-        kryo.register(BaseGameState.class);
-        kryo.register(Action.class);
+    /**
+     * Makes a deep copy of any Java object that is passed.
+     */
+    public static <T> T deepCopy(T object) {
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ObjectOutputStream outputStrm = new ObjectOutputStream(outputStream);
+            outputStrm.writeObject(object);
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+            ObjectInputStream objInputStream = new ObjectInputStream(inputStream);
+            // noinspection unchecked
+            return (T) objInputStream.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -15,13 +15,9 @@ public class Timeline {
     public static Timeline main;
     public static ArrayList<Timeline> alternativeLines = new ArrayList<>();
 
-    private VirtualClock clock;
-    private BaseGameState gameState;
+    private final VirtualClock clock;
+    private final BaseGameState gameState;
     private final ArrayList<Action<?>> actions = new ArrayList<>();
-
-    @SuppressWarnings("unused")
-    Timeline() {
-    }
 
     public Timeline(VirtualClock clock, BaseGameState gameState) {
         this.clock = clock;
@@ -54,7 +50,7 @@ public class Timeline {
      * Moves specified creature back in time to specified point in the new timeline.
      */
     public void beginChanges(Creature c, TimePoint point) {
-        var newTimeline = Cloner.instance.kryo.copy(main);
+        var newTimeline = Cloner.deepCopy(main);
         newTimeline.rollbackTo(point, newTimeline.gameState.players.get(c.getKeyName()));
         alternativeLines.add(newTimeline);
         main.gameState.removePlayer(c);
