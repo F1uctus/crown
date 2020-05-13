@@ -17,11 +17,11 @@
 
 - `com.crown.items` - Pickable inventory items
 
-- `com.crown.maps` - 2D (tiled) maps (3D maps)
+- `com.crown.maps` - 3D / 2D(tiled) maps
 
 - `com.crown.skills` - `Creature` skills API
 
-- `com.crown.time` - Virtual clock implementation & Timelines (time-travelling API - very unstable)
+- `com.crown.time` - `VirtualClock` implementation + `Timeline` (time-travelling API - very unstable)
 
 - `com.crown.common.utils` - `Random` class extensions, RPG-specific
 
