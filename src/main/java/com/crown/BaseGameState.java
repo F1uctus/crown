@@ -5,7 +5,9 @@ import com.crown.creatures.Creature;
 import com.crown.maps.Map;
 import com.crown.time.Timeline;
 
-public class BaseGameState {
+import java.io.Serializable;
+
+public class BaseGameState implements Serializable {
     public final ObjectCollection<Creature> players = new ObjectCollection<>();
     public final Map map;
 

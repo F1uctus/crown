@@ -5,9 +5,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rlforj.IBoard;
 
+import java.io.Serializable;
 import java.util.stream.IntStream;
 
-public abstract class Map extends NamedObject implements IBoard {
+public abstract class Map extends NamedObject implements IBoard, Serializable {
     public final int xSize;
     public final int ySize;
     public final int zSize;

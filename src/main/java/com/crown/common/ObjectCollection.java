@@ -2,10 +2,11 @@ package com.crown.common;
 
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 
-public class ObjectCollection<T extends NamedObject> {
+public class ObjectCollection<T extends NamedObject> implements Serializable {
     protected final LinkedCaseInsensitiveMap<T> all = new LinkedCaseInsensitiveMap<>();
 
     protected ObjectCollection<T> fromBuiltIn() {

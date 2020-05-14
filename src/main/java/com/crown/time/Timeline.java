@@ -5,13 +5,14 @@ import com.crown.common.Cloner;
 import com.crown.creatures.Creature;
 import com.crown.i18n.ITemplate;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * A timeline for game events.
  * The "heart" of time travelling implementation.
  */
-public class Timeline {
+public class Timeline implements Serializable {
     public static Timeline main;
     public static ArrayList<Timeline> alternativeLines = new ArrayList<>();
 

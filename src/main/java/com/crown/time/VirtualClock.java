@@ -2,6 +2,7 @@ package com.crown.time;
 
 import com.crown.common.utils.Random;
 
+import java.io.Serializable;
 import java.time.Year;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -9,7 +10,7 @@ import java.util.TimerTask;
 /**
  * Simplified clock logic for virtual game time.
  */
-public class VirtualClock {
+public class VirtualClock implements Serializable {
     public final int maxYears = Integer.MAX_VALUE;
     private int years;
 

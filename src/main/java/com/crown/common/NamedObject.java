@@ -4,11 +4,13 @@ import com.crown.common.utils.Random;
 import com.crown.i18n.ITemplate;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
+
 /**
  * Represents a localizable object
  * with {@code id}, {@code name} and {@code description}.
  */
-public abstract class NamedObject {
+public abstract class NamedObject implements Serializable {
     protected int id;
     protected String name;
     protected String description;

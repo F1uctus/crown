@@ -1,6 +1,8 @@
 package com.crown.time;
 
-public class TimePoint {
+import java.io.Serializable;
+
+public class TimePoint implements Serializable {
     public final int years;
     public final int months;
     public final int weeks;
