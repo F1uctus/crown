@@ -88,7 +88,7 @@ public abstract class Creature extends MapObject {
      */
     protected ITemplate changeHp(int delta) {
         if (invalidDelta(hp, delta, maxHp)) {
-            return invalidDeltaMessage;
+            return I18n.invalidDeltaMessage;
         }
         hp += delta;
         return I18n.okMessage;
@@ -133,7 +133,7 @@ public abstract class Creature extends MapObject {
      */
     protected ITemplate changeEnergy(int delta) {
         if (invalidDelta(energy, delta, maxEnergy)) {
-            return invalidDeltaMessage;
+            return I18n.invalidDeltaMessage;
         }
         energy += delta;
         return I18n.okMessage;
@@ -170,7 +170,7 @@ public abstract class Creature extends MapObject {
      */
     protected ITemplate changeSpeed(int delta) {
         if (invalidDelta(speed, delta, maxSpeed)) {
-            return invalidDeltaMessage;
+            return I18n.invalidDeltaMessage;
         }
         speed += delta;
         return I18n.okMessage;
@@ -207,7 +207,7 @@ public abstract class Creature extends MapObject {
      */
     protected ITemplate changeFov(int delta) {
         if (invalidDelta(fov, delta, maxFov)) {
-            return invalidDeltaMessage;
+            return I18n.invalidDeltaMessage;
         }
         fov += delta;
         return I18n.okMessage;
@@ -237,7 +237,7 @@ public abstract class Creature extends MapObject {
      */
     protected ITemplate changeXp(int delta) {
         if (invalidDelta(xp, delta)) {
-            return invalidDeltaMessage;
+            return I18n.invalidDeltaMessage;
         }
         xp += delta;
         if (delta > 0) {
@@ -277,7 +277,7 @@ public abstract class Creature extends MapObject {
      */
     protected ITemplate changeLevel(int delta) {
         if (invalidDelta(level, delta)) {
-            return invalidDeltaMessage;
+            return I18n.invalidDeltaMessage;
         }
         level += delta;
         changeSkillPointsBy((int) Math.signum(delta));
@@ -308,7 +308,7 @@ public abstract class Creature extends MapObject {
      */
     protected ITemplate changeSkillPoints(int delta) {
         if (invalidDelta(skillPoints, delta)) {
-            return invalidDeltaMessage;
+            return I18n.invalidDeltaMessage;
         }
         skillPoints += delta;
         return I18n.okMessage;
@@ -382,8 +382,6 @@ public abstract class Creature extends MapObject {
         int lvlRem = lvl % 10;
         return 500 * (lvl10 * lvl10 + lvl10) + (lvlRem * (100 * lvl10 + 100));
     }
-
-    protected final ITemplate invalidDeltaMessage = I18n.of("fail.delta.outOfBounds");
 
     protected static boolean invalidDelta(int val, int delta) {
         return delta == 0
