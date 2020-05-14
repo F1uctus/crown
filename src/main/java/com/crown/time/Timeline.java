@@ -1,9 +1,9 @@
 package com.crown.time;
 
 import com.crown.BaseGameState;
-import com.crown.common.Cloner;
 import com.crown.creatures.Creature;
 import com.crown.i18n.ITemplate;
+import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class Timeline implements Serializable {
      * Moves specified creature back in time to specified point in the new timeline.
      */
     public void beginChanges(Creature c, TimePoint point) {
-        var newTimeline = Cloner.deepCopy(main);
+        var newTimeline = SerializationUtils.clone(main);
         newTimeline.rollbackTo(point, newTimeline.gameState.players.get(c.getKeyName()));
         alternativeLines.add(newTimeline);
         main.gameState.removePlayer(c);
