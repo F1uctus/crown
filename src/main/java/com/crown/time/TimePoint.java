@@ -53,6 +53,30 @@ public class TimePoint implements Serializable {
         );
     }
 
+    public TimePoint plus(TimePoint other) {
+        return new TimePoint(
+            years + other.years,
+            months + other.months,
+            weeks + other.weeks,
+            days + other.days,
+            hours + other.hours,
+            minutes + other.minutes,
+            seconds + other.seconds
+        );
+    }
+
+    public TimePoint minus() {
+        return new TimePoint(
+            years,
+            months,
+            weeks,
+            days,
+            hours,
+            minutes,
+            seconds
+        );
+    }
+
     public boolean gt(TimePoint point) {
         return years > point.years
                || (years == point.years

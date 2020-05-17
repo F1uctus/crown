@@ -11,52 +11,33 @@ import java.util.TimerTask;
  * Simplified clock logic for virtual game time.
  */
 public class VirtualClock implements Serializable {
-    public final int maxYears = Integer.MAX_VALUE;
-    private int years;
+    public static final int maxYears = Integer.MAX_VALUE;
+    private static int years;
 
-    public final int maxMonths;
-    private int months;
+    private static int maxMonths;
+    private static int months;
 
-    public final int maxWeeks;
-    private int weeks;
+    private static int maxWeeks;
+    private static int weeks;
 
-    public final int maxDays;
-    private int days;
+    private static int maxDays;
+    private static int days;
 
-    public final int maxHours;
-    private int hours;
+    private static int maxHours;
+    private static int hours;
 
-    public final int maxMinutes;
-    private int minutes;
+    private static int maxMinutes;
+    private static int minutes;
 
-    public final int maxSeconds;
-    private int seconds;
+    private static int maxSeconds;
+    private static int seconds;
 
-    public final int secondLength;
-    private Timer timer;
-    private final Runnable tickAction;
+    private static int secondLength;
 
-    /**
-     * Creates new game clock with Earth-like timing
-     * (12m/4w/7d/24h/60m/60s) with custom second length.
-     */
-    public VirtualClock(
-        int secondLength,
-        Runnable tickAction
-    ) {
-        this(
-            12,
-            4,
-            7,
-            24,
-            60,
-            60,
-            secondLength,
-            tickAction
-        );
-    }
+    private static Timer timer;
+    private static Runnable tickAction;
 
-    public VirtualClock(
+    public void setPeriods(
         int maxMonths,
         int maxWeeks,
         int maxDays,
@@ -66,20 +47,48 @@ public class VirtualClock implements Serializable {
         int secondLength,
         Runnable tickAction
     ) {
-        this.maxMonths = maxMonths;
-        this.maxWeeks = maxWeeks;
-        this.maxDays = maxDays;
-        this.maxHours = maxHours;
-        this.maxMinutes = maxMinutes;
-        this.maxSeconds = maxSeconds;
-        this.secondLength = secondLength;
-        this.tickAction = tickAction;
+        VirtualClock.maxMonths = maxMonths;
+        VirtualClock.maxWeeks = maxWeeks;
+        VirtualClock.maxDays = maxDays;
+        VirtualClock.maxHours = maxHours;
+        VirtualClock.maxMinutes = maxMinutes;
+        VirtualClock.maxSeconds = maxSeconds;
+        VirtualClock.secondLength = secondLength;
+        VirtualClock.tickAction = tickAction;
     }
 
-    public VirtualClock startAtRnd() {
-        return startAt(
+    /**
+     * Starts game clock with Earth-like timing
+     * (12m/4w/7d/24h/60m/60s) and custom second length.
+     */
+    public void startEarthLike(
+        int secondLength,
+        Runnable tickAction
+    ) {
+        VirtualClock.secondLength = secondLength;
+        VirtualClock.tickAction = tickAction;
+        startAt(
             new TimePoint(
-                Random.getInt(1000, Year.now().getValue() + 1),
+                maxYears,
+                12,
+                4,
+                7,
+                24,
+                60,
+                60
+            )
+        );
+    }
+
+    public static void startAtRnd(
+        int secondLength,
+        Runnable tickAction
+    ) {
+        VirtualClock.secondLength = secondLength;
+        VirtualClock.tickAction = tickAction;
+        startAt(
+            new TimePoint(
+                Random.getInt(1, Year.now().getValue() + 1),
                 Random.getInt(1, maxMonths + 1),
                 Random.getInt(1, maxWeeks + 1),
                 Random.getInt(1, maxDays + 1),
@@ -90,25 +99,21 @@ public class VirtualClock implements Serializable {
         );
     }
 
-    /**
-     * Starts this instance of clock
-     */
-    public VirtualClock startAt(TimePoint point) {
+    public static void startAt(TimePoint point) {
         if (timer != null) {
             timer.cancel();
         }
-        this.years = point.years;
-        this.months = point.months;
-        this.weeks = point.weeks;
-        this.days = point.days;
-        this.hours = point.hours;
-        this.minutes = point.minutes;
-        this.seconds = point.seconds;
+        years = point.years;
+        months = point.months;
+        weeks = point.weeks;
+        days = point.days;
+        hours = point.hours;
+        minutes = point.minutes;
+        seconds = point.seconds;
         start();
-        return this;
     }
 
-    private void start() {
+    private static void start() {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -143,7 +148,31 @@ public class VirtualClock implements Serializable {
         }, 0, secondLength);
     }
 
-    public TimePoint now() {
+    public static TimePoint now() {
         return new TimePoint(years, months, weeks, days, hours, minutes, seconds);
+    }
+
+    public static int getMaxMonths() {
+        return maxMonths;
+    }
+
+    public static int getMaxWeeks() {
+        return maxWeeks;
+    }
+
+    public static int getMaxDays() {
+        return maxDays;
+    }
+
+    public static int getMaxHours() {
+        return maxHours;
+    }
+
+    public static int getMaxMinutes() {
+        return maxMinutes;
+    }
+
+    public static int getMaxSeconds() {
+        return maxSeconds;
     }
 }

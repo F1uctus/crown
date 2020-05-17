@@ -16,6 +16,7 @@ public class Timeline implements Serializable {
     public static Timeline main;
     public static ArrayList<Timeline> alternativeLines = new ArrayList<>();
 
+    private TimePoint offsetToMain;
     private final VirtualClock clock;
     private final BaseGameState gameState;
     private final ArrayList<Action<?>> actions = new ArrayList<>();
@@ -41,10 +42,8 @@ public class Timeline implements Serializable {
                 if (a.performer != savedCreature) {
                     a.rollback();
                 }
-                actions.remove(a);
             }
         }
-        clock.startAt(actions.get(actions.size() - 1).point);
     }
 
     /**
@@ -52,6 +51,7 @@ public class Timeline implements Serializable {
      */
     public void beginChanges(Creature c, TimePoint point) {
         var newTimeline = SerializationUtils.clone(main);
+        newTimeline.offsetToMain = VirtualClock.now().plus(point.minus());
         newTimeline.rollbackTo(point, newTimeline.gameState.players.get(c.getKeyName()));
         alternativeLines.add(newTimeline);
         main.gameState.removePlayer(c);
