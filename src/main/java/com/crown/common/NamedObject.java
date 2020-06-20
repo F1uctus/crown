@@ -12,8 +12,8 @@ import java.util.UUID;
  * resource {@link NamedObject#keyName}, and description.
  */
 public abstract class NamedObject {
-    protected final UUID id;
-    protected final String keyName;
+    private final UUID id;
+    private final String keyName;
 
     public NamedObject(@NotNull String keyName) {
         this.id = Random.getId();
@@ -22,6 +22,10 @@ public abstract class NamedObject {
 
     public UUID getId() {
         return id;
+    }
+
+    public String getKeyName() {
+        return keyName;
     }
 
     public abstract ITemplate getName();
