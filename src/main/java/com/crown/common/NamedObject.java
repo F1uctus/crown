@@ -4,27 +4,24 @@ import com.crown.common.utils.Random;
 import com.crown.i18n.ITemplate;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * Represents a localizable object
- * with {@code id}, {@code name} and {@code description}.
+ * with unique {@link NamedObject#id},
+ * resource {@link NamedObject#keyName}, and description.
  */
-public abstract class NamedObject implements Serializable {
-    protected final int id;
-    private final String keyName;
+public abstract class NamedObject {
+    protected final UUID id;
+    protected final String keyName;
 
     public NamedObject(@NotNull String keyName) {
         this.id = Random.getId();
         this.keyName = keyName.toLowerCase();
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
-    }
-
-    public String getKeyName() {
-        return keyName;
     }
 
     public abstract ITemplate getName();

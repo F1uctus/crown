@@ -1,12 +1,11 @@
 package com.crown.maps;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * This class represents an integer-point in 3D space.
  */
-public class Point3D implements Serializable {
+public class Point3D {
     public int x;
     public int y;
     public int z;

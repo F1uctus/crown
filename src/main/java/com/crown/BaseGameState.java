@@ -4,9 +4,7 @@ import com.crown.common.ObjectCollection;
 import com.crown.creatures.Creature;
 import com.crown.time.Timeline;
 
-import java.io.Serializable;
-
-public class BaseGameState implements Serializable {
+public class BaseGameState {
     public final ObjectCollection<Creature> players = new ObjectCollection<>();
 
     public BaseGameState() {
@@ -18,6 +16,6 @@ public class BaseGameState implements Serializable {
     }
 
     public void removePlayer(Creature p) {
-        players.remove(p.getKeyName());
+        players.remove(p);
     }
 }

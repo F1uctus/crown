@@ -1,8 +1,6 @@
 package com.crown.maps;
 
-import java.io.Serializable;
-
-public enum MapWeight implements Serializable {
+public enum MapWeight {
     STEP_EASY,
     STEP_AVOID,
     OBSTACLE,

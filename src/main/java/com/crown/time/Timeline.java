@@ -5,14 +5,13 @@ import com.crown.creatures.Creature;
 import com.crown.i18n.ITemplate;
 import com.rits.cloning.Cloner;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * A timeline for game events.
  * The "heart" of time travelling implementation.
  */
-public class Timeline implements Serializable {
+public class Timeline {
     /**
      * Main real-time timeline, where
      * all players are placed by default.
@@ -98,7 +97,7 @@ public class Timeline implements Serializable {
         cloner.setDumpClonedClasses(true);
         var newTimeline = cloner.deepClone(main);
         newTimeline.offsetToMain = clock.now().plus(point.minus());
-        newTimeline.rollbackTo(point, newTimeline.gameState.players.get(c.getKeyName()));
+        newTimeline.rollbackTo(point, newTimeline.gameState.players.get(c.getId()));
         alternativeLines.add(newTimeline);
         main.gameState.removePlayer(c);
     }

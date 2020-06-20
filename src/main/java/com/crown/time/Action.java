@@ -5,10 +5,9 @@ import com.crown.i18n.I18n;
 import com.crown.i18n.ITemplate;
 import org.jetbrains.annotations.NonNls;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 
-public abstract class Action<T extends Creature> implements Serializable {
+public abstract class Action<T extends Creature> {
     public final TimePoint point;
     public final T performer;
 

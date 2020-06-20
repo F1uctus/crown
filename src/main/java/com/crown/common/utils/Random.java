@@ -6,6 +6,7 @@ import com.crown.maps.MapWeight;
 import com.crown.maps.Point3D;
 
 import java.util.HashSet;
+import java.util.UUID;
 
 /**
  * Handy extensions for {@link java.util.Random}.
@@ -22,16 +23,10 @@ public class Random {
     }
 
     /**
-     * Returns a random id for game object
-     * (in bounds of {@link Integer} type - should be unique).
+     * Returns a random UUID for game object.
      */
-    public static int getId() {
-        int id = rnd.nextInt(Integer.MAX_VALUE);
-        while (ids.contains(id)) {
-            id = rnd.nextInt(Integer.MAX_VALUE);
-        }
-        ids.add(id);
-        return id;
+    public static UUID getId() {
+        return UUID.randomUUID();
     }
 
     /**

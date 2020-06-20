@@ -378,8 +378,8 @@ public abstract class Creature extends MapObject {
      */
     protected ITemplate move(int deltaX, int deltaY, int deltaZ) {
         var tgtPos = getPt0().plus(new Point3D(deltaX, deltaY, deltaZ));
-        var tgtObj = map.get(tgtPos);
-        if (map.contains(tgtPos)
+        var tgtObj = getMap().get(tgtPos);
+        if (getMap().contains(tgtPos)
             && (tgtObj == null || tgtObj.getMapWeight() != MapWeight.OBSTACLE)) {
             var delta = (int) getPt0().getDistance(tgtPos);
             if (getEnergy() < delta) {
