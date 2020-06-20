@@ -3,6 +3,7 @@ package com.crown.time;
 import com.crown.BaseGameState;
 import com.crown.creatures.Creature;
 import com.crown.i18n.ITemplate;
+import com.rits.cloning.Cloner;
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.Serializable;
@@ -36,8 +37,7 @@ public class Timeline implements Serializable {
     }
 
     public void rollbackTo(TimePoint point, Creature savedCreature) {
-        for (int i = 0; i < actions.size(); i++) {
-            Action<?> a = actions.get(i);
+        for (Action<?> a : actions) {
             if (a.point.gt(point)) {
                 if (a.performer != savedCreature) {
                     a.rollback();
@@ -50,7 +50,8 @@ public class Timeline implements Serializable {
      * Moves specified creature back in time to specified point in the new timeline.
      */
     public void beginChanges(Creature c, TimePoint point) {
-        var newTimeline = SerializationUtils.clone(main);
+        var cloner = new Cloner();
+        var newTimeline = cloner.deepClone(main);
         newTimeline.offsetToMain = VirtualClock.now().plus(point.minus());
         newTimeline.rollbackTo(point, newTimeline.gameState.players.get(c.getKeyName()));
         alternativeLines.add(newTimeline);
