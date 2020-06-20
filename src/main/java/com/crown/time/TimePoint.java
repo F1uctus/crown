@@ -11,6 +11,9 @@ public class TimePoint implements Serializable {
     public final int minutes;
     public final int seconds;
 
+    public static TimePoint zero =
+        new TimePoint(0, 0, 0, 0, 0, 0, 0);
+
     public TimePoint(
         int years,
         int months,
@@ -30,22 +33,30 @@ public class TimePoint implements Serializable {
     }
 
     public TimePoint plus(int seconds) {
-        return plus(0, 0, 0, seconds);
+        return plus(0, 0, 0, 0, 0, 0, seconds);
     }
 
     public TimePoint plus(int minutes, int seconds) {
-        return plus(0, 0, minutes, seconds);
+        return plus(0, 0, 0, 0, 0, minutes, seconds);
     }
 
     public TimePoint plus(int hours, int minutes, int seconds) {
-        return plus(0, hours, minutes, seconds);
+        return plus(0, 0, 0, 0, hours, minutes, seconds);
     }
 
-    public TimePoint plus(int days, int hours, int minutes, int seconds) {
+    public TimePoint plus(
+        int years,
+        int months,
+        int weeks,
+        int days,
+        int hours,
+        int minutes,
+        int seconds
+    ) {
         return new TimePoint(
-            years,
-            months,
-            weeks,
+            this.years + years,
+            this.months + months,
+            this.weeks + weeks,
             this.days + days,
             this.hours + hours,
             this.minutes + minutes,
@@ -136,9 +147,42 @@ public class TimePoint implements Serializable {
 
     @Override
     public String toString() {
+        // noinspection HardCodedStringLiteral
         return String.format("%04d", years) +
                "/" + String.format("%02d", months) +
                "/" + String.format("%02d", days)
                + ", " + hours + ":" + minutes + ":" + seconds;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TimePoint timePoint = (TimePoint) o;
+
+        if (years != timePoint.years) {
+            return false;
+        }
+        if (months != timePoint.months) {
+            return false;
+        }
+        if (weeks != timePoint.weeks) {
+            return false;
+        }
+        if (days != timePoint.days) {
+            return false;
+        }
+        if (hours != timePoint.hours) {
+            return false;
+        }
+        if (minutes != timePoint.minutes) {
+            return false;
+        }
+        return seconds == timePoint.seconds;
     }
 }

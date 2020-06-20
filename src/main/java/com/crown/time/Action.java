@@ -10,10 +10,10 @@ import java.lang.reflect.Method;
 
 public abstract class Action<T extends Creature> implements Serializable {
     public final TimePoint point;
-    public T performer;
+    public final T performer;
 
     public Action(T performer) {
-        point = performer.timeline.getClock().now();
+        point = Timeline.getGameClock().now();
         this.performer = performer;
     }
 

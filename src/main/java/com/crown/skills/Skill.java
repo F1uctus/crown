@@ -26,9 +26,7 @@ public abstract class Skill extends NamedObject {
     }
 
     public void apply(MapObject target) {
-        new Thread(() -> {
-            effect.accept(target);
-        }).start();
+        new Thread(() -> effect.accept(target)).start();
     }
 
     public int getEnergyCost() {

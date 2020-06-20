@@ -11,9 +11,7 @@ import java.io.Serializable;
  * with {@code id}, {@code name} and {@code description}.
  */
 public abstract class NamedObject implements Serializable {
-    protected int id;
-    protected String name;
-    protected String description;
+    protected final int id;
     private final String keyName;
 
     public NamedObject(@NotNull String keyName) {

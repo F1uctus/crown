@@ -78,11 +78,13 @@ public class I18n {
     public static ITemplate changeableOf(String resourceKey, int delta) {
         String key;
         if (delta > 0) {
+            // noinspection HardCodedStringLiteral
             key = MessageFormat.format(
                 resourceKey,
                 "increased"
             );
         } else {
+            // noinspection HardCodedStringLiteral
             key = MessageFormat.format(
                 resourceKey,
                 "decreased"
