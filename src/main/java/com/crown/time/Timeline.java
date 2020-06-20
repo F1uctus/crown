@@ -56,6 +56,10 @@ public class Timeline implements Serializable {
         return clock;
     }
 
+    public TimePoint getOffsetToMain() {
+        return offsetToMain;
+    }
+
     public BaseGameState getGameState() {
         return gameState;
     }
