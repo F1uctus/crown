@@ -7,7 +7,7 @@ public class MapIcons extends ObjectCollection<MapIcon<?>> {
 
     public static MapIcons getMapIcons() {
         if (instance == null) {
-            synchronized (Maps.class) {
+            synchronized (MapIcons.class) {
                 if (instance == null) {
                     instance = new MapIcons();
                 }
