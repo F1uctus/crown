@@ -10,6 +10,13 @@ import com.crown.time.Timeline;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Main class for every in-game creature.
+ * Methods with {@code By}-suffix are used for creature
+ * to make some action, while methods with same name,
+ * but without {@code By}-suffix contain internal (non-timeline)
+ * logic that can be overridden by successors.
+ */
 public abstract class Creature extends MapObject {
     protected int maxHp;
     protected int hp;
@@ -319,7 +326,8 @@ public abstract class Creature extends MapObject {
     // region Movement
 
     /**
-     * Changes creature 2D position by coordinates delta.
+     * Moves creature by specified delta-point.
+     * Reduces creature's energy.
      * Timeline support included.
      */
     public ITemplate moveBy(int deltaX, int deltaY) {
@@ -327,25 +335,45 @@ public abstract class Creature extends MapObject {
     }
 
     /**
-     * Changes creature 3D position by coordinates delta.
+     * Moves creature by specified delta-point.
+     * Reduces creature's energy.
      * Timeline support included.
      */
     public ITemplate moveBy(int deltaX, int deltaY, int deltaZ) {
         return timeline.perform(new Action<>(this) {
             @Override
             public ITemplate perform() {
-                return performer.move(deltaX, deltaY, deltaZ);
+                var result = performer.move(deltaX, deltaY, deltaZ);
+                if (result == I18n.okMessage) {
+                    // SIDE-EFFECT: decrease energy if player moved
+                    changeEnergy(-(int) Math.sqrt(
+                        Math.pow(deltaX, 2) +
+                        Math.pow(deltaY, 2) +
+                        Math.pow(deltaZ, 2)
+                    ));
+                }
+                return result;
             }
 
             @Override
             public ITemplate rollback() {
-                return performer.move(-deltaX, -deltaY, -deltaZ);
+                var result = performer.move(-deltaX, -deltaY, -deltaZ);
+                if (result == I18n.okMessage) {
+                    // SIDE-EFFECT: increase energy if player moved
+                    changeEnergy((int) Math.sqrt(
+                        Math.pow(deltaX, 2) +
+                        Math.pow(deltaY, 2) +
+                        Math.pow(deltaZ, 2)
+                    ));
+                }
+                return result;
             }
         });
     }
 
     /**
-     * Internal logic to move character to specified target point.
+     * Changes creature 3D position by delta point.
+     * Creature's energy remains UNCHANGED.
      * May be overridden if needed.
      */
     protected ITemplate move(int deltaX, int deltaY, int deltaZ) {
@@ -358,7 +386,6 @@ public abstract class Creature extends MapObject {
                 return I18n.of("stats.energy.low");
             } else {
                 moveView(deltaX, deltaY, deltaZ);
-                changeEnergyBy(-delta);
                 return I18n.okMessage;
             }
         } else {
