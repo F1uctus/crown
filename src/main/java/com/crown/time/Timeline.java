@@ -95,6 +95,7 @@ public class Timeline implements Serializable {
      */
     public void beginChanges(Creature c, TimePoint point) {
         var cloner = new Cloner();
+        cloner.setDumpClonedClasses(true);
         var newTimeline = cloner.deepClone(main);
         newTimeline.offsetToMain = clock.now().plus(point.minus());
         newTimeline.rollbackTo(point, newTimeline.gameState.players.get(c.getKeyName()));
