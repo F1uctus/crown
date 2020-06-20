@@ -323,7 +323,7 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate moveBy(int deltaX, int deltaY) {
-        return move(deltaX, deltaY, 0);
+        return moveBy(deltaX, deltaY, 0);
     }
 
     /**
