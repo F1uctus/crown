@@ -67,13 +67,13 @@ public class TimePoint implements Serializable {
 
     public TimePoint minus() {
         return new TimePoint(
-            years,
-            months,
-            weeks,
-            days,
-            hours,
-            minutes,
-            seconds
+            -years,
+            -months,
+            -weeks,
+            -days,
+            -hours,
+            -minutes,
+            -seconds
         );
     }
 
