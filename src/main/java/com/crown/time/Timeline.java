@@ -37,7 +37,8 @@ public class Timeline implements Serializable {
     }
 
     public void rollbackTo(TimePoint point, Creature savedCreature) {
-        for (Action<?> a : actions) {
+        for (int i = 0; i < actions.size(); i++) {
+            Action<?> a = actions.get(i);
             if (a.point.gt(point)) {
                 if (a.performer != savedCreature) {
                     a.rollback();
