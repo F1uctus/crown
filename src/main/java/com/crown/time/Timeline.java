@@ -71,7 +71,7 @@ public class Timeline {
     /**
      * Main logic of backward time-travelling.
      * Discards all actions in this timeline made up to {@code point},
-     * IF they weren't made by {@code preservedCreature}.
+     * IF they were not made by {@code preservedCreature}.
      */
     void rollbackTo(TimePoint point, Creature preservedCreature) {
         // Ensure we're travelling into past
@@ -97,7 +97,10 @@ public class Timeline {
         cloner.setDumpClonedClasses(true);
         var newTimeline = cloner.deepClone(main);
         newTimeline.offsetToMain = clock.now().plus(point.minus());
-        newTimeline.rollbackTo(point, newTimeline.gameState.players.get(c.getId()));
+        newTimeline.rollbackTo(
+            point,
+            newTimeline.gameState.players.get(c.getKeyName())
+        );
         alternativeLines.add(newTimeline);
         main.gameState.removePlayer(c);
     }

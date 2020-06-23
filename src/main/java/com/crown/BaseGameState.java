@@ -1,16 +1,16 @@
 package com.crown;
 
-import com.crown.common.ObjectCollection;
+import com.crown.common.ObjectByKeyNameMap;
 import com.crown.creatures.Creature;
 import com.crown.time.Timeline;
 
 public class BaseGameState {
-    public final ObjectCollection<Creature> players = new ObjectCollection<>();
+    public final ObjectByKeyNameMap<Creature> players = new ObjectByKeyNameMap<>();
 
     public BaseGameState() {
     }
 
-    protected void addNewPlayer(Creature p) {
+    protected void addPlayer(Creature p) {
         p.timeline = Timeline.main;
         players.add(p);
     }

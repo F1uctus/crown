@@ -5,15 +5,15 @@ import java.util.LinkedHashMap;
 import java.util.UUID;
 
 /**
- * Collection of named objects. This class is usually extended,
+ * Hash map of named objects. This class is usually extended,
  * and then populated with predefined items
- * using {@link ObjectCollection#withPredefinedItems()}.
- * Internally, uses object UUID's as hash map keys.
+ * using {@link ObjectByIdMap#withPredefinedItems()}.
+ * Internally, uses object UUIDs as hash map keys.
  */
-public class ObjectCollection<T extends NamedObject> {
+public class ObjectByIdMap<T extends NamedObject> {
     protected final LinkedHashMap<UUID, T> all = new LinkedHashMap<>();
 
-    protected ObjectCollection<T> withPredefinedItems() {
+    protected ObjectByIdMap<T> withPredefinedItems() {
         return this;
     }
 

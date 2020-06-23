@@ -38,3 +38,9 @@ Latest version is unstable, so use this commit instead:
     <version>021993f86c30a3315da45362de64fb35f713d475</version>
 </dependency>
 ```
+
+## Time-travelling API implementation overview
+
+I tried to keep diagram as simple as possible, but feel free to report any inconvenience.
+
+[[images/crown-timelines-overview.png|alt=Crown time travelling API overview]]

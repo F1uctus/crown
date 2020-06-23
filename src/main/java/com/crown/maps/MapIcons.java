@@ -1,8 +1,8 @@
 package com.crown.maps;
 
-import com.crown.common.ObjectCollection;
+import com.crown.common.ObjectByIdMap;
 
-public class MapIcons extends ObjectCollection<MapIcon<?>> {
+public class MapIcons extends ObjectByIdMap<MapIcon<?>> {
     private static MapIcons instance;
 
     public static MapIcons getMapIcons() {

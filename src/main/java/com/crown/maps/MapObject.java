@@ -14,7 +14,7 @@ import java.util.UUID;
  * to maintain deep-copying performance.
  */
 public abstract class MapObject extends NamedObject {
-    private final UUID mapId;
+    private final Map map;
     private final UUID mapIconId;
     private final MapWeight mapWeight;
 
@@ -71,14 +71,14 @@ public abstract class MapObject extends NamedObject {
         Point3D[] particles
     ) {
         super(name);
-        this.mapId = map.getId();
+        this.map = map;
         this.mapIconId = mapIcon.getId();
         this.mapWeight = mapWeight;
         this.particles = lastParticles = particles;
     }
 
     public Map getMap() {
-        return Maps.getMaps().get(mapId);
+        return map;
     }
 
     public MapIcon<?> getMapIcon() {
