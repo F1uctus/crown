@@ -43,4 +43,4 @@ Latest version is unstable, so use this commit instead:
 
 I tried to keep diagram as simple as possible, but feel free to report any inconvenience.
 
-[[images/crown-timelines-overview.png|alt=Crown time travelling API overview]]
+![Crown time travelling API overview](/images/crown-timelines-overview.png)
