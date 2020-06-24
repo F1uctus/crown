@@ -82,7 +82,7 @@ public abstract class MapObject extends NamedObject {
     }
 
     public MapIcon<?> getMapIcon() {
-        return MapIcons.getMapIcons().get(mapIconId);
+        return BaseMapIcons.getIcons().get(mapIconId);
     }
 
     public MapWeight getMapWeight() {
