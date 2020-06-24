@@ -7,9 +7,6 @@ import com.crown.time.Timeline;
 public class BaseGameState {
     public final ObjectByKeyNameMap<Creature> players = new ObjectByKeyNameMap<>();
 
-    public BaseGameState() {
-    }
-
     protected void addPlayer(Creature p) {
         p.timeline = Timeline.main;
         players.add(p);
