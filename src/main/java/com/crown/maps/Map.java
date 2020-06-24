@@ -19,8 +19,7 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
         String name,
         int xSize,
         int ySize,
-        int zSize,
-        MapIcon<?> emptyIcon
+        int zSize
     ) {
         super(name);
         this.xSize = xSize;
