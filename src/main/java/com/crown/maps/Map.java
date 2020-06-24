@@ -12,7 +12,6 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
     public final int xSize;
     public final int ySize;
     public final int zSize;
-    public final MapIcon<?> emptyIcon;
 
     protected final MapCell[][][] containers;
 
@@ -27,7 +26,6 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
         this.xSize = xSize;
         this.ySize = ySize;
         this.zSize = zSize;
-        this.emptyIcon = emptyIcon;
 
         containers = new MapCell[zSize][ySize][xSize];
         for (int z = 0; z < zSize; z++) {
@@ -38,6 +36,8 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
             }
         }
     }
+
+    public abstract MapIcon<?> getEmptyIcon();
 
     /**
      * Returns 3D area for map region with given radius.
@@ -79,7 +79,7 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
             for (int y = 0; y < area[0].length; y++) {
                 for (int x = 0; x < area[0][0].length; x++) {
                     if (area[z][y][x] == null) {
-                        icons[z][y][x] = emptyIcon;
+                        icons[z][y][x] = getEmptyIcon();
                     } else {
                         icons[z][y][x] = area[z][y][x].getMapIcon();
                     }
@@ -130,7 +130,7 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
         for (int y = 0; y < area.length; y++) {
             for (int x = 0; x < area.length; x++) {
                 if (area[y][x] == null) {
-                    icons[y][x] = emptyIcon;
+                    icons[y][x] = getEmptyIcon();
                 } else {
                     icons[y][x] = area[y][x].getMapIcon();
                 }
