@@ -62,8 +62,8 @@ public class Point3D implements Serializable {
     public double getDistance(Point3D point) {
         return Math.sqrt(
             Math.pow(x - point.x, 2) +
-            Math.pow(y - point.y, 2) +
-            Math.pow(z - point.z, 2)
+                Math.pow(y - point.y, 2) +
+                Math.pow(z - point.z, 2)
         );
     }
 

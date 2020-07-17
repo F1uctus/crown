@@ -177,11 +177,11 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
      */
     public boolean contains(@NotNull Point3D pt) {
         return pt.x >= 0
-               && pt.x < xSize
-               && pt.y >= 0
-               && pt.y < ySize
-               && pt.z >= 0
-               && pt.z < zSize;
+            && pt.x < xSize
+            && pt.y >= 0
+            && pt.y < ySize
+            && pt.z >= 0
+            && pt.z < zSize;
     }
 
     @Nullable
@@ -230,9 +230,9 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
     @Deprecated
     public boolean contains(int x, int y) {
         return x >= 0
-               && x < xSize
-               && y >= 0
-               && y < ySize;
+            && x < xSize
+            && y >= 0
+            && y < ySize;
     }
 
     /**
@@ -245,7 +245,7 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
             .mapToObj(z -> get(x, y, z))
             .anyMatch(
                 mapObj -> mapObj != null
-                          && mapObj.getMapWeight() == MapWeight.OBSTACLE
+                    && mapObj.getMapWeight() == MapWeight.OBSTACLE
             );
     }
 
@@ -260,7 +260,7 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
             .mapToObj(z -> get(x, y, z))
             .anyMatch(
                 mapObj -> mapObj != null
-                          && mapObj.getMapWeight() == MapWeight.BLOCKS_LIGHT
+                    && mapObj.getMapWeight() == MapWeight.BLOCKS_LIGHT
             );
     }
 
@@ -275,7 +275,7 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
             .mapToObj(z -> get(x, y, z))
             .anyMatch(
                 mapObj -> mapObj != null
-                          && mapObj.getMapWeight() == MapWeight.BLOCKS_STEP
+                    && mapObj.getMapWeight() == MapWeight.BLOCKS_STEP
             );
     }
 

@@ -14,7 +14,7 @@ import java.util.UUID;
  * to maintain deep-copying performance.
  */
 public abstract class MapObject extends NamedObject {
-    private final Map map;
+    private Map map;
     private final UUID mapIconId;
     private final MapWeight mapWeight;
 
@@ -71,14 +71,23 @@ public abstract class MapObject extends NamedObject {
         Point3D[] particles
     ) {
         super(name);
-        this.map = map;
         this.mapIconId = mapIcon.getId();
         this.mapWeight = mapWeight;
         this.particles = lastParticles = particles;
+        setMap(map);
     }
 
     public Map getMap() {
         return map;
+    }
+
+    public void setMap(Map value) {
+        if (value == null) {
+            map.remove(this);
+        } else {
+            value.add(this);
+        }
+        map = value;
     }
 
     public abstract MapIcon<?> getMapIcon();
@@ -150,11 +159,11 @@ public abstract class MapObject extends NamedObject {
     public String toString() {
         // noinspection HardCodedStringLiteral
         return getName()
-               + " [#" + getId()
-               + " | " + getMapIcon()
-               + " | w=" + getMapWeight()
-               + " | @ " + getPt0()
-               + " map #" + getMap().getId()
-               + "]";
+            + " [#" + getId()
+            + " | " + getMapIcon()
+            + " | w=" + getMapWeight()
+            + " | @ " + getPt0()
+            + " map #" + getMap().getId()
+            + "]";
     }
 }

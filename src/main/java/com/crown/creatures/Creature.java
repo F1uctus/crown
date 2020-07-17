@@ -34,7 +34,7 @@ public abstract class Creature extends MapObject {
     protected int xp = 0;
     protected int skillPoints = 0;
 
-    public Timeline timeline;
+    private Timeline timeline;
     private final List<InventoryItem> inventory = new ArrayList<>();
 
     public Creature(
@@ -56,6 +56,7 @@ public abstract class Creature extends MapObject {
         this.fov = fieldOfView;
         this.speed = speed;
         this.level = level;
+        timeline = Timeline.main;
     }
 
     /**
@@ -343,13 +344,13 @@ public abstract class Creature extends MapObject {
         return timeline.perform(new Action<>(this) {
             @Override
             public ITemplate perform() {
-                var result = performer.move(deltaX, deltaY, deltaZ);
+                var result = getPerformer().move(deltaX, deltaY, deltaZ);
                 if (result == I18n.okMessage) {
                     // SIDE-EFFECT: decrease energy if player moved
                     changeEnergy(-(int) Math.sqrt(
                         Math.pow(deltaX, 2) +
-                        Math.pow(deltaY, 2) +
-                        Math.pow(deltaZ, 2)
+                            Math.pow(deltaY, 2) +
+                            Math.pow(deltaZ, 2)
                     ));
                 }
                 return result;
@@ -357,13 +358,13 @@ public abstract class Creature extends MapObject {
 
             @Override
             public ITemplate rollback() {
-                var result = performer.move(-deltaX, -deltaY, -deltaZ);
+                var result = getPerformer().move(-deltaX, -deltaY, -deltaZ);
                 if (result == I18n.okMessage) {
                     // SIDE-EFFECT: increase energy if player moved
                     changeEnergy((int) Math.sqrt(
                         Math.pow(deltaX, 2) +
-                        Math.pow(deltaY, 2) +
-                        Math.pow(deltaZ, 2)
+                            Math.pow(deltaY, 2) +
+                            Math.pow(deltaZ, 2)
                     ));
                 }
                 return result;
@@ -402,6 +403,14 @@ public abstract class Creature extends MapObject {
         return inventory;
     }
 
+    public Timeline getTimeline() {
+        return timeline;
+    }
+
+    public void setTimeline(Timeline value) {
+        timeline = value;
+    }
+
     // utilities
 
     protected int getXpForLevel(int lvl) {
@@ -412,12 +421,12 @@ public abstract class Creature extends MapObject {
 
     protected static boolean invalidDelta(int val, int delta) {
         return delta == 0
-               || delta < 0 && val + delta < 0;
+            || delta < 0 && val + delta < 0;
     }
 
     protected static boolean invalidDelta(int val, int delta, int max) {
         return delta == 0
-               || delta < 0 && val + delta < 0
-               || delta > 0 && val + delta > max;
+            || delta < 0 && val + delta < 0
+            || delta > 0 && val + delta > max;
     }
 }

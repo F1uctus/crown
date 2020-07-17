@@ -51,7 +51,24 @@ public class I18n {
      * from given {@code messageParts}.
      */
     public static ITemplate of(@NonNls Object... messageParts) {
-        return new Template(messageParts);
+        return new Template(messageParts) {
+            @Override
+            public boolean isRaw() {
+                return true;
+            }
+        };
+    }
+
+    /**
+     * Returns a non-localizable "raw" template.
+     */
+    public static ITemplate raw(@NonNls Object... messageParts) {
+        return new Template(messageParts) {
+            @Override
+            public boolean isRaw() {
+                return true;
+            }
+        };
     }
 
     /**

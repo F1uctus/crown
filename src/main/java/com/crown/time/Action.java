@@ -6,14 +6,35 @@ import com.crown.i18n.ITemplate;
 import org.jetbrains.annotations.NonNls;
 
 import java.lang.reflect.Method;
+import java.time.Instant;
 
 public abstract class Action<T extends Creature> {
-    public final TimePoint point;
-    public final T performer;
+    private Instant point;
+    private T performer;
 
     public Action(T performer) {
         point = Timeline.getGameClock().now();
         this.performer = performer;
+    }
+
+    public abstract ITemplate perform();
+
+    public abstract ITemplate rollback();
+
+    public Instant getPoint() {
+        return point;
+    }
+
+    public void setPoint(Instant value) {
+        point = value;
+    }
+
+    public T getPerformer() {
+        return performer;
+    }
+
+    public void setPerformer(T value) {
+        performer = value;
     }
 
     public static Action<Creature> change(Creature c, @NonNls String changerMethodName, int delta) {
@@ -30,7 +51,7 @@ public abstract class Action<T extends Creature> {
             @Override
             public ITemplate perform() {
                 try {
-                    return (ITemplate) m.invoke(c, delta);
+                    return (ITemplate) m.invoke(getPerformer(), delta);
                 } catch (Throwable e) {
                     return I18n.of(e.getMessage());
                 }
@@ -39,15 +60,11 @@ public abstract class Action<T extends Creature> {
             @Override
             public ITemplate rollback() {
                 try {
-                    return (ITemplate) m.invoke(c, -delta);
+                    return (ITemplate) m.invoke(getPerformer(), -delta);
                 } catch (Throwable e) {
                     return I18n.of(e.getMessage());
                 }
             }
         };
     }
-
-    public abstract ITemplate perform();
-
-    public abstract ITemplate rollback();
 }

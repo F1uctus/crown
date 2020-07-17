@@ -1,6 +1,9 @@
 package com.crown.common;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
@@ -10,7 +13,7 @@ import java.util.UUID;
  * using {@link ObjectsMap#withPredefinedItems()}.
  * Internally, uses object UUIDs as hash map keys.
  */
-public class ObjectsMap<T extends NamedObject> {
+public class ObjectsMap<T extends NamedObject> implements Iterable<T> {
     protected final LinkedHashMap<UUID, T> byIdMap = new LinkedHashMap<>();
     protected final LinkedHashMap<String, T> byKeyNameMap = new LinkedHashMap<>();
 
@@ -31,6 +34,18 @@ public class ObjectsMap<T extends NamedObject> {
         return byKeyNameMap.getOrDefault(keyName, null);
     }
 
+    public void remove(UUID id) {
+        var obj = byIdMap.get(id);
+        byIdMap.remove(obj.getId());
+        byKeyNameMap.remove(obj.getKeyName());
+    }
+
+    public void remove(String keyName) {
+        var obj = byKeyNameMap.get(keyName);
+        byIdMap.remove(obj.getId());
+        byKeyNameMap.remove(obj.getKeyName());
+    }
+
     public void remove(T obj) {
         byIdMap.remove(obj.getId());
         byKeyNameMap.remove(obj.getKeyName());
@@ -38,5 +53,19 @@ public class ObjectsMap<T extends NamedObject> {
 
     public Collection<T> values() {
         return byIdMap.values();
+    }
+
+    public int size() {
+        return byIdMap.size();
+    }
+
+    public T first() {
+        return byIdMap.values().stream().findFirst().orElse(null);
+    }
+
+    @NotNull
+    @Override
+    public Iterator<T> iterator() {
+        return this.values().iterator();
     }
 }

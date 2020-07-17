@@ -6,5 +6,9 @@ public interface ITemplate {
         return getLocalized("en");
     }
 
+    default boolean isRaw() {
+        return false;
+    }
+
     String getLocalized(String langName);
 }
