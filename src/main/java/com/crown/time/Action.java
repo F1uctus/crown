@@ -6,28 +6,17 @@ import com.crown.i18n.ITemplate;
 import org.jetbrains.annotations.NonNls;
 
 import java.lang.reflect.Method;
-import java.time.Instant;
 
 public abstract class Action<T extends Creature> {
-    private Instant point;
     private T performer;
 
     public Action(T performer) {
-        point = Timeline.getGameClock().now();
         this.performer = performer;
     }
 
     public abstract ITemplate perform();
 
     public abstract ITemplate rollback();
-
-    public Instant getPoint() {
-        return point;
-    }
-
-    public void setPoint(Instant value) {
-        point = value;
-    }
 
     public T getPerformer() {
         return performer;

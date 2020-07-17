@@ -14,7 +14,7 @@ import java.util.TimerTask;
 public class VirtualClock {
     public final int secondLength;
 
-    private Timestamp timePoint;
+    private Instant timePoint;
     private Timer timer;
     private final Runnable tickAction;
     private final ObjectsMap<TimelineMirrorAction> instantActions = new ObjectsMap<>();
@@ -40,14 +40,14 @@ public class VirtualClock {
         long end = Timestamp.from(Instant.now()).getTime();
         long diff = end - begin + 1;
         return startAt(
-            new Timestamp(begin + (long) (Math.random() * diff))
+            new Timestamp(begin + (long) (Math.random() * diff)).toInstant()
         );
     }
 
     /**
      * Starts this instance of clock at specified time point.
      */
-    public VirtualClock startAt(Timestamp point) {
+    public VirtualClock startAt(Instant point) {
         if (timer != null) {
             timer.cancel();
             timer.purge();
@@ -73,10 +73,13 @@ public class VirtualClock {
             @Override
             public void run() {
                 elapsedMilliseconds += period;
+                // this is done to avoid overriding actions
+                // that happen almost simultaneously (in bounds of 1 game-second)
+                timePoint = timePoint.plusNanos(1);
                 // Doing clock units increment if needed
                 if (elapsedMilliseconds >= secondLength) {
                     elapsedMilliseconds = 0;
-                    timePoint = new Timestamp(timePoint.getTime() + 1000);
+                    timePoint = timePoint.plusSeconds(1);
                     tickAction.run();
                 }
                 for (var a : instantActions) {
@@ -104,6 +107,6 @@ public class VirtualClock {
      * Returns instant time of this clock.
      */
     public Instant now() {
-        return timePoint.toInstant();
+        return timePoint;
     }
 }

@@ -8,8 +8,7 @@ import com.rits.cloning.Cloner;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * A timeline for game events.
@@ -38,8 +37,8 @@ public class Timeline {
 
     private final TimelineMirrorAction mirrorAction = new TimelineMirrorAction(this);
     private final BaseGameState gameState;
-    final ArrayList<Action<?>> performedActions = new ArrayList<>();
-    final TreeMap<Instant, Action<?>> pendingActions = new TreeMap<>();
+    final ConcurrentSkipListMap<Instant, Action<?>> performedActions = new ConcurrentSkipListMap<>();
+    final ConcurrentSkipListMap<Instant, Action<?>> pendingActions = new ConcurrentSkipListMap<>();
 
     public Timeline(BaseGameState gameState) {
         this.gameState = gameState;
@@ -66,21 +65,20 @@ public class Timeline {
     }
 
     public <T extends Creature> ITemplate perform(Action<T> action) {
-        performedActions.add(action);
+        var now = clock.now();
+        performedActions.put(now, action);
         var result = action.perform();
         // mirror actions from main timeline to alternative
         if (this == main && alternative != null) {
             var cloner = new Cloner();
-            // skip cloning properties, they're replaced in alternative timeline
+            // skip cloning performer, it is replaced in alternative timeline
             cloner.nullInsteadOfClone(action.getPerformer().getClass());
-            cloner.nullInsteadOfClone(action.getPoint().getClass());
             var alternativeAction = cloner.deepClone(action);
             // player from alternative timeline has exactly
             // the same type as player from main.
             // noinspection unchecked
             alternativeAction.setPerformer((T) alternative.gameState.players.get(action.getPerformer().getKeyName()));
-            alternativeAction.setPoint(action.getPoint().minus(offsetToMain));
-            alternative.pendingActions.put(alternativeAction.getPoint(), alternativeAction);
+            alternative.pendingActions.put(now.minus(offsetToMain), alternativeAction);
         }
         return result;
     }
@@ -93,12 +91,12 @@ public class Timeline {
     private void rollbackTo(Instant point) {
         // Throws ConcurrentModificationException, so
         // noinspection ForLoopReplaceableByForEach
-        for (int i = 0; i < performedActions.size(); i++) {
-            Action<?> a = performedActions.get(i);
-            if (a.getPoint().isAfter(point)) {
-                a.rollback();
-                performedActions.remove(a);
-                pendingActions.put(a.getPoint().minus(offsetToMain), a);
+        for (Instant actionPoint : performedActions.keySet()) {
+            if (actionPoint.isAfter(point)) {
+                var action = performedActions.get(actionPoint);
+                action.rollback();
+                performedActions.remove(actionPoint);
+                pendingActions.put(actionPoint, action);
             }
         }
         // scheduling clock to make actions from
@@ -111,38 +109,33 @@ public class Timeline {
      * to specified {@code point} in the new timeline.
      * Returns a copy of provided creature moved
      * to the alternative timeline in the past.
+     * Original traveller is renamed, his id is changed.
      */
-    public static Creature moveToThePast(Creature traveller, Instant point) {
-        // Ensure we're travelling into past
+    public static void moveToThePast(Creature traveller, Instant point) {
+        // ensure we're travelling into past
         assert point.isBefore(clock.now());
+        var timelinePresent = traveller.getTimeline();
 
         var cloner = new Cloner();
         cloner.setDumpClonedClasses(true);
-        var timelineClone = cloner.deepClone(traveller.getTimeline());
-        alternative = timelineClone;
-        timelineClone.offsetToMain = Duration.between(point, clock.now());
+        alternative = cloner.deepClone(timelinePresent);
+        alternative.offsetToMain = Duration.between(point, clock.now());
 
-        // clear fields to unbind player from any environment
-        var mapFromPast = timelineClone.gameState.players.get(traveller.getKeyName()).getMap();
-        traveller.setMap(null);
-        traveller.getTimeline().gameState.players.remove(traveller);
-        traveller.setTimeline(null);
+        // rebind player from future to the past
+        var mapFromPast = alternative.gameState.players.get(traveller.getKeyName()).getMap();
+        timelinePresent.gameState.players.remove(traveller);
+        traveller.setMap(mapFromPast);
+        traveller.setTimeline(alternative);
+
         // noinspection HardCodedStringLiteral
         traveller.setKeyName(traveller.getKeyName() + "::clone");
         traveller.newId();
 
-        // making a copy for the new timeline
-        var travellerClone = cloner.deepClone(traveller);
-
         // binding clone from future to the cloned timeline
-        travellerClone.setTimeline(timelineClone);
-        travellerClone.setMap(mapFromPast);
+        alternative.gameState.players.add(traveller);
 
         // rolling timeline back to the past
-        timelineClone.rollbackTo(point);
-
-        timelineClone.gameState.players.add(travellerClone);
-        return travellerClone;
+        alternative.rollbackTo(point);
     }
 
     /**
@@ -156,6 +149,7 @@ public class Timeline {
             return I18n.of("commit.mainTimeline");
         }
         getGameClock().cancelAction(mirrorAction);
+        // original player is getting deleted
         var originalPlayer = tl.gameState.players.get(
             cloned.getKeyName().replace("::clone", "")
         );

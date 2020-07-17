@@ -13,11 +13,11 @@ public class TimelineMirrorAction extends NamedObject implements Runnable {
 
     @Override
     public void run() {
-        timeline.pendingActions.forEach((timePoint, action) -> {
-            if (timePoint.isBefore(Timeline.getGameClock().now())) {
+        timeline.pendingActions.forEach((actionTimePoint, action) -> {
+            if (actionTimePoint.isBefore(Timeline.getGameClock().now().minus(timeline.getOffsetToMain()))) {
                 action.perform();
-                timeline.pendingActions.remove(action.getPoint());
-                timeline.performedActions.add(action);
+                timeline.pendingActions.remove(actionTimePoint);
+                timeline.performedActions.put(actionTimePoint, action);
             }
         });
     }
