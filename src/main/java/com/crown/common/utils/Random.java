@@ -1,9 +1,6 @@
 package com.crown.common.utils;
 
-import com.crown.maps.Map;
-import com.crown.maps.MapObject;
-import com.crown.maps.MapWeight;
-import com.crown.maps.Point3D;
+import com.crown.maps.*;
 
 import java.util.HashSet;
 import java.util.UUID;
@@ -30,13 +27,24 @@ public class Random {
     }
 
     /**
-     * Returns a [truly] random point on given map.
+     * Returns a random point on given map.
      */
-    public static Point3D getPoint(Map m) {
+    public static Point3D getPoint(Map map) {
         return new Point3D(
-            rnd.nextInt(m.xSize),
-            rnd.nextInt(m.ySize),
-            rnd.nextInt(m.zSize)
+            rnd.nextInt(map.xSize),
+            rnd.nextInt(map.ySize),
+            rnd.nextInt(map.zSize)
+        );
+    }
+
+    /**
+     * Returns a random point on given map for object with specified size.
+     */
+    public static Point3D getPoint(Map map, int xSize, int ySize) {
+        return new Point3D(
+            rnd.nextInt(map.xSize - xSize),
+            rnd.nextInt(map.ySize - ySize),
+            rnd.nextInt(map.zSize)
         );
     }
 
@@ -74,7 +82,7 @@ public class Random {
      *                (e.g to get point with z = 1 exactly,
      *                invoke it with Point3D(-1, -1, 1)).
      */
-    public static Point3D getFreePoint(
+    static Point3D getFreePoint(
         Map m,
         Point3D fixedPt,
         long maxAttempts

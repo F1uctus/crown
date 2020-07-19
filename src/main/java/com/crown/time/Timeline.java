@@ -33,10 +33,9 @@ public class Timeline {
      * Time difference of [main timeline] - [this timeline].
      * Equal to 0 for main timeline, obviously.
      */
-    private Duration offsetToMain;
-
-    private final TimelineMirrorAction mirrorAction = new TimelineMirrorAction(this);
-    private final BaseGameState gameState;
+    Duration offsetToMain;
+    final TimelineMirrorAction mirrorAction = new TimelineMirrorAction(this);
+    final BaseGameState gameState;
     final ConcurrentSkipListMap<Instant, Action<?>> performedActions = new ConcurrentSkipListMap<>();
     final ConcurrentSkipListMap<Instant, Action<?>> pendingActions = new ConcurrentSkipListMap<>();
 
@@ -72,12 +71,12 @@ public class Timeline {
         if (this == main && alternative != null) {
             var cloner = new Cloner();
             // skip cloning performer, it is replaced in alternative timeline
-            cloner.nullInsteadOfClone(action.getPerformer().getClass());
+            cloner.nullInsteadOfClone(action.getTarget().getClass());
             var alternativeAction = cloner.deepClone(action);
             // player from alternative timeline has exactly
             // the same type as player from main.
             // noinspection unchecked
-            alternativeAction.setPerformer((T) alternative.gameState.players.get(action.getPerformer().getKeyName()));
+            alternativeAction.setTarget((T) alternative.gameState.players.get(action.getTarget().getKeyName()));
             alternative.pendingActions.put(now.minus(offsetToMain), alternativeAction);
         }
         return result;
@@ -89,8 +88,6 @@ public class Timeline {
      * and then re-schedules these actions to "future" of this timeline.
      */
     private void rollbackTo(Instant point) {
-        // Throws ConcurrentModificationException, so
-        // noinspection ForLoopReplaceableByForEach
         for (Instant actionPoint : performedActions.keySet()) {
             if (actionPoint.isAfter(point)) {
                 var action = performedActions.get(actionPoint);
@@ -139,49 +136,55 @@ public class Timeline {
     }
 
     /**
-     * Commits all changes made by {@code cloned}.
-     * (Makes creature's timeline the main one).
+     * Commits all changes made traveller.
+     * (Makes traveller's timeline the main one).
      */
     @SuppressWarnings("HardCodedStringLiteral")
-    public ITemplate commitChanges(Creature cloned) {
-        var tl = cloned.getTimeline();
+    public static ITemplate commitChanges(Creature traveller) {
+        var tl = traveller.getTimeline();
         if (tl == null || tl == main) {
             return I18n.of("commit.mainTimeline");
         }
-        getGameClock().cancelAction(mirrorAction);
-        // original player is getting deleted
-        var originalPlayer = tl.gameState.players.get(
-            cloned.getKeyName().replace("::clone", "")
-        );
-        tl.gameState.players.remove(originalPlayer.getKeyName());
-        originalPlayer.setMap(null);
-        originalPlayer.setTimeline(null);
-        tl.gameState.rename(cloned, originalPlayer.getKeyName());
-        setMain(tl);
+        getGameClock().freeze(tl, () -> {
+            var originalPlayerName =
+                traveller.getKeyName().replace("::clone", "");
+            // original player is getting deleted
+            var originalPlayer = tl.gameState.players.get(originalPlayerName);
+            tl.gameState.players.remove(originalPlayerName);
+            originalPlayer.setMap(null);
+            originalPlayer.setTimeline(null);
+            tl.gameState.rename(traveller, originalPlayerName);
+            setMain(tl);
+            alternative = null;
+        });
         return I18n.okMessage;
     }
 
     /**
-     * Undoes all changes made by {@code cloned} in the alternative timeline.
-     * Drops cloned creature back to the main timeline.
+     * Undoes all changes made by traveller in the alternative timeline.
+     * Drops traveller back to the main timeline.
      * Returns original player's key name.
      */
     @SuppressWarnings("HardCodedStringLiteral")
-    public ITemplate rollbackChanges(Creature cloned) {
-        var tl = cloned.getTimeline();
+    public static ITemplate rollbackChanges(Creature traveller) {
+        var tl = traveller.getTimeline();
         if (tl == null || tl == main) {
             return I18n.of("rollback.mainTimeline");
         }
         if (main.gameState.players.size() == 0) {
             return I18n.of("rollback.mainTimelineEmpty");
         }
-        getGameClock().cancelAction(mirrorAction);
-        var originalPlayer = cloned.getTimeline().gameState.players.get(
-            cloned.getKeyName().replace("::clone", "")
+        var originalPlayer = tl.gameState.players.get(
+            traveller.getKeyName().replace("::clone", "")
         );
-        originalPlayer.setMap(main.gameState.players.first().getMap());
-        originalPlayer.setTimeline(main);
-        main.gameState.players.add(originalPlayer);
+        getGameClock().freeze(tl, () -> {
+            originalPlayer.setMap(main.gameState.players.first().getMap());
+            originalPlayer.setTimeline(main);
+            traveller.setMap(null);
+            traveller.setTimeline(null);
+            main.gameState.players.add(originalPlayer);
+            alternative = null;
+        });
         return I18n.raw(originalPlayer.getKeyName());
     }
 }

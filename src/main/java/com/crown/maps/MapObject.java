@@ -81,13 +81,10 @@ public abstract class MapObject extends NamedObject {
         return map;
     }
 
-    public void setMap(Map value) {
-        if (value == null) {
-            map.remove(this);
-        } else {
-            value.add(this);
-        }
-        map = value;
+    public void setMap(Map map) {
+        if (this.map != null) this.map.remove(this);
+        if (map != null) map.add(this);
+        this.map = map;
     }
 
     public abstract MapIcon<?> getMapIcon();

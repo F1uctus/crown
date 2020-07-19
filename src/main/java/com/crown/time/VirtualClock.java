@@ -3,10 +3,12 @@ package com.crown.time;
 import com.crown.common.ObjectsMap;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Simplified clock logic for virtual game time.
@@ -14,6 +16,7 @@ import java.util.TimerTask;
 public class VirtualClock {
     public final int secondLength;
 
+    private boolean paused = false;
     private Instant timePoint;
     private Timer timer;
     private final Runnable tickAction;
@@ -58,8 +61,6 @@ public class VirtualClock {
         return this;
     }
 
-    private int elapsedMilliseconds = 0;
-
     /**
      * Schedules time units increment
      * and {@link VirtualClock#tickAction} running every
@@ -67,26 +68,34 @@ public class VirtualClock {
      */
     private void start() {
         timer = new Timer();
-        elapsedMilliseconds = 0;
         final int period = 10;
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                elapsedMilliseconds += period;
-                // this is done to avoid overriding actions
-                // that happen almost simultaneously (in bounds of 1 game-second)
-                timePoint = timePoint.plusNanos(1);
-                // Doing clock units increment if needed
-                if (elapsedMilliseconds >= secondLength) {
-                    elapsedMilliseconds = 0;
-                    timePoint = timePoint.plusSeconds(1);
+                if (!paused) {
+                    timePoint = timePoint.plusMillis(period);
                     tickAction.run();
-                }
-                for (var a : instantActions) {
-                    a.run();
+                    for (var a : instantActions) {
+                        a.run();
+                    }
                 }
             }
         }, 0, period);
+    }
+
+    /**
+     * <pre>
+     * - pauses the clock
+     * - cancels timeline mirroring actions
+     * - performs an action (commit/rollback logic)
+     * - resumes the clock
+     * </pre>
+     */
+    void freeze(Timeline t, Runnable action) {
+        paused = true;
+        cancelAction(t.mirrorAction);
+        action.run();
+        paused = false;
     }
 
     /**

@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import rlforj.IBoard;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 public abstract class Map extends NamedObject implements IBoard, Serializable {
@@ -39,12 +40,34 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
     public abstract MapIcon<?> getEmptyIcon();
 
     /**
+     * Returns all objects of given type inside the area with given
+     * center point and radius.
+     */
+    public <T extends MapObject> ArrayList<T> getAll(
+        Class<T> ofType,
+        Point3D centerPoint,
+        int inRadius
+    ) {
+        var targets = new ArrayList<T>();
+        var rangeObjsMatrix = getRaw2DArea(centerPoint, inRadius);
+        for (var objRow : rangeObjsMatrix) {
+            for (var obj : objRow) {
+                if (ofType.isInstance(obj)) {
+                    // noinspection unchecked
+                    targets.add((T) obj);
+                }
+            }
+        }
+        return targets;
+    }
+
+    /**
      * Returns 3D area for map region with given radius.
      * Objects with Z-coordinate <= to point.z are returned.
      */
-    public @Nullable MapObject[][][] getRaw3DArea(Point3D pt, int radius) {
+    public @Nullable MapObject[][][] getRaw3DArea(Point3D centerPoint, int radius) {
         final int diameter = radius * 2 + 1;
-        int ptZ = pt.z + 1;
+        int ptZ = centerPoint.z + 1;
         int height = ptZ > 0 && ptZ < zSize ? ptZ : zSize;
 
         MapObject[][][] area = new MapObject[height][diameter][diameter];
@@ -52,9 +75,9 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
         int areaZ = 0;
         for (int z = 0; z < height; z++) {
             int areaY = 0;
-            for (int y = pt.y - radius; y <= pt.y + radius; y++) {
+            for (int y = centerPoint.y - radius; y <= centerPoint.y + radius; y++) {
                 int areaX = 0;
-                for (int x = pt.x - radius; x <= pt.x + radius; x++) {
+                for (int x = centerPoint.x - radius; x <= centerPoint.x + radius; x++) {
                     if (contains(x, y)) {
                         area[areaZ][areaY][areaX] = get(x, y, z);
                     }
@@ -71,8 +94,8 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
      * Returns 3D area for map region with given radius.
      * Icons with Z-coordinate <= to point.z are returned.
      */
-    public MapIcon<?>[][][] get3DArea(Point3D pt, int radius) {
-        var area = getRaw3DArea(pt, radius);
+    public MapIcon<?>[][][] get3DArea(Point3D centerPoint, int radius) {
+        var area = getRaw3DArea(centerPoint, radius);
         var icons = new MapIcon<?>[area.length][area[0].length][area[0][0].length];
         for (int z = 0; z < area.length; z++) {
             for (int y = 0; y < area[0].length; y++) {
@@ -94,18 +117,18 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
      * e. g. if you pass z = 3 for each map point you will get
      * object with the highest z position if it is <= 3.
      */
-    public @Nullable MapObject[][] getRaw2DArea(Point3D pt, int radius) {
+    public @Nullable MapObject[][] getRaw2DArea(Point3D centerPoint, int radius) {
         final int diameter = radius * 2 + 1;
         MapObject[][] area = new MapObject[diameter][diameter];
 
-        int ptZ = pt.z + 1;
+        int ptZ = centerPoint.z + 1;
         int height = ptZ > 0 && ptZ < zSize ? ptZ : zSize;
 
         for (int z = 0; z < height; z++) {
             int areaY = 0;
-            for (int y = pt.y - radius; y <= pt.y + radius; y++) {
+            for (int y = centerPoint.y - radius; y <= centerPoint.y + radius; y++) {
                 int areaX = 0;
-                for (int x = pt.x - radius; x <= pt.x + radius; x++) {
+                for (int x = centerPoint.x - radius; x <= centerPoint.x + radius; x++) {
                     if (contains(x, y)) {
                         area[areaY][areaX] = get(x, y, z);
                     }
@@ -123,8 +146,8 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
      * e. g. if you pass z = 3 for each map point you will get
      * icon of object with the highest z position if it is <= 3.
      */
-    public MapIcon<?>[][] get2DArea(Point3D pt, int radius) {
-        var area = getRaw2DArea(pt, radius);
+    public MapIcon<?>[][] get2DArea(Point3D centerPoint, int radius) {
+        var area = getRaw2DArea(centerPoint, radius);
         var icons = new MapIcon<?>[area.length][area.length];
         for (int y = 0; y < area.length; y++) {
             for (int x = 0; x < area.length; x++) {

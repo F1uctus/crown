@@ -6,6 +6,14 @@ class FormatTemplate implements ITemplate {
     private final String message;
     private final Object[] formatArgs;
 
+    /**
+     * A lozalizable message template that can be formatted.
+     * Message is usually a resource key name, or simply a string
+     * with formatting marks, for example:
+     * <pre>
+     * "{0} picked up a {1}"
+     * </pre>
+     */
     public FormatTemplate(String message, Object... formatArgs) {
         this.message = message;
         this.formatArgs = formatArgs;
@@ -32,7 +40,6 @@ class FormatTemplate implements ITemplate {
             fArgs[i] = part.toString();
         }
         String pattern = I18n.has(langName, message) ? I18n.get(langName, message) : message;
-        // noinspection RedundantCast
         result.append(MessageFormat.format(pattern, (Object[]) fArgs));
         return result.toString();
     }

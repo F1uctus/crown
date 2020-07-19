@@ -8,14 +8,14 @@ import com.crown.time.Action;
 import com.crown.time.Timeline;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Main class for every in-game creature.
  * Methods with {@code By}-suffix are used for creature
  * to make some action, while methods with same name,
  * but without {@code By}-suffix contain internal (non-timeline)
- * logic that can be overridden by successors.
+ * logic that can be overridden by successors, and used inside
+ * timeline-logic implementation.
  */
 public abstract class Creature extends MapObject {
     protected int maxHp;
@@ -35,8 +35,11 @@ public abstract class Creature extends MapObject {
     protected int skillPoints = 0;
 
     private Timeline timeline;
-    private final List<InventoryItem> inventory = new ArrayList<>();
+    private final ArrayList<InventoryItem> inventory = new ArrayList<>();
 
+    /**
+     * Adds a new creature to the main timeline.
+     */
     public Creature(
         String name,
         Map map,
@@ -94,7 +97,7 @@ public abstract class Creature extends MapObject {
     /**
      * Internal logic, may be overridden if needed.
      */
-    protected ITemplate changeHp(int delta) {
+    public ITemplate changeHp(int delta) {
         if (invalidDelta(hp, delta, maxHp)) {
             return I18n.invalidDeltaMessage;
         }
@@ -139,7 +142,7 @@ public abstract class Creature extends MapObject {
     /**
      * Internal logic, may be overridden if needed.
      */
-    protected ITemplate changeEnergy(int delta) {
+    public ITemplate changeEnergy(int delta) {
         if (invalidDelta(energy, delta, maxEnergy)) {
             return I18n.invalidDeltaMessage;
         }
@@ -176,7 +179,7 @@ public abstract class Creature extends MapObject {
     /**
      * Internal logic, may be overridden if needed.
      */
-    protected ITemplate changeSpeed(int delta) {
+    public ITemplate changeSpeed(int delta) {
         if (invalidDelta(speed, delta, maxSpeed)) {
             return I18n.invalidDeltaMessage;
         }
@@ -213,7 +216,7 @@ public abstract class Creature extends MapObject {
     /**
      * Internal logic, may be overridden if needed.
      */
-    protected ITemplate changeFov(int delta) {
+    public ITemplate changeFov(int delta) {
         if (invalidDelta(fov, delta, maxFov)) {
             return I18n.invalidDeltaMessage;
         }
@@ -243,7 +246,7 @@ public abstract class Creature extends MapObject {
     /**
      * Internal logic, may be overridden if needed.
      */
-    protected ITemplate changeXp(int delta) {
+    public ITemplate changeXp(int delta) {
         if (invalidDelta(xp, delta)) {
             return I18n.invalidDeltaMessage;
         }
@@ -283,7 +286,7 @@ public abstract class Creature extends MapObject {
     /**
      * Internal logic, may be overridden if needed.
      */
-    protected ITemplate changeLevel(int delta) {
+    public ITemplate changeLevel(int delta) {
         if (invalidDelta(level, delta)) {
             return I18n.invalidDeltaMessage;
         }
@@ -314,7 +317,7 @@ public abstract class Creature extends MapObject {
     /**
      * Internal logic, may be overridden if needed.
      */
-    protected ITemplate changeSkillPoints(int delta) {
+    public ITemplate changeSkillPoints(int delta) {
         if (invalidDelta(skillPoints, delta)) {
             return I18n.invalidDeltaMessage;
         }
@@ -344,7 +347,7 @@ public abstract class Creature extends MapObject {
         return timeline.perform(new Action<>(this) {
             @Override
             public ITemplate perform() {
-                var result = getPerformer().move(deltaX, deltaY, deltaZ);
+                var result = getTarget().move(deltaX, deltaY, deltaZ);
                 if (result == I18n.okMessage) {
                     // SIDE-EFFECT: decrease energy if player moved
                     changeEnergy(-(int) Math.sqrt(
@@ -358,7 +361,7 @@ public abstract class Creature extends MapObject {
 
             @Override
             public ITemplate rollback() {
-                var result = getPerformer().move(-deltaX, -deltaY, -deltaZ);
+                var result = getTarget().move(-deltaX, -deltaY, -deltaZ);
                 if (result == I18n.okMessage) {
                     // SIDE-EFFECT: increase energy if player moved
                     changeEnergy((int) Math.sqrt(
@@ -377,7 +380,7 @@ public abstract class Creature extends MapObject {
      * Creature's energy remains UNCHANGED.
      * May be overridden if needed.
      */
-    protected ITemplate move(int deltaX, int deltaY, int deltaZ) {
+    public ITemplate move(int deltaX, int deltaY, int deltaZ) {
         var tgtPos = getPt0().plus(new Point3D(deltaX, deltaY, deltaZ));
         var tgtObj = getMap().get(tgtPos);
         if (getMap().contains(tgtPos)
@@ -399,7 +402,7 @@ public abstract class Creature extends MapObject {
     /**
      * Returns creature's inventory items.
      */
-    public List<InventoryItem> getInventory() {
+    public ArrayList<InventoryItem> getInventory() {
         return inventory;
     }
 
@@ -413,17 +416,29 @@ public abstract class Creature extends MapObject {
 
     // utilities
 
+    /**
+     * Returns an absolute experience required to achieve some level.
+     * Original implementation is picked from a Steam users level system.
+     */
     protected int getXpForLevel(int lvl) {
         int lvl10 = lvl / 10;
         int lvlRem = lvl % 10;
         return 500 * (lvl10 * lvl10 + lvl10) + (lvlRem * (100 * lvl10 + 100));
     }
 
+    /**
+     * Utility function used to check if creature property changed by delta
+     * is always greater or equal to zero.
+     */
     protected static boolean invalidDelta(int val, int delta) {
         return delta == 0
             || delta < 0 && val + delta < 0;
     }
 
+    /**
+     * Utility function used to check if creature property changed by delta
+     * is always greater or equal to zero and less than given max value.
+     */
     protected static boolean invalidDelta(int val, int delta, int max) {
         return delta == 0
             || delta < 0 && val + delta < 0

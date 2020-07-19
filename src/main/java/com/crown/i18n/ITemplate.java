@@ -6,6 +6,9 @@ public interface ITemplate {
         return getLocalized("en");
     }
 
+    /**
+     * Indicates if this template is non-localizable.
+     */
     default boolean isRaw() {
         return false;
     }

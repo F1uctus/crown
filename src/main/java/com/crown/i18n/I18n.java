@@ -3,9 +3,7 @@ package com.crown.i18n;
 import org.jetbrains.annotations.NonNls;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Game messages internationalization utilities.
@@ -75,6 +73,10 @@ public class I18n {
      * Returns a internationalization {@link FormatTemplate}
      * from message with given {@code resourceKey}
      * formatted with specified {@code format} objects.
+     * Example of usage:
+     * <pre>
+     *     fmtOf("{0} picked up a {1}", player.getName(), item.getName())
+     * </pre>
      */
     public static ITemplate fmtOf(String message, Object... formatArgs) {
         return new FormatTemplate(message, formatArgs);
@@ -86,9 +88,9 @@ public class I18n {
      * {@code "increased"} or {@code "decreased"} string
      * based on sign of given {@code delta}.
      * <p>
-     * Example:
+     * Example of usage:
      * <pre>
-     *     changeableOf("stats.xp.{0}", -1")
+     *     changeableOf("stats.xp.{0}", -1)
      * </pre>
      * returns template with resource key {@code "stats.xp.decreased"}.
      */
