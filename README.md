@@ -113,6 +113,5 @@ I18n.init(bundles);
 ## Time-travelling API implementation overview
 
 I tried to keep diagram as simple as possible, but feel free to report any inconvenience.
-It is a bit deprecated now. New diagram is WIP.
 
 ![Crown time travelling API overview](/images/crown-timelines-overview.png)
