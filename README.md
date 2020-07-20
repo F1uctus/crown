@@ -17,7 +17,7 @@
 | `com.crown.i18n`         | Internationalization helpers
 | `com.crown.maps`         | 3D / 2D(tiled) maps logic
 | `com.crown.skills`       | `Creature` skills API
-| `com.crown.time`         | `VirtualClock` implementation + `Timeline` (time-travelling API - a bit unstable)
+| `com.crown.time`         | `VirtualClock` implementation + `Timeline` (time-travelling API - may be unstable in some cases, please report any issues)
 | `com.crown.common.utils` | `Random` class extensions, RPG-specific
 
 ## Usage
