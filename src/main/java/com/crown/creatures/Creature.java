@@ -12,9 +12,10 @@ import java.util.ArrayList;
 /**
  * Main class for every in-game creature.
  * Methods with {@code By}-suffix are used for creature
- * to make some action, while methods with same name,
- * but without {@code By}-suffix contain internal (non-timeline)
- * logic that can be overridden by successors, and used inside
+ * to make some action, and are safe
+ * (any inconvenience is checked before doing any action).
+ * And methods with same name, but without {@code By}-suffix contain internal
+ * (non-timeline) logic that can be overridden by successors, and used inside
  * timeline-logic implementation.
  */
 public abstract class Creature extends MapObject {
@@ -91,6 +92,9 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate changeHpBy(int delta) {
+        if (invalidDelta(hp, delta, maxHp)) {
+            return I18n.invalidDeltaMessage;
+        }
         return timeline.perform(Action.change(this, "changeHp", delta));
     }
 
@@ -98,9 +102,6 @@ public abstract class Creature extends MapObject {
      * Internal logic, may be overridden if needed.
      */
     public ITemplate changeHp(int delta) {
-        if (invalidDelta(hp, delta, maxHp)) {
-            return I18n.invalidDeltaMessage;
-        }
         hp += delta;
         return I18n.okMessage;
     }
@@ -136,6 +137,9 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate changeEnergyBy(int delta) {
+        if (invalidDelta(energy, delta, maxEnergy)) {
+            return I18n.invalidDeltaMessage;
+        }
         return timeline.perform(Action.change(this, "changeEnergy", delta));
     }
 
@@ -143,9 +147,6 @@ public abstract class Creature extends MapObject {
      * Internal logic, may be overridden if needed.
      */
     public ITemplate changeEnergy(int delta) {
-        if (invalidDelta(energy, delta, maxEnergy)) {
-            return I18n.invalidDeltaMessage;
-        }
         energy += delta;
         return I18n.okMessage;
     }
@@ -173,6 +174,9 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate changeSpeedBy(int delta) {
+        if (invalidDelta(speed, delta, maxSpeed)) {
+            return I18n.invalidDeltaMessage;
+        }
         return timeline.perform(Action.change(this, "changeSpeed", delta));
     }
 
@@ -180,9 +184,6 @@ public abstract class Creature extends MapObject {
      * Internal logic, may be overridden if needed.
      */
     public ITemplate changeSpeed(int delta) {
-        if (invalidDelta(speed, delta, maxSpeed)) {
-            return I18n.invalidDeltaMessage;
-        }
         speed += delta;
         return I18n.okMessage;
     }
@@ -210,6 +211,9 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate changeFovBy(int delta) {
+        if (invalidDelta(fov, delta, maxFov)) {
+            return I18n.invalidDeltaMessage;
+        }
         return timeline.perform(Action.change(this, "changeFov", delta));
     }
 
@@ -217,9 +221,6 @@ public abstract class Creature extends MapObject {
      * Internal logic, may be overridden if needed.
      */
     public ITemplate changeFov(int delta) {
-        if (invalidDelta(fov, delta, maxFov)) {
-            return I18n.invalidDeltaMessage;
-        }
         fov += delta;
         return I18n.okMessage;
     }
@@ -240,6 +241,9 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate changeXpBy(int delta) {
+        if (invalidDelta(xp, delta)) {
+            return I18n.invalidDeltaMessage;
+        }
         return timeline.perform(Action.change(this, "changeXp", delta));
     }
 
@@ -247,9 +251,6 @@ public abstract class Creature extends MapObject {
      * Internal logic, may be overridden if needed.
      */
     public ITemplate changeXp(int delta) {
-        if (invalidDelta(xp, delta)) {
-            return I18n.invalidDeltaMessage;
-        }
         xp += delta;
         if (delta > 0) {
             while (xp > getXpForLevel(level)) {
@@ -280,6 +281,9 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate changeLevelBy(int delta) {
+        if (invalidDelta(level, delta)) {
+            return I18n.invalidDeltaMessage;
+        }
         return timeline.perform(Action.change(this, "changeLevel", delta));
     }
 
@@ -287,11 +291,8 @@ public abstract class Creature extends MapObject {
      * Internal logic, may be overridden if needed.
      */
     public ITemplate changeLevel(int delta) {
-        if (invalidDelta(level, delta)) {
-            return I18n.invalidDeltaMessage;
-        }
         level += delta;
-        changeSkillPointsBy((int) Math.signum(delta));
+        changeSkillPoints((int) Math.signum(delta));
         return I18n.okMessage;
     }
 
@@ -311,6 +312,9 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate changeSkillPointsBy(int delta) {
+        if (invalidDelta(skillPoints, delta)) {
+            return I18n.invalidDeltaMessage;
+        }
         return timeline.perform(Action.change(this, "changeSkillPoints", delta));
     }
 
@@ -318,9 +322,6 @@ public abstract class Creature extends MapObject {
      * Internal logic, may be overridden if needed.
      */
     public ITemplate changeSkillPoints(int delta) {
-        if (invalidDelta(skillPoints, delta)) {
-            return I18n.invalidDeltaMessage;
-        }
         skillPoints += delta;
         return I18n.okMessage;
     }
@@ -399,19 +400,16 @@ public abstract class Creature extends MapObject {
 
     // endregion
 
-    /**
-     * Returns creature's inventory items.
-     */
-    public ArrayList<InventoryItem> getInventory() {
-        return inventory;
-    }
-
     public Timeline getTimeline() {
         return timeline;
     }
 
     public void setTimeline(Timeline value) {
         timeline = value;
+    }
+
+    public ArrayList<InventoryItem> getInventory() {
+        return inventory;
     }
 
     // utilities
