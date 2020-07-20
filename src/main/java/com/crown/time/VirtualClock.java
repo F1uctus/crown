@@ -3,35 +3,32 @@ package com.crown.time;
 import com.crown.common.ObjectsMap;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Simplified clock logic for virtual game time.
+ * Abstraction over in-game virtual clock logic.
  */
 public class VirtualClock {
-    public final int secondLength;
-
     private boolean paused = false;
-    private Instant timePoint;
+    private Instant instantValue;
     private Timer timer;
+
+    private final int tickPeriod;
     private final Runnable tickAction;
-    private final ObjectsMap<TimelineMirrorAction> instantActions = new ObjectsMap<>();
+
+    private final ObjectsMap<TimelineFlowAction> scheduledActions = new ObjectsMap<>();
 
     /**
-     * Creates new game clock with Earth-like time units
-     * and custom second length.
+     * Creates new game clock with Earth-like time units.
+     *
+     * @param tickPeriod Specifies a delay (in milliseconds) between
+     *                   calls to the tick action.
      */
-    public VirtualClock(
-        int secondLength,
-        @NotNull Runnable tickAction
-    ) {
-        assert secondLength > 0;
-        this.secondLength = secondLength;
+    public VirtualClock(int tickPeriod, @NotNull Runnable tickAction) {
+        this.tickPeriod = tickPeriod;
         this.tickAction = tickAction;
     }
 
@@ -56,66 +53,58 @@ public class VirtualClock {
             timer.purge();
             timer = null;
         }
-        timePoint = point;
+        instantValue = point;
         start();
         return this;
     }
 
     /**
-     * Schedules time units increment
-     * and {@link VirtualClock#tickAction} running every
-     * {@link VirtualClock#secondLength} milliseconds period of time.
+     * Schedules time units increment and {@link VirtualClock#tickAction}
+     * running every {@link VirtualClock#tickPeriod} milliseconds of time.
      */
     private void start() {
         timer = new Timer();
-        final int period = 10;
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 if (!paused) {
-                    timePoint = timePoint.plusMillis(period);
+                    instantValue = instantValue.plusMillis(tickPeriod);
                     tickAction.run();
-                    for (var a : instantActions) {
+                    for (var a : scheduledActions) {
                         a.run();
                     }
                 }
             }
-        }, 0, period);
+        }, 0, tickPeriod);
     }
 
     /**
-     * <pre>
-     * - pauses the clock
-     * - cancels timeline mirroring actions
-     * - performs an action (commit/rollback logic)
-     * - resumes the clock
-     * </pre>
+     * Pauses the clock, performs an action; then resumes the clock.
      */
-    void freeze(Timeline t, Runnable action) {
+    void freeze(Runnable action) {
         paused = true;
-        cancelAction(t.mirrorAction);
         action.run();
         paused = false;
     }
 
     /**
-     * Schedules an action to execute every 10 ms of virtual clock timer.
+     * Schedules an action to execute every {@link VirtualClock#tickPeriod} ms.
      */
-    public void scheduleAction(TimelineMirrorAction action) {
-        instantActions.add(action);
+    void schedule(TimelineFlowAction action) {
+        scheduledActions.add(action);
     }
 
     /**
      * Removes last action virtual clock timer schedule.
      */
-    public void cancelAction(TimelineMirrorAction action) {
-        instantActions.remove(action);
+    void cancel(TimelineFlowAction action) {
+        scheduledActions.remove(action);
     }
 
     /**
      * Returns instant time of this clock.
      */
     public Instant now() {
-        return timePoint;
+        return instantValue;
     }
 }

@@ -3,10 +3,10 @@ package com.crown.time;
 import com.crown.common.NamedObject;
 import com.crown.i18n.ITemplate;
 
-public class TimelineMirrorAction extends NamedObject implements Runnable {
+public class TimelineFlowAction extends NamedObject implements Runnable {
     private final Timeline timeline;
 
-    TimelineMirrorAction(Timeline timeline) {
+    TimelineFlowAction(Timeline timeline) {
         super("");
         this.timeline = timeline;
     }
@@ -14,7 +14,7 @@ public class TimelineMirrorAction extends NamedObject implements Runnable {
     @Override
     public void run() {
         timeline.pendingActions.forEach((actionTimePoint, action) -> {
-            if (actionTimePoint.isBefore(Timeline.getGameClock().now().minus(timeline.getOffsetToMain()))) {
+            if (actionTimePoint.isBefore(Timeline.getClock().now().minus(timeline.getOffsetToMain()))) {
                 action.perform();
                 timeline.pendingActions.remove(actionTimePoint);
                 timeline.performedActions.put(actionTimePoint, action);
