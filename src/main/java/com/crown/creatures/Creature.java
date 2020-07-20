@@ -399,19 +399,16 @@ public abstract class Creature extends MapObject {
 
     // endregion
 
-    /**
-     * Returns creature's inventory items.
-     */
-    public ArrayList<InventoryItem> getInventory() {
-        return inventory;
-    }
-
     public Timeline getTimeline() {
         return timeline;
     }
 
     public void setTimeline(Timeline value) {
         timeline = value;
+    }
+
+    public ArrayList<InventoryItem> getInventory() {
+        return inventory;
     }
 
     // utilities
