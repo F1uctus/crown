@@ -173,27 +173,30 @@ public class Timeline {
         //     return I18n.of("time.travel.fromPast");
         // }
 
-        // cloning timeline
-        var cloner = new Cloner();
-        cloner.setDumpClonedClasses(true);
-        var alternative = cloner.deepClone(timelinePresent);
-        alternative.offsetToMain = Duration.between(targetPoint, clock.now());
+        clock.freeze(() -> {
+            // cloning timeline
+            var cloner = new Cloner();
+            // DEBUG
+            //  cloner.setDumpClonedClasses(true);
+            var alternative = cloner.deepClone(timelinePresent);
+            alternative.offsetToMain = Duration.between(targetPoint, clock.now());
 
-        // rebind player from future to the past
-        var mapFromPast = alternative.gameState.players.get(traveller.getKeyName()).getMap();
-        timelinePresent.gameState.players.remove(traveller);
-        traveller.setMap(mapFromPast);
-        traveller.setTimeline(alternative);
-        traveller.setKeyName(encodeName(traveller));
-        traveller.newId();
-        alternative.gameState.players.add(traveller);
+            // rebind player from future to the past
+            var mapFromPast = alternative.gameState.players.get(traveller.getKeyName()).getMap();
+            timelinePresent.gameState.players.remove(traveller);
+            traveller.setMap(mapFromPast);
+            traveller.setTimeline(alternative);
+            traveller.setKeyName(encodeName(traveller));
+            traveller.newId();
+            alternative.gameState.players.add(traveller);
 
-        // rolling timeline back to the past
-        alternative.rollbackTo(targetPoint);
-        // scheduling clock to redo actions from future
-        clock.schedule(alternative.flowAction);
+            // rolling timeline back to the past
+            alternative.rollbackTo(targetPoint);
+            // scheduling clock to redo actions from future
+            clock.schedule(alternative.flowAction);
 
-        alternatives.put(travellerName, alternative);
+            alternatives.put(travellerName, alternative);
+        });
         return I18n.okMessage;
     }
 
