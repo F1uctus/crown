@@ -387,13 +387,13 @@ public abstract class Creature extends MapObject {
             && (tgtObj == null || tgtObj.getMapWeight() != MapWeight.OBSTACLE)) {
             var delta = (int) getPt0().getDistance(tgtPos);
             if (getEnergy() < delta) {
-                return I18n.of("stats.energy.low");
+                return I18n.of("move.lowEnergy");
             } else {
                 moveView(deltaX, deltaY, deltaZ);
                 return I18n.okMessage;
             }
         } else {
-            return I18n.of("fail.move.obstacle");
+            return I18n.of("move.obstacle");
         }
     }
 

@@ -18,7 +18,7 @@ public class I18n {
     public static final ITemplate okMessage = I18n.of("message.ok");
 
     @NonNls
-    public static final ITemplate invalidDeltaMessage = I18n.of("fail.delta.outOfBounds");
+    public static final ITemplate invalidDeltaMessage = I18n.of("delta.outOfBounds");
 
     /**
      * Initializes internationalization resources.

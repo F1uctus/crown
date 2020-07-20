@@ -246,10 +246,6 @@ public class Timeline {
         if (tl == null || tl == main) {
             return Pair.of(I18n.of("rollback.fromMain"), travellerClone);
         }
-        if (main.gameState.players.size() == 0) {
-            return Pair.of(I18n.of("rollback.mainTimelineEmpty"), travellerClone);
-        }
-
         clock.cancel(tl.flowAction);
         clock.freeze(() -> {
             // bind original traveller back to the main timeline
