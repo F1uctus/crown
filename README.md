@@ -73,6 +73,8 @@ Initialization is static:
 Timeline.init(gameClock, gameState);
 ```
 
+For more exact usage overview, see [this game](https://github.com/f1uctus/cotfk).
+
 #### Internationalization
 
 Most of Crown's action methods return `ITemplate` object - a localizable message storage,
