@@ -1,6 +1,7 @@
 package com.crown.common;
 
 import com.crown.common.utils.Random;
+import com.crown.creatures.Creature;
 import com.crown.i18n.I18n;
 import com.crown.i18n.ITemplate;
 import org.jetbrains.annotations.NotNull;
@@ -48,8 +49,10 @@ public abstract class NamedObject {
 
     /**
      * Sets a new key name for this object.
-     * It can be a key for your I18n resource file,
-     * or just a non-localizable name.
+     * It can be a key for your I18n resource file, or just a non-localizable name.
+     * Used to create a clone for the game object during time travelling process,
+     * so should NOT be used in your code in general.
+     * Use {@link com.crown.BaseGameState#rename(Creature, String)} instead.
      */
     public void setKeyName(String value) {
         keyName = value.strip().toLowerCase();
