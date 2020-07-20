@@ -91,10 +91,11 @@ so you must add at least one resource bundle to store built-in message propertie
 
 To easily interact with your resource bundles there is an `I18n` class with static methods to wrap your messages to the localizable `ITemplate`s.
 To translate `ITemplate` to some language, a `ITemplate.getLocalized(String lang)` method is used.
+Of course, you can add your own localizable messages and use them the same way.
 For example:
 ```java
-var result = I18n.of("move.obstacle")
-result.getLocalized("en") // => Oops, I can't go that way!
+var result = I18n.of("mage.unknownSpell");
+result.getLocalized("en") // => I don't know that spell.
 ```
 
 To initialize `I18n` class this approach is used:
