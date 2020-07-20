@@ -345,43 +345,6 @@ public abstract class Creature extends MapObject {
      * Timeline support included.
      */
     public ITemplate moveBy(int deltaX, int deltaY, int deltaZ) {
-        return timeline.perform(new Action<>(this) {
-            @Override
-            public ITemplate perform() {
-                var result = getTarget().move(deltaX, deltaY, deltaZ);
-                if (result == I18n.okMessage) {
-                    // SIDE-EFFECT: decrease energy if player moved
-                    changeEnergy(-(int) Math.sqrt(
-                        Math.pow(deltaX, 2) +
-                            Math.pow(deltaY, 2) +
-                            Math.pow(deltaZ, 2)
-                    ));
-                }
-                return result;
-            }
-
-            @Override
-            public ITemplate rollback() {
-                var result = getTarget().move(-deltaX, -deltaY, -deltaZ);
-                if (result == I18n.okMessage) {
-                    // SIDE-EFFECT: increase energy if player moved
-                    changeEnergy((int) Math.sqrt(
-                        Math.pow(deltaX, 2) +
-                            Math.pow(deltaY, 2) +
-                            Math.pow(deltaZ, 2)
-                    ));
-                }
-                return result;
-            }
-        });
-    }
-
-    /**
-     * Changes creature 3D position by delta point.
-     * Creature's energy remains UNCHANGED.
-     * May be overridden if needed.
-     */
-    public ITemplate move(int deltaX, int deltaY, int deltaZ) {
         var tgtPos = getPt0().plus(new Point3D(deltaX, deltaY, deltaZ));
         var tgtObj = getMap().get(tgtPos);
         if (getMap().contains(tgtPos)
@@ -389,13 +352,36 @@ public abstract class Creature extends MapObject {
             var delta = (int) getPt0().getDistance(tgtPos);
             if (getEnergy() < delta) {
                 return I18n.of("stats.energy.low");
-            } else {
-                moveView(deltaX, deltaY, deltaZ);
-                return I18n.okMessage;
             }
         } else {
             return I18n.of("fail.move.obstacle");
         }
+
+        return timeline.perform(new Action<>(this) {
+            @Override
+            public ITemplate perform() {
+                getTarget().moveView(deltaX, deltaY, deltaZ);
+                // SIDE-EFFECT: decrease energy if player moved
+                changeEnergy(-(int) Math.sqrt(
+                    Math.pow(deltaX, 2) +
+                        Math.pow(deltaY, 2) +
+                        Math.pow(deltaZ, 2)
+                ));
+                return I18n.okMessage;
+            }
+
+            @Override
+            public ITemplate rollback() {
+                getTarget().moveView(-deltaX, -deltaY, -deltaZ);
+                // SIDE-EFFECT: increase energy if player moved
+                changeEnergy((int) Math.sqrt(
+                    Math.pow(deltaX, 2) +
+                        Math.pow(deltaY, 2) +
+                        Math.pow(deltaZ, 2)
+                ));
+                return I18n.okMessage;
+            }
+        });
     }
 
     // endregion
