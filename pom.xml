@@ -3,7 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>org.f1uctus</groupId>
     <artifactId>CrownFramework</artifactId>
     <version>0.3.3</version>
@@ -16,6 +15,16 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- Build an executable JAR -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <goal>jar:inplace</goal>
+                    <outputDirectory>target/jar</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>
@@ -42,6 +51,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>5.2.4.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.kostaskougios</groupId>
+            <artifactId>cloning</artifactId>
+            <version>-d8d786fb32-1</version>
         </dependency>
         <dependency>
             <groupId>com.github.fabio-t</groupId>

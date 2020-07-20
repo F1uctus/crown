@@ -5,13 +5,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rlforj.IBoard;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.stream.IntStream;
 
-public abstract class Map extends NamedObject implements IBoard {
+public abstract class Map extends NamedObject implements IBoard, Serializable {
     public final int xSize;
     public final int ySize;
     public final int zSize;
-    public final MapIcon<?> emptyIcon;
 
     protected final MapCell[][][] containers;
 
@@ -19,14 +20,12 @@ public abstract class Map extends NamedObject implements IBoard {
         String name,
         int xSize,
         int ySize,
-        int zSize,
-        MapIcon<?> emptyIcon
+        int zSize
     ) {
         super(name);
         this.xSize = xSize;
         this.ySize = ySize;
         this.zSize = zSize;
-        this.emptyIcon = emptyIcon;
 
         containers = new MapCell[zSize][ySize][xSize];
         for (int z = 0; z < zSize; z++) {
@@ -38,13 +37,37 @@ public abstract class Map extends NamedObject implements IBoard {
         }
     }
 
+    public abstract MapIcon<?> getEmptyIcon();
+
+    /**
+     * Returns all objects of given type inside the area with given
+     * center point and radius.
+     */
+    public <T extends MapObject> ArrayList<T> getAll(
+        Class<T> ofType,
+        Point3D centerPoint,
+        int inRadius
+    ) {
+        var targets = new ArrayList<T>();
+        var rangeObjsMatrix = getRaw2DArea(centerPoint, inRadius);
+        for (var objRow : rangeObjsMatrix) {
+            for (var obj : objRow) {
+                if (ofType.isInstance(obj)) {
+                    // noinspection unchecked
+                    targets.add((T) obj);
+                }
+            }
+        }
+        return targets;
+    }
+
     /**
      * Returns 3D area for map region with given radius.
      * Objects with Z-coordinate <= to point.z are returned.
      */
-    public @Nullable MapObject[][][] getRaw3DArea(Point3D pt, int radius) {
+    public @Nullable MapObject[][][] getRaw3DArea(Point3D centerPoint, int radius) {
         final int diameter = radius * 2 + 1;
-        int ptZ = pt.z + 1;
+        int ptZ = centerPoint.z + 1;
         int height = ptZ > 0 && ptZ < zSize ? ptZ : zSize;
 
         MapObject[][][] area = new MapObject[height][diameter][diameter];
@@ -52,9 +75,9 @@ public abstract class Map extends NamedObject implements IBoard {
         int areaZ = 0;
         for (int z = 0; z < height; z++) {
             int areaY = 0;
-            for (int y = pt.y - radius; y <= pt.y + radius; y++) {
+            for (int y = centerPoint.y - radius; y <= centerPoint.y + radius; y++) {
                 int areaX = 0;
-                for (int x = pt.x - radius; x <= pt.x + radius; x++) {
+                for (int x = centerPoint.x - radius; x <= centerPoint.x + radius; x++) {
                     if (contains(x, y)) {
                         area[areaZ][areaY][areaX] = get(x, y, z);
                     }
@@ -71,14 +94,14 @@ public abstract class Map extends NamedObject implements IBoard {
      * Returns 3D area for map region with given radius.
      * Icons with Z-coordinate <= to point.z are returned.
      */
-    public MapIcon<?>[][][] get3DArea(Point3D pt, int radius) {
-        var area = getRaw3DArea(pt, radius);
+    public MapIcon<?>[][][] get3DArea(Point3D centerPoint, int radius) {
+        var area = getRaw3DArea(centerPoint, radius);
         var icons = new MapIcon<?>[area.length][area[0].length][area[0][0].length];
         for (int z = 0; z < area.length; z++) {
             for (int y = 0; y < area[0].length; y++) {
                 for (int x = 0; x < area[0][0].length; x++) {
                     if (area[z][y][x] == null) {
-                        icons[z][y][x] = emptyIcon;
+                        icons[z][y][x] = getEmptyIcon();
                     } else {
                         icons[z][y][x] = area[z][y][x].getMapIcon();
                     }
@@ -94,18 +117,18 @@ public abstract class Map extends NamedObject implements IBoard {
      * e. g. if you pass z = 3 for each map point you will get
      * object with the highest z position if it is <= 3.
      */
-    public @Nullable MapObject[][] getRaw2DArea(Point3D pt, int radius) {
+    public @Nullable MapObject[][] getRaw2DArea(Point3D centerPoint, int radius) {
         final int diameter = radius * 2 + 1;
         MapObject[][] area = new MapObject[diameter][diameter];
 
-        int ptZ = pt.z + 1;
+        int ptZ = centerPoint.z + 1;
         int height = ptZ > 0 && ptZ < zSize ? ptZ : zSize;
 
         for (int z = 0; z < height; z++) {
             int areaY = 0;
-            for (int y = pt.y - radius; y <= pt.y + radius; y++) {
+            for (int y = centerPoint.y - radius; y <= centerPoint.y + radius; y++) {
                 int areaX = 0;
-                for (int x = pt.x - radius; x <= pt.x + radius; x++) {
+                for (int x = centerPoint.x - radius; x <= centerPoint.x + radius; x++) {
                     if (contains(x, y)) {
                         area[areaY][areaX] = get(x, y, z);
                     }
@@ -123,13 +146,13 @@ public abstract class Map extends NamedObject implements IBoard {
      * e. g. if you pass z = 3 for each map point you will get
      * icon of object with the highest z position if it is <= 3.
      */
-    public MapIcon<?>[][] get2DArea(Point3D pt, int radius) {
-        var area = getRaw2DArea(pt, radius);
+    public MapIcon<?>[][] get2DArea(Point3D centerPoint, int radius) {
+        var area = getRaw2DArea(centerPoint, radius);
         var icons = new MapIcon<?>[area.length][area.length];
         for (int y = 0; y < area.length; y++) {
             for (int x = 0; x < area.length; x++) {
                 if (area[y][x] == null) {
-                    icons[y][x] = emptyIcon;
+                    icons[y][x] = getEmptyIcon();
                 } else {
                     icons[y][x] = area[y][x].getMapIcon();
                 }
@@ -177,11 +200,11 @@ public abstract class Map extends NamedObject implements IBoard {
      */
     public boolean contains(@NotNull Point3D pt) {
         return pt.x >= 0
-               && pt.x < xSize
-               && pt.y >= 0
-               && pt.y < ySize
-               && pt.z >= 0
-               && pt.z < zSize;
+            && pt.x < xSize
+            && pt.y >= 0
+            && pt.y < ySize
+            && pt.z >= 0
+            && pt.z < zSize;
     }
 
     @Nullable
@@ -230,9 +253,9 @@ public abstract class Map extends NamedObject implements IBoard {
     @Deprecated
     public boolean contains(int x, int y) {
         return x >= 0
-               && x < xSize
-               && y >= 0
-               && y < ySize;
+            && x < xSize
+            && y >= 0
+            && y < ySize;
     }
 
     /**
@@ -245,7 +268,7 @@ public abstract class Map extends NamedObject implements IBoard {
             .mapToObj(z -> get(x, y, z))
             .anyMatch(
                 mapObj -> mapObj != null
-                          && mapObj.getMapWeight() == MapWeight.OBSTACLE
+                    && mapObj.getMapWeight() == MapWeight.OBSTACLE
             );
     }
 
@@ -260,7 +283,7 @@ public abstract class Map extends NamedObject implements IBoard {
             .mapToObj(z -> get(x, y, z))
             .anyMatch(
                 mapObj -> mapObj != null
-                          && mapObj.getMapWeight() == MapWeight.BLOCKS_LIGHT
+                    && mapObj.getMapWeight() == MapWeight.BLOCKS_LIGHT
             );
     }
 
@@ -275,7 +298,7 @@ public abstract class Map extends NamedObject implements IBoard {
             .mapToObj(z -> get(x, y, z))
             .anyMatch(
                 mapObj -> mapObj != null
-                          && mapObj.getMapWeight() == MapWeight.BLOCKS_STEP
+                    && mapObj.getMapWeight() == MapWeight.BLOCKS_STEP
             );
     }
 
@@ -286,5 +309,30 @@ public abstract class Map extends NamedObject implements IBoard {
     @Deprecated
     public void visit(int x, int y) {
         // TODO: implement 'visit'
+    }
+
+    @SuppressWarnings("HardCodedStringLiteral")
+    @Override
+    public String toString() {
+        var sb = new StringBuilder();
+        for (int z = 0; z < zSize; z++) {
+            sb.append("Layer ").append(z + 1).append(":\n");
+            for (int y = 0; y < ySize; y++) {
+                for (int x = 0; x < xSize; x++) {
+                    var c = containers[z][y][x];
+                    if (c.objects.empty()) {
+                        sb.append("     ");
+                        continue;
+                    }
+                    sb.append(
+                        c.objects.peek().getKeyName(),
+                        0,
+                        Math.min(c.objects.peek().getKeyName().length(), 4)
+                    ).append(" ");
+                }
+                sb.append('\n');
+            }
+        }
+        return sb.toString();
     }
 }

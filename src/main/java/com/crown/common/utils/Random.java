@@ -1,11 +1,9 @@
 package com.crown.common.utils;
 
-import com.crown.maps.Map;
-import com.crown.maps.MapObject;
-import com.crown.maps.MapWeight;
-import com.crown.maps.Point3D;
+import com.crown.maps.*;
 
 import java.util.HashSet;
+import java.util.UUID;
 
 /**
  * Handy extensions for {@link java.util.Random}.
@@ -22,26 +20,31 @@ public class Random {
     }
 
     /**
-     * Returns a random id for game object
-     * (in bounds of {@link Integer} type - should be unique).
+     * Returns a random UUID for game object.
      */
-    public static int getId() {
-        int id = rnd.nextInt(Integer.MAX_VALUE);
-        while (ids.contains(id)) {
-            id = rnd.nextInt(Integer.MAX_VALUE);
-        }
-        ids.add(id);
-        return id;
+    public static UUID getId() {
+        return UUID.randomUUID();
     }
 
     /**
-     * Returns a [truly] random point on given map.
+     * Returns a random point on given map.
      */
-    public static Point3D getPoint(Map m) {
+    public static Point3D getPoint(Map map) {
         return new Point3D(
-            rnd.nextInt(m.xSize),
-            rnd.nextInt(m.ySize),
-            rnd.nextInt(m.zSize)
+            rnd.nextInt(map.xSize),
+            rnd.nextInt(map.ySize),
+            rnd.nextInt(map.zSize)
+        );
+    }
+
+    /**
+     * Returns a random point on given map for object with specified size.
+     */
+    public static Point3D getPoint(Map map, int xSize, int ySize) {
+        return new Point3D(
+            rnd.nextInt(map.xSize - xSize),
+            rnd.nextInt(map.ySize - ySize),
+            rnd.nextInt(map.zSize)
         );
     }
 
@@ -79,7 +82,7 @@ public class Random {
      *                (e.g to get point with z = 1 exactly,
      *                invoke it with Point3D(-1, -1, 1)).
      */
-    public static Point3D getFreePoint(
+    static Point3D getFreePoint(
         Map m,
         Point3D fixedPt,
         long maxAttempts
@@ -88,12 +91,20 @@ public class Random {
         MapObject obj;
         long attempts = -1;
         do {
-            if (++attempts == maxAttempts) return null;
+            if (++attempts == maxAttempts) {
+                return null;
+            }
 
             pt = Random.getPoint(m);
-            if (fixedPt.x != -1) pt.x = fixedPt.x;
-            if (fixedPt.y != -1) pt.y = fixedPt.y;
-            if (fixedPt.z != -1) pt.z = fixedPt.z;
+            if (fixedPt.x != -1) {
+                pt.x = fixedPt.x;
+            }
+            if (fixedPt.y != -1) {
+                pt.y = fixedPt.y;
+            }
+            if (fixedPt.z != -1) {
+                pt.z = fixedPt.z;
+            }
             obj = m.get(pt);
         } while (obj != null && obj.getMapWeight() == MapWeight.OBSTACLE);
 

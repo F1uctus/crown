@@ -5,10 +5,17 @@ import com.crown.common.utils.Random;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-public abstract class MapObject extends NamedObject {
-    protected Map map;
+import java.util.UUID;
 
-    private final MapIcon<?> mapIcon;
+/**
+ * A regular object (thing, creature, etc.)
+ * that is placed on referenced map.
+ * Internally, 'heavy' references are replaced with their UUID's,
+ * to maintain deep-copying performance.
+ */
+public abstract class MapObject extends NamedObject {
+    private Map map;
+    private final UUID mapIconId;
     private final MapWeight mapWeight;
 
     protected Point3D[] lastParticles;
@@ -64,22 +71,34 @@ public abstract class MapObject extends NamedObject {
         Point3D[] particles
     ) {
         super(name);
-        this.map = map;
-        this.mapIcon = mapIcon;
+        this.mapIconId = mapIcon.getId();
         this.mapWeight = mapWeight;
         this.particles = lastParticles = particles;
+        setMap(map);
     }
 
     public Map getMap() {
         return map;
     }
 
-    public MapIcon<?> getMapIcon() {
-        return this.mapIcon;
+    public void setMap(Map map) {
+        if (this.map != null) this.map.remove(this);
+        if (map != null) map.add(this);
+        this.map = map;
+    }
+
+    public abstract MapIcon<?> getMapIcon();
+
+    public UUID getMapIconId() {
+        return mapIconId;
     }
 
     public MapWeight getMapWeight() {
         return mapWeight;
+    }
+
+    public Point3D[] getParticles() {
+        return particles;
     }
 
     public int getWidth() {
@@ -92,14 +111,11 @@ public abstract class MapObject extends NamedObject {
         return bounds.getRight().y - bounds.getLeft().y + 1;
     }
 
-    public Point3D[] getParticles() {
-        return particles;
-    }
-
     /**
      * Returns pair of min & max points of this map object.
      */
     private Pair<Point3D, Point3D> getBounds() {
+        var map = getMap();
         var minPt = new Point3D(map.xSize, map.ySize, map.zSize);
         var maxPt = new Point3D();
         for (var part : particles) {
@@ -123,9 +139,9 @@ public abstract class MapObject extends NamedObject {
      */
     public void moveView(int deltaX, int deltaY, int deltaZ) {
         if (deltaX > 0) {
-            mapIcon.flipped = true;
+            getMapIcon().direction = Direction.east;
         } else if (deltaX < 0) {
-            mapIcon.flipped = false;
+            getMapIcon().direction = Direction.west;
         }
         lastParticles = SerializationUtils.clone(particles);
         for (Point3D part : particles) {
@@ -133,18 +149,18 @@ public abstract class MapObject extends NamedObject {
             part.y += deltaY;
             part.z += deltaZ;
         }
-        map.move(this);
+        getMap().move(this);
     }
 
     @Override
     public String toString() {
         // noinspection HardCodedStringLiteral
         return getName()
-               + " [#" + getId()
-               + " | " + getMapIcon()
-               + " | w=" + getMapWeight()
-               + " | @ " + getPt0()
-               + " map #" + getMap().getId()
-               + "]";
+            + " [#" + getId()
+            + " | " + getMapIcon()
+            + " | w=" + getMapWeight()
+            + " | @ " + getPt0()
+            + " map #" + getMap().getId()
+            + "]";
     }
 }
