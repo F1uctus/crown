@@ -310,4 +310,29 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
     public void visit(int x, int y) {
         // TODO: implement 'visit'
     }
+
+    @SuppressWarnings("HardCodedStringLiteral")
+    @Override
+    public String toString() {
+        var sb = new StringBuilder();
+        for (int z = 0; z < zSize; z++) {
+            sb.append("Layer ").append(z + 1).append(":\n");
+            for (int y = 0; y < ySize; y++) {
+                for (int x = 0; x < xSize; x++) {
+                    var c = containers[z][y][x];
+                    if (c.objects.empty()) {
+                        sb.append("     ");
+                        continue;
+                    }
+                    sb.append(
+                        c.objects.peek().getKeyName(),
+                        0,
+                        Math.min(c.objects.peek().getKeyName().length(), 4)
+                    ).append(" ");
+                }
+                sb.append('\n');
+            }
+        }
+        return sb.toString();
+    }
 }
