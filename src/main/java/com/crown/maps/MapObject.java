@@ -138,11 +138,6 @@ public abstract class MapObject extends NamedObject {
      * Unsafe, map bounds are not checked.
      */
     public void moveView(int deltaX, int deltaY, int deltaZ) {
-        if (deltaX > 0) {
-            getMapIcon().direction = Direction.east;
-        } else if (deltaX < 0) {
-            getMapIcon().direction = Direction.west;
-        }
         lastParticles = SerializationUtils.clone(particles);
         for (Point3D part : particles) {
             part.x += deltaX;

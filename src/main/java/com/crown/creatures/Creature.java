@@ -381,6 +381,15 @@ public abstract class Creature extends MapObject {
      * May be overridden if needed.
      */
     public ITemplate move(int deltaX, int deltaY, int deltaZ) {
+        // update icon
+        Direction direction = getMapIcon().getDirection();
+        if (deltaX > 0) direction = Direction.east;
+        else if (deltaX < 0) direction = Direction.west;
+        if (deltaY > 0) direction = Direction.south;
+        else if (deltaY < 0) direction = Direction.north;
+        getMapIcon().setDirection(direction);
+        getMapIcon().stepAnimation();
+
         var tgtPos = getPt0().plus(new Point3D(deltaX, deltaY, deltaZ));
         var tgtObj = getMap().get(tgtPos);
         if (getMap().contains(tgtPos)

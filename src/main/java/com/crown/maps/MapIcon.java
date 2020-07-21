@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
  * Map object's icon. Left-sided by default.
  */
 public abstract class MapIcon<T> extends NamedObject {
-    protected Direction direction = Direction.west;
+    private Direction direction = Direction.west;
 
     /**
      * Creates new map icon.
@@ -19,4 +19,14 @@ public abstract class MapIcon<T> extends NamedObject {
     }
 
     public abstract T get();
+
+    public abstract void stepAnimation();
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
 }
