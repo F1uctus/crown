@@ -1,6 +1,6 @@
 package com.crown.time;
 
-import com.crown.creatures.Creature;
+import com.crown.creatures.Organism;
 import com.crown.i18n.I18n;
 import com.crown.i18n.ITemplate;
 import com.crown.maps.MapObject;
@@ -27,10 +27,10 @@ public abstract class Action<T extends MapObject> {
         target = value;
     }
 
-    public static Action<Creature> change(Creature target, @NonNls String changerMethodName, int delta) {
+    public static Action<Organism> change(Organism target, @NonNls String changerMethodName, int delta) {
         Method m;
         try {
-            m = Creature.class.getDeclaredMethod(changerMethodName, int.class);
+            m = Organism.class.getDeclaredMethod(changerMethodName, int.class);
             m.setAccessible(true);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();

@@ -17,15 +17,12 @@ import java.util.ArrayList;
  * logic that can be overridden by successors, and used inside
  * timeline-logic implementation.
  */
-public abstract class Creature extends MapObject {
+public abstract class Organism extends MapObject {
     protected int maxHp;
     protected int hp;
 
     protected final int maxEnergy;
     protected int energy;
-
-    protected final int maxFov = 100;
-    protected int fov;
 
     protected final int maxSpeed = 10;
     protected int speed;
@@ -40,7 +37,7 @@ public abstract class Creature extends MapObject {
     /**
      * Adds a new creature to the main timeline.
      */
-    public Creature(
+    public Organism(
         String name,
         Map map,
         MapIcon<?> mapIcon,
@@ -49,14 +46,12 @@ public abstract class Creature extends MapObject {
         int maxEnergy,
         int maxHp,
         int level,
-        int fieldOfView,
         int speed
     ) {
         super(name, map, mapIcon, mapWeight, position);
 
         this.maxHp = hp = maxHp;
         this.maxEnergy = energy = maxEnergy;
-        this.fov = fieldOfView;
         this.speed = speed;
         this.level = level;
         timeline = Timeline.main;
@@ -184,43 +179,6 @@ public abstract class Creature extends MapObject {
             return I18n.invalidDeltaMessage;
         }
         speed += delta;
-        return I18n.okMessage;
-    }
-
-    // endregion
-
-    // region FOV
-
-    /**
-     * Maximal allowed field of vision for creature.
-     */
-    public int getMaxFov() {
-        return maxFov;
-    }
-
-    /**
-     * Returns creature's field of vision.
-     */
-    public int getFov() {
-        return fov;
-    }
-
-    /**
-     * Changes creature's field of vision by {@code delta}.
-     * Timeline support included.
-     */
-    public ITemplate changeFovBy(int delta) {
-        return timeline.perform(Action.change(this, "changeFov", delta));
-    }
-
-    /**
-     * Internal logic, may be overridden if needed.
-     */
-    public ITemplate changeFov(int delta) {
-        if (invalidDelta(fov, delta, maxFov)) {
-            return I18n.invalidDeltaMessage;
-        }
-        fov += delta;
         return I18n.okMessage;
     }
 

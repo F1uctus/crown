@@ -1,7 +1,7 @@
 package com.crown.time;
 
 import com.crown.BaseGameState;
-import com.crown.creatures.Creature;
+import com.crown.creatures.Organism;
 import com.crown.i18n.I18n;
 import com.crown.i18n.ITemplate;
 import com.crown.maps.Map;
@@ -95,7 +95,7 @@ public class Timeline {
         return gameState;
     }
 
-    public <T extends Creature> ITemplate perform(Action<T> action) {
+    public <T extends Organism> ITemplate perform(Action<T> action) {
         var now = clock.now();
         performedActions.put(now, action);
         var result = action.perform();
@@ -149,7 +149,7 @@ public class Timeline {
         }
     }
 
-    private Creature originalTraveller;
+    private Organism originalTraveller;
     private Map originalMap;
 
     /**
@@ -158,7 +158,7 @@ public class Timeline {
      * Returns a copy of provided creature moved
      * to the alternative timeline in the past.
      */
-    public static Pair<ITemplate, Creature> move(Creature traveller, Instant targetPoint) {
+    public static Pair<ITemplate, Organism> move(Organism traveller, Instant targetPoint) {
         if (!targetPoint.isBefore(clock.now())) {
             return Pair.of(I18n.of("time.travel.future"), traveller);
         }
@@ -171,7 +171,7 @@ public class Timeline {
             return Pair.of(I18n.of("time.travel.parallel"), traveller);
         }
 
-        final Creature[] travellerClone = new Creature[1];
+        final Organism[] travellerClone = new Organism[1];
         clock.freeze(() -> {
             // cloning timeline
             var cloner = new Cloner();
@@ -210,7 +210,7 @@ public class Timeline {
      * Commits all changes made {@code travellerClone}.
      * (Makes {@code travellerClone}'s timeline the main one).
      */
-    public static ITemplate commitChanges(Creature travellerClone) {
+    public static ITemplate commitChanges(Organism travellerClone) {
         var tl = travellerClone.getTimeline();
         if (tl == null || tl == main) {
             return I18n.of("commit.fromMain");
@@ -241,7 +241,7 @@ public class Timeline {
      * Undoes all changes made by travellerClone in the alternative timeline.
      * Drops original traveller back to the main timeline.
      */
-    public static Pair<ITemplate, Creature> rollbackChanges(Creature travellerClone) {
+    public static Pair<ITemplate, Organism> rollbackChanges(Organism travellerClone) {
         var tl = travellerClone.getTimeline();
         if (tl == null || tl == main) {
             return Pair.of(I18n.of("rollback.fromMain"), travellerClone);
@@ -262,7 +262,7 @@ public class Timeline {
     }
 
     @SuppressWarnings("HardCodedStringLiteral")
-    private static String encodeName(Creature traveller) {
+    private static String encodeName(Organism traveller) {
         return traveller.getKeyName() + "::clone";
     }
 }
