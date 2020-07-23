@@ -21,10 +21,10 @@ public abstract class Organism extends MapObject {
     protected int maxHp;
     protected int hp;
 
-    protected final int maxEnergy;
+    protected int maxEnergy;
     protected int energy;
 
-    protected final int maxSpeed = 10;
+    protected int maxSpeed = 10;
     protected int speed;
 
     protected int level;
