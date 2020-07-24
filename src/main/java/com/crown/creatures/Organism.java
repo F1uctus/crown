@@ -356,6 +356,13 @@ public abstract class Organism extends MapObject {
                 direction = Direction.northWest;
             }
         }
+        else {
+            if (deltaX > 0) {
+                direction = Direction.east;
+            } else if (deltaX < 0) {
+                direction = Direction.west;
+            }
+        }
         getMapIcon().setDirection(direction);
         getMapIcon().stepAnimation();
 
