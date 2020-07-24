@@ -31,7 +31,7 @@
 ```
 <dependency>
     <groupId>com.github.F1uctus</groupId>
-    <artifactId>crown-framework</artifactId>
+    <artifactId>crown</artifactId>
     <version>-SNAPSHOT</version>
 </dependency>
 ```
