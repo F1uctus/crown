@@ -32,7 +32,7 @@
 <dependency>
     <groupId>com.github.F1uctus</groupId>
     <artifactId>crown</artifactId>
-    <version>-SNAPSHOT</version>
+    <version>master-SNAPSHOT</version>
 </dependency>
 ```
 
