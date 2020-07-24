@@ -16,10 +16,12 @@ public class ObjectsMap<T extends NamedObject> implements Iterable<T> {
     /**
      * Adds a new element to the collection.
      */
-    public void add(T obj) {
-        if (obj == null) return;
-        byIdMap.put(obj.getId(), obj);
-        byKeyNameMap.put(obj.getKeyName(), obj);
+    public ObjectsMap<T> add(T obj) {
+        if (obj != null) {
+            byIdMap.put(obj.getId(), obj);
+            byKeyNameMap.put(obj.getKeyName(), obj);
+        }
+        return this;
     }
 
     /**
