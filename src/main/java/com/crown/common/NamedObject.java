@@ -73,6 +73,6 @@ public abstract class NamedObject {
      * Empty by default.
      */
     public ITemplate getDescription() {
-        return I18n.raw("");
+        return I18n.empty;
     }
 }
