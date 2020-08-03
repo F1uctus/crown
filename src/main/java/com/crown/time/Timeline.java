@@ -41,16 +41,16 @@ public class Timeline {
     Duration offsetToMain;
 
     /**
+     * A game state bound to this timeline.
+     */
+    final BaseGameState gameState;
+
+    /**
      * An action performing timeline actions flow.
      * Invoked automatically when time travelling is performed.
      * It is repeating actions from future the same way they were performed in the main timeline.
      */
-    final TimelineFlowAction flowAction = new TimelineFlowAction(this);
-
-    /**
-     * A game state bound to this timeline.
-     */
-    final BaseGameState gameState;
+    private TimelineFlowAction flowAction;
 
     /**
      * Automatically sorted set, pointing action's perform time to action itself.
@@ -199,7 +199,7 @@ public class Timeline {
             // rolling timeline back to the past
             timelineClone.rollbackTo(targetPoint);
             // scheduling clock to redo actions from future
-            clock.schedule(timelineClone.flowAction);
+            timelineClone.startFlow();
 
             alternatives.put(traveller.getKeyName(), timelineClone);
         });
@@ -215,8 +215,7 @@ public class Timeline {
         if (tl == null || tl == main) {
             return I18n.of("commit.fromMain");
         }
-
-        clock.cancel(tl.flowAction);
+        tl.stopFlow();
         clock.freeze(() -> {
             var originalTravellerName = tl.originalTraveller.getKeyName();
             // instantly moving creature's timeline state to be equal to main
@@ -246,7 +245,7 @@ public class Timeline {
         if (tl == null || tl == main) {
             return Pair.of(I18n.of("rollback.fromMain"), travellerClone);
         }
-        clock.cancel(tl.flowAction);
+        tl.stopFlow();
         clock.freeze(() -> {
             // bind original traveller back to the main timeline
             tl.originalTraveller.setMap(tl.originalMap);
@@ -259,6 +258,16 @@ public class Timeline {
         });
 
         return Pair.of(I18n.okMessage, tl.originalTraveller);
+    }
+
+    private void startFlow() {
+        flowAction = new TimelineFlowAction(this);
+        clock.schedule(flowAction);
+    }
+
+    private void stopFlow() {
+        clock.cancel(flowAction);
+        flowAction = null;
     }
 
     @SuppressWarnings("HardCodedStringLiteral")
