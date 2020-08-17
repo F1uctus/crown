@@ -130,7 +130,10 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
                 int areaX = 0;
                 for (int x = centerPoint.x - radius; x <= centerPoint.x + radius; x++) {
                     if (contains(x, y)) {
-                        area[areaY][areaX] = get(x, y, z);
+                        var obj = get(x, y, z);
+                        if (obj != null) {
+                            area[areaY][areaX] = obj;
+                        }
                     }
                     areaX++;
                 }
