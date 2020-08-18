@@ -63,4 +63,11 @@
             <version>0.3.0</version>
         </dependency>
     </dependencies>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/f1uctus/crown</url>
+        </repository>
+    </distributionManagement>
 </project>
