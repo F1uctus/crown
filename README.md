@@ -26,13 +26,13 @@
 
 ## Usage
 
-### Maven dependency (Jitpack)
+### Maven dependency (GitHub Packages)
 
 ```
 <dependency>
     <groupId>com.github.F1uctus</groupId>
     <artifactId>crown</artifactId>
-    <version>master-SNAPSHOT</version>
+    <version>Specify latest version</version>
 </dependency>
 ```
 
