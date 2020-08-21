@@ -1,7 +1,7 @@
 <h1 align="center">👑 Crown 👑</h1>
 
 <p align="center">
-    <a href="https://github.com/actions/setup-java">
+    <a href="https://github.com/F1uctus/crown/blob/master/.github/workflows/github-package-publish.yml">
         <img src="https://github.com/F1uctus/crown/workflows/GitHub%20Package/badge.svg"
              alt="GitHub Actions status for 'GitHub Package'">
     </a>
