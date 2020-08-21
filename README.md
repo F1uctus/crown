@@ -2,6 +2,10 @@
 
 <p align="center">
     <a href="https://github.com/actions/setup-java">
+        <img src="https://github.com/F1uctus/crown/workflows/GitHub%20Package/badge.svg"
+             alt="GitHub Actions status for 'GitHub Package'">
+    </a>
+    <a href="https://github.com/actions/setup-java">
         <img src="https://github.com/F1uctus/crown/workflows/Maven/badge.svg"
              alt="GitHub Actions status for 'Maven'">
     </a>
