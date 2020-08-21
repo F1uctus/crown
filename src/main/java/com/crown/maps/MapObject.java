@@ -119,8 +119,8 @@ public abstract class MapObject extends NamedObject {
         var minPt = new Point3D(map.xSize, map.ySize, map.zSize);
         var maxPt = new Point3D();
         for (var part : particles) {
-            minPt = minPt.min(part);
-            maxPt = maxPt.max(part);
+            minPt = Point3D.min(minPt, part);
+            maxPt = Point3D.max(maxPt, part);
         }
         return Pair.of(minPt, maxPt);
     }
@@ -149,7 +149,6 @@ public abstract class MapObject extends NamedObject {
 
     @Override
     public String toString() {
-        // noinspection HardCodedStringLiteral
         return getName()
             + " [#" + getId()
             + " | " + getMapIcon()
