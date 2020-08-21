@@ -8,5 +8,5 @@ public enum Direction {
     south,
     southWest,
     west,
-    northWest;
+    northWest
 }

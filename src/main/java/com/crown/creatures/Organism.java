@@ -355,8 +355,7 @@ public abstract class Organism extends MapObject {
             } else if (deltaX < 0) {
                 direction = Direction.northWest;
             }
-        }
-        else {
+        } else {
             if (deltaX > 0) {
                 direction = Direction.east;
             } else if (deltaX < 0) {

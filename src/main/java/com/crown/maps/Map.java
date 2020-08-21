@@ -3,13 +3,11 @@ package com.crown.maps;
 import com.crown.common.NamedObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import rlforj.IBoard;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.stream.IntStream;
 
-public abstract class Map extends NamedObject implements IBoard, Serializable {
+public abstract class Map extends NamedObject implements Serializable {
     public final int xSize;
     public final int ySize;
     public final int zSize;
@@ -191,23 +189,28 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
         }
     }
 
-    /**
-     * Checks if specified point is inside this map's bounds.
-     */
-    public boolean contains(int x, int y, int z) {
-        return contains(new Point3D(x, y, z));
-    }
 
     /**
      * Checks if specified point is inside this map's bounds.
      */
     public boolean contains(@NotNull Point3D pt) {
-        return pt.x >= 0
-            && pt.x < xSize
-            && pt.y >= 0
-            && pt.y < ySize
-            && pt.z >= 0
-            && pt.z < zSize;
+        return contains(pt.x, pt.y, pt.z);
+    }
+
+    /**
+     * Checks if specified point is inside this map's bounds.
+     */
+    public boolean contains(int x, int y) {
+        return x >= 0 && x < xSize
+            && y >= 0 && y < ySize;
+    }
+
+    /**
+     * Checks if specified point is inside this map's bounds.
+     */
+    public boolean contains(int x, int y, int z) {
+        return contains(x, y)
+            && z >= 0 && z < zSize;
     }
 
     @Nullable
@@ -249,72 +252,36 @@ public abstract class Map extends NamedObject implements IBoard, Serializable {
     }
 
     /**
-     * Used for player vision logic. Do not use it manually!
-     * Use {@code contains(pt)} instead.
-     */
-    @Override
-    @Deprecated
-    public boolean contains(int x, int y) {
-        return x >= 0
-            && x < xSize
-            && y >= 0
-            && y < ySize;
-    }
-
-    /**
      * Used for player movement checks.
      */
-    @Override
-    public boolean isObstacle(int x, int y) {
-        return IntStream
-            .range(0, zSize)
-            .mapToObj(z -> get(x, y, z))
-            .anyMatch(
-                mapObj -> mapObj != null
-                    && mapObj.getMapWeight() == MapWeight.OBSTACLE
-            );
+    public boolean isObstacle(@NotNull Point3D point) {
+        MapObject obj = get(point);
+        return obj != null && obj.getMapWeight() == MapWeight.OBSTACLE;
     }
 
     /**
-     * Used for player vision logic. Do not use it manually!
+     * Used for player vision logic.
      */
-    @Override
-    @Deprecated
-    public boolean blocksLight(int x, int y) {
-        return IntStream
-            .range(0, zSize)
-            .mapToObj(z -> get(x, y, z))
-            .anyMatch(
-                mapObj -> mapObj != null
-                    && mapObj.getMapWeight() == MapWeight.BLOCKS_LIGHT
-            );
+    public boolean blocksLight(@NotNull Point3D point) {
+        MapObject obj = get(point);
+        return obj != null && obj.getMapWeight() == MapWeight.BLOCKS_LIGHT;
     }
 
     /**
-     * Used for player vision logic. Do not use it manually!
+     * Used for player vision logic.
      */
-    @Override
-    @Deprecated
-    public boolean blocksStep(int x, int y) {
-        return IntStream
-            .range(0, zSize)
-            .mapToObj(z -> get(x, y, z))
-            .anyMatch(
-                mapObj -> mapObj != null
-                    && mapObj.getMapWeight() == MapWeight.BLOCKS_STEP
-            );
+    public boolean blocksStep(@NotNull Point3D point) {
+        MapObject obj = get(point);
+        return obj != null && obj.getMapWeight() == MapWeight.BLOCKS_STEP;
     }
 
     /**
-     * Used for player vision logic. Do not use it manually!
+     * Used for player vision logic.
      */
-    @Override
-    @Deprecated
-    public void visit(int x, int y) {
+    public void visit(Point3D point) {
         // TODO: implement 'visit'
     }
 
-    @SuppressWarnings("HardCodedStringLiteral")
     @Override
     public String toString() {
         var sb = new StringBuilder();

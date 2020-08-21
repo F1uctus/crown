@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.f1uctus</groupId>
     <artifactId>crown</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0-alpha</version>
     <build>
         <plugins>
             <plugin>
@@ -56,11 +56,6 @@
             <groupId>com.github.kostaskougios</groupId>
             <artifactId>cloning</artifactId>
             <version>-d8d786fb32-1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.fabio-t</groupId>
-            <artifactId>rlforj-alt</artifactId>
-            <version>0.3.0</version>
         </dependency>
     </dependencies>
     <distributionManagement>
