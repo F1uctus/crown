@@ -15,18 +15,19 @@
     </a>
 </p>
 
-<h3 align="center">A Java library for RPG/roguelikes.</h3>
+<h3 align="center">A Java framework for RPG/roguelikes.</h3>
 
 ## API Structure
 
 | Package | Description |
 |-|-|
-| `com.crown.creatures`    | Basic `Creature` API
-| `com.crown.i18n`         | Internationalization helpers
-| `com.crown.maps`         | 3D / 2D(tiled) maps logic
-| `com.crown.skills`       | `Creature` skills API
-| `com.crown.time`         | `VirtualClock` implementation + `Timeline` (time-travelling API - may be unstable in some cases, please report any issues)
-| `com.crown.common.utils` | `Random` class extensions, RPG-specific
+| `com.crown.creatures`           | Basic `Creature` API
+| `com.crown.i18n`                | Internationalization helpers
+| `com.crown.maps`                | 3D / 2D(tiled) maps logic
+| `— com.crown.maps.pathfinding`  | 3D map pathfinding algorithms and heuristics
+| `com.crown.skills`              | `Creature` skills API
+| `com.crown.time`                | `VirtualClock` implementation + `Timeline` (time-travelling API - may be unstable in some cases)
+| `com.crown.common.utils`        | `Random` class extensions & other utility stuff
 
 ## Usage
 
@@ -36,9 +37,12 @@
 <dependency>
     <groupId>com.github.F1uctus</groupId>
     <artifactId>crown</artifactId>
-    <version>Specify latest version</version>
+    <version></version>
 </dependency>
 ```
+
+To see the most comprehensive usage overview, see my [demo game](https://github.com/f1uctus/cotfk),
+or [RPGram](https://github.com/zemllia/rpgram) game implementations.
 
 ### Code
 
@@ -80,8 +84,6 @@ Initialization is static:
 ```java
 Timeline.init(gameClock, gameState);
 ```
-
-For more exact usage overview, see [this game](https://github.com/f1uctus/cotfk).
 
 #### Internationalization
 
