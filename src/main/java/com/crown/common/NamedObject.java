@@ -31,11 +31,23 @@ public abstract class NamedObject {
 
     /**
      * Generates a new UUID for this game object.
-     * Used to create a clone for the game object during time travelling process,
+     * Used to create a clone for the game object during time travelling process.
+     * Think twice before using this method, changing object id will unbind
+     * it from {@link ObjectsMap}s and other places in code,
      * so should NOT be used in your code in general.
      */
     public void newId() {
         id = Random.getId();
+    }
+
+    /**
+     * Sets a new UUID for this game object.
+     * Think twice before using this method, changing object id will unbind
+     * it from {@link ObjectsMap}s and other places in code,
+     * so should NOT be used in your code in general.
+     */
+    public void setId(UUID value) {
+        id = value;
     }
 
     /**
