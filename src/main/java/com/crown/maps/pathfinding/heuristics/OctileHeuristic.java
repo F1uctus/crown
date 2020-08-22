@@ -2,7 +2,19 @@ package com.crown.maps.pathfinding.heuristics;
 
 import com.crown.maps.Point3D;
 
+/**
+ * 3D Octile heuristic for A*.
+ */
 public class OctileHeuristic implements IAStarHeuristic {
+    private static final OctileHeuristic instance = new OctileHeuristic();
+
+    public static OctileHeuristic get() {
+        return instance;
+    }
+
+    private OctileHeuristic() {
+    }
+
     @Override
     public double apply(Point3D startPoint, Point3D endPoint) {
         var d = startPoint.minus(endPoint).abs();

@@ -3,17 +3,33 @@ package com.crown.maps.pathfinding;
 import com.crown.maps.Map;
 import com.crown.maps.Point3D;
 import com.crown.maps.pathfinding.heuristics.IAStarHeuristic;
+import com.crown.maps.pathfinding.heuristics.OctileHeuristic;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
+/**
+ * Famous A* pathfinding implementation for the 3D grid map.
+ */
 public class AStarPathfinder implements IPathfinder {
     private final Map map;
     private final Point3D mapMaxPoint;
     private final boolean includeDiagonals;
-
     private final IAStarHeuristic heuristic;
 
+    /**
+     * Initialize a new A* pathfinder for given map.
+     * Uses 3D-Octile heuristic by default.
+     */
+    public AStarPathfinder(final Map map) {
+        this(map, OctileHeuristic.get(), true);
+    }
+
+    /**
+     * Initialize a new A* pathfinder for given map.
+     * You can specify any heuristic from [heuristics] package.
+     * Diagonal steps are enabled.
+     */
     public AStarPathfinder(
         final Map map,
         IAStarHeuristic heuristic
@@ -21,6 +37,11 @@ public class AStarPathfinder implements IPathfinder {
         this(map, heuristic, true);
     }
 
+    /**
+     * Initialize a new A* pathfinder for given map.
+     * You can specify any heuristic from [heuristics] package,
+     * and allow/restrict pathfinder to use diagonal steps.
+     */
     public AStarPathfinder(
         final Map map,
         final IAStarHeuristic heuristic,
@@ -32,10 +53,16 @@ public class AStarPathfinder implements IPathfinder {
         this.includeDiagonals = includeDiagonals;
     }
 
+    /**
+     * Finds an optimal path between given points.
+     */
     public Point3D[] findPath(final Point3D startPt, final Point3D endPt) {
         return findPath(startPt, endPt, -1);
     }
 
+    /**
+     * Finds an optimal path between given points.
+     */
     public Point3D[] findPath(
         final Point3D startPt,
         final Point3D endPt,
