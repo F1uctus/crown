@@ -24,7 +24,7 @@
 | `com.crown.creatures`           | Basic `Creature` API
 | `com.crown.i18n`                | Internationalization helpers
 | `com.crown.maps`                | 3D / 2D(tiled) maps logic
-| — `com.crown.maps.pathfinding`  | 3D map pathfinding algorithms and heuristics
+| — `...maps.pathfinding`              | 3D map pathfinding algorithms and heuristics
 | `com.crown.skills`              | `Creature` skills API
 | `com.crown.time`                | `VirtualClock` implementation + `Timeline` (time-travelling API - may be unstable in some cases)
 | `com.crown.common.utils`        | `Random` class extensions & other utility stuff
