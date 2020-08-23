@@ -34,6 +34,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>articdive-nexus</id>
+            <url>https://repo.articdive.de/repository/maven-public/</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -56,6 +60,16 @@
             <groupId>com.github.kostaskougios</groupId>
             <artifactId>cloning</artifactId>
             <version>-d8d786fb32-1</version>
+        </dependency>
+        <dependency>
+            <groupId>de.articdive</groupId>
+            <artifactId>jnoise</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mini2Dx</groupId>
+            <artifactId>gdx-math</artifactId>
+            <version>1.9.11</version>
         </dependency>
     </dependencies>
     <distributionManagement>
