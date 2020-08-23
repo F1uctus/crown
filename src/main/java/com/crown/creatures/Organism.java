@@ -342,24 +342,24 @@ public abstract class Organism extends MapObject {
         // update icon
         Direction direction = getMapIcon().getDirection();
         if (deltaY > 0) {
-            direction = Direction.south;
+            direction = Direction.s;
             if (deltaX > 0) {
-                direction = Direction.southEast;
+                direction = Direction.se;
             } else if (deltaX < 0) {
-                direction = Direction.southWest;
+                direction = Direction.sw;
             }
         } else if (deltaY < 0) {
-            direction = Direction.north;
+            direction = Direction.n;
             if (deltaX > 0) {
-                direction = Direction.northEast;
+                direction = Direction.ne;
             } else if (deltaX < 0) {
-                direction = Direction.northWest;
+                direction = Direction.nw;
             }
         } else {
             if (deltaX > 0) {
-                direction = Direction.east;
+                direction = Direction.e;
             } else if (deltaX < 0) {
-                direction = Direction.west;
+                direction = Direction.w;
             }
         }
         getMapIcon().setDirection(direction);
