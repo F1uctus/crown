@@ -12,14 +12,6 @@ public class Point3D implements Serializable {
     public int z;
 
     /**
-     * Default constructor for a point.
-     * default value for x, y, z is 0
-     */
-    public Point3D() {
-        this(0, 0, 0);
-    }
-
-    /**
      * Constructor for a point.
      */
     public Point3D(int x, int y, int z) {

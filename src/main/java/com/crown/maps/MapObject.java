@@ -117,7 +117,7 @@ public abstract class MapObject extends NamedObject {
     private Pair<Point3D, Point3D> getBounds() {
         var map = getMap();
         var minPt = new Point3D(map.xSize, map.ySize, map.zSize);
-        var maxPt = new Point3D();
+        var maxPt = Point3D.ZERO;
         for (var part : particles) {
             minPt = Point3D.min(minPt, part);
             maxPt = Point3D.max(maxPt, part);
