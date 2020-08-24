@@ -151,6 +151,26 @@ public abstract class Map extends NamedObject implements Serializable {
     }
 
     /**
+     * Returns an object that is topmost in selected map column.
+     * Z coordinate is used to specify "view point height".
+     * e. g. if you pass z = 3 for each map point you will get
+     * object with the highest z position if it is <= 3.
+     */
+    public @Nullable MapObject getTopmost(Point3D point) {
+        MapObject result = null;
+        int height = MathAux.clamp(point.z + 1, 1, zSize);
+        for (int z = 0; z < height; z++) {
+            if (inBounds(point.x, point.y)) {
+                var obj = get(point.x, point.y, z);
+                if (obj != null) {
+                    result = obj;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
      * Returns icons of 2D area for map region with given radius.
      * Z coordinate is used to specify "view point height".
      * e. g. if you pass z = 3 for each map point you will get
