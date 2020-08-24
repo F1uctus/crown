@@ -70,9 +70,7 @@ public enum Direction {
         if (z > 0 && dir == none) return up;
         if (z < 0 && dir == none) return down;
         if (z == 0) return none;
-        else throw new IllegalArgumentException(
-            "Invalid delta-point for direction (" + x + ", " + y + ", " + z + ")"
-        );
+        return dir;
     }
 
     public static Direction fromPoint(Point3D point) {
