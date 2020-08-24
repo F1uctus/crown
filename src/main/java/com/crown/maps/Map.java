@@ -90,13 +90,13 @@ public abstract class Map extends NamedObject implements Serializable {
      */
     public @Nullable MapObject[] getColumn(Point3D point) {
         int height = MathAux.clamp(point.z + 1, 1, zSize);
-        MapObject[] area = new MapObject[height];
+        MapObject[] column = new MapObject[height];
         for (int z = 0; z < height; z++) {
             if (inBounds(point.x, point.y)) {
-                area[z] = get(point.x, point.y, z);
+                column[z] = get(point.x, point.y, z);
             }
         }
-        return area;
+        return column;
     }
 
     /**
