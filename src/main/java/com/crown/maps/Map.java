@@ -243,16 +243,16 @@ public abstract class Map extends NamedObject implements Serializable {
     }
 
     @Nullable
-    public MapObject get(int x, int y, int z) {
-        return get(new Point3D(x, y, z));
+    public MapObject get(@NotNull Point3D pt) {
+        return get(pt.x, pt.y, pt.z);
     }
 
     @Nullable
-    public MapObject get(@NotNull Point3D pt) {
-        if (!inBounds(pt)) {
+    public MapObject get(int x, int y, int z) {
+        if (!inBounds(x, y, z)) {
             return null;
         }
-        var cont = getRaw(pt.x, pt.y, pt.z);
+        var cont = getRaw(x, y, z);
         if (cont.objects.empty()) {
             return null;
         }
