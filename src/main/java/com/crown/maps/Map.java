@@ -62,7 +62,7 @@ public abstract class Map extends NamedObject implements Serializable {
 
     /**
      * Returns 3D area for map region with given radius.
-     * Objects with Z-coordinate <= to point.z are returned.
+     * Objects with Z-coordinate <= point.z are returned.
      */
     public @Nullable MapObject[][][] getRaw3DArea(Point3D centerPoint, int radius) {
         final int diameter = radius * 2 + 1;
@@ -89,7 +89,7 @@ public abstract class Map extends NamedObject implements Serializable {
 
     /**
      * Returns 3D area for map region with given radius.
-     * Icons with Z-coordinate <= to point.z are returned.
+     * Icons with Z-coordinate <= point.z are returned.
      */
     public MapIcon<?>[][][] get3DArea(Point3D centerPoint, int radius) {
         var area = getRaw3DArea(centerPoint, radius);
