@@ -68,21 +68,33 @@ public abstract class Map extends NamedObject implements Serializable {
         final int diameter = radius * 2 + 1;
         int height = MathAux.clamp(centerPoint.z + 1, 1, zSize);
         MapObject[][][] area = new MapObject[height][diameter][diameter];
-
-        int areaZ = 0;
         for (int z = 0; z < height; z++) {
             int areaY = 0;
             for (int y = centerPoint.y - radius; y <= centerPoint.y + radius; y++) {
                 int areaX = 0;
                 for (int x = centerPoint.x - radius; x <= centerPoint.x + radius; x++) {
                     if (inBounds(x, y)) {
-                        area[areaZ][areaY][areaX] = get(x, y, z);
+                        area[z][areaY][areaX] = get(x, y, z);
                     }
                     areaX++;
                 }
                 areaY++;
             }
-            areaZ++;
+        }
+        return area;
+    }
+
+    /**
+     * Returns a 3D z-column of this map at specified point.
+     * Objects with Z-coordinate <= point.z are returned.
+     */
+    public @Nullable MapObject[] getColumn(Point3D point) {
+        int height = MathAux.clamp(point.z + 1, 1, zSize);
+        MapObject[] area = new MapObject[height];
+        for (int z = 0; z < height; z++) {
+            if (inBounds(point.x, point.y)) {
+                area[z] = get(point.x, point.y, z);
+            }
         }
         return area;
     }
