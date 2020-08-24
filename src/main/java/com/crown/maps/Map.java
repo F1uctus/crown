@@ -1,6 +1,7 @@
 package com.crown.maps;
 
 import com.crown.common.NamedObject;
+import com.crown.common.utils.MathAux;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,9 +66,7 @@ public abstract class Map extends NamedObject implements Serializable {
      */
     public @Nullable MapObject[][][] getRaw3DArea(Point3D centerPoint, int radius) {
         final int diameter = radius * 2 + 1;
-        int ptZ = centerPoint.z + 1;
-        int height = ptZ > 0 && ptZ < zSize ? ptZ : zSize;
-
+        int height = MathAux.clamp(centerPoint.z + 1, 1, zSize);
         MapObject[][][] area = new MapObject[height][diameter][diameter];
 
         int areaZ = 0;
@@ -119,9 +118,7 @@ public abstract class Map extends NamedObject implements Serializable {
         final int diameter = radius * 2 + 1;
         MapObject[][] area = new MapObject[diameter][diameter];
 
-        int ptZ = centerPoint.z + 1;
-        int height = ptZ > 0 && ptZ < zSize ? ptZ : zSize;
-
+        int height = MathAux.clamp(centerPoint.z + 1, 1, zSize);
         for (int z = 0; z < height; z++) {
             int areaY = 0;
             for (int y = centerPoint.y - radius; y <= centerPoint.y + radius; y++) {
