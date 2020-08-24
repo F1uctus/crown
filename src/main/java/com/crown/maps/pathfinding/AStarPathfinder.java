@@ -68,7 +68,7 @@ public class AStarPathfinder implements IPathfinder {
         final Point3D endPt,
         final int radius
     ) {
-        if (!this.map.contains(startPt) || !this.map.contains(endPt)) {
+        if (!this.map.inBounds(startPt) || !this.map.inBounds(endPt)) {
             return null;
         }
         if (radius == 0) {
@@ -123,7 +123,7 @@ public class AStarPathfinder implements IPathfinder {
 
                 final Point3D target = step.point.plus(dx, dy, dz);
 
-                if (target.isInsideOf(minPt, maxPt) && this.map.contains(target)) {
+                if (target.isInsideOf(minPt, maxPt) && this.map.inBounds(target)) {
                     // the only allowed obstacle is the end point
                     if (!target.equals(endPt) && this.map.isObstacle(target)) {
                         continue;

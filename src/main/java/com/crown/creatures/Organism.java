@@ -344,7 +344,7 @@ public abstract class Organism extends MapObject {
 
         var tgtPos = getPt0().plus(deltaX, deltaY, deltaZ);
         var tgtObj = getMap().get(tgtPos);
-        if (getMap().contains(tgtPos)
+        if (getMap().inBounds(tgtPos)
             && (tgtObj == null || tgtObj.getMapWeight() != MapWeight.OBSTACLE)) {
             var delta = (int) getPt0().getDistance(tgtPos);
             if (getEnergy() < delta) {

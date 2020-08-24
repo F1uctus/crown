@@ -76,7 +76,7 @@ public abstract class Map extends NamedObject implements Serializable {
             for (int y = centerPoint.y - radius; y <= centerPoint.y + radius; y++) {
                 int areaX = 0;
                 for (int x = centerPoint.x - radius; x <= centerPoint.x + radius; x++) {
-                    if (contains(x, y)) {
+                    if (inBounds(x, y)) {
                         area[areaZ][areaY][areaX] = get(x, y, z);
                     }
                     areaX++;
@@ -127,7 +127,7 @@ public abstract class Map extends NamedObject implements Serializable {
             for (int y = centerPoint.y - radius; y <= centerPoint.y + radius; y++) {
                 int areaX = 0;
                 for (int x = centerPoint.x - radius; x <= centerPoint.x + radius; x++) {
-                    if (contains(x, y)) {
+                    if (inBounds(x, y)) {
                         var obj = get(x, y, z);
                         if (obj != null) {
                             area[areaY][areaX] = obj;
@@ -179,8 +179,8 @@ public abstract class Map extends NamedObject implements Serializable {
      * then adds it on the current point.
      */
     public void move(@NotNull MapObject mapObj) {
-        if (contains(mapObj.getPt0())) {
-            if (contains(mapObj.getLastPt0())) {
+        if (inBounds(mapObj.getPt0())) {
+            if (inBounds(mapObj.getLastPt0())) {
                 for (var pt : mapObj.lastParticles) {
                     getRaw(pt).objects.remove(mapObj);
                 }
@@ -193,14 +193,14 @@ public abstract class Map extends NamedObject implements Serializable {
     /**
      * Checks if specified point is inside this map's bounds.
      */
-    public boolean contains(@NotNull Point3D pt) {
-        return contains(pt.x, pt.y, pt.z);
+    public boolean inBounds(@NotNull Point3D pt) {
+        return inBounds(pt.x, pt.y, pt.z);
     }
 
     /**
      * Checks if specified point is inside this map's bounds.
      */
-    public boolean contains(int x, int y) {
+    public boolean inBounds(int x, int y) {
         return x >= 0 && x < xSize
             && y >= 0 && y < ySize;
     }
@@ -208,8 +208,8 @@ public abstract class Map extends NamedObject implements Serializable {
     /**
      * Checks if specified point is inside this map's bounds.
      */
-    public boolean contains(int x, int y, int z) {
-        return contains(x, y)
+    public boolean inBounds(int x, int y, int z) {
+        return inBounds(x, y)
             && z >= 0 && z < zSize;
     }
 
@@ -220,7 +220,7 @@ public abstract class Map extends NamedObject implements Serializable {
 
     @Nullable
     public MapObject get(@NotNull Point3D pt) {
-        if (!contains(pt)) {
+        if (!inBounds(pt)) {
             return null;
         }
         var cont = getRaw(pt.x, pt.y, pt.z);
