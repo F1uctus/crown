@@ -1,11 +1,13 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.junit.jupiter.api.Test;
 
 import com.crown.common.NamedObject;
 import com.crown.common.ObjectsMap;
 
 public class ObjectsMapTest {
-    public class GameObject extends NamedObject {
+    public static class GameObject extends NamedObject {
         public GameObject(String keyName) {
             super(keyName);
         }
@@ -33,7 +35,7 @@ public class ObjectsMapTest {
         map.add(obj1);
         map.remove("object 1");
 
-        assertEquals(map.get("object 1"), null);
+        assertNull(map.get("object 1"));
     }
 
     @Test
@@ -44,7 +46,7 @@ public class ObjectsMapTest {
         map.add(obj1);
         map.remove(obj1);
 
-        assertEquals(map.get("object 1"), null);
+        assertNull(map.get("object 1"));
     }
 
     @Test
