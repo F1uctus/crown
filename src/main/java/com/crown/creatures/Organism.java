@@ -340,32 +340,9 @@ public abstract class Organism extends MapObject {
      */
     public ITemplate move(int deltaX, int deltaY, int deltaZ) {
         // update icon
-        Direction direction = getMapIcon().getDirection();
-        if (deltaY > 0) {
-            direction = Direction.s;
-            if (deltaX > 0) {
-                direction = Direction.se;
-            } else if (deltaX < 0) {
-                direction = Direction.sw;
-            }
-        } else if (deltaY < 0) {
-            direction = Direction.n;
-            if (deltaX > 0) {
-                direction = Direction.ne;
-            } else if (deltaX < 0) {
-                direction = Direction.nw;
-            }
-        } else {
-            if (deltaX > 0) {
-                direction = Direction.e;
-            } else if (deltaX < 0) {
-                direction = Direction.w;
-            }
-        }
-        getMapIcon().setDirection(direction);
-        getMapIcon().stepAnimation();
+        getMapIcon().rotateTo(Direction.fromCoordinates(deltaX, deltaY, deltaZ));
 
-        var tgtPos = getPt0().plus(new Point3D(deltaX, deltaY, deltaZ));
+        var tgtPos = getPt0().plus(deltaX, deltaY, deltaZ);
         var tgtObj = getMap().get(tgtPos);
         if (getMap().contains(tgtPos)
             && (tgtObj == null || tgtObj.getMapWeight() != MapWeight.OBSTACLE)) {
