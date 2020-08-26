@@ -30,7 +30,7 @@ public abstract class Action<T extends MapObject> {
     public static Action<Organism> change(Organism target, @NonNls String changerMethodName, int delta) {
         Method m;
         try {
-            m = Organism.class.getDeclaredMethod(changerMethodName, int.class);
+            m = target.getClass().getDeclaredMethod(changerMethodName, int.class);
             m.setAccessible(true);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
