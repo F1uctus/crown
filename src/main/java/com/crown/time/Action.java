@@ -28,25 +28,26 @@ public abstract class Action<T extends MapObject> {
     }
 
     public static Action<Organism> change(Organism target, @NonNls String changerMethodName, int delta) {
-        Method m;
+        Method method;
         try {
-            m = Organism.class.getDeclaredMethod(changerMethodName, int.class);
-            m.setAccessible(true);
+            method = Organism.class.getDeclaredMethod(changerMethodName, int.class);
+            method.setAccessible(true);
         } catch (NoSuchMethodException e) {
             try {
-                m = target.getClass().getDeclaredMethod(changerMethodName, int.class);
-                m.setAccessible(true);
+                method = target.getClass().getDeclaredMethod(changerMethodName, int.class);
+                method.setAccessible(true);
             } catch (NoSuchMethodException e1) {
                 e.printStackTrace();
                 return null;
             }
         }
 
+        final Method finalMethod = method;
         return new Action<>(target) {
             @Override
             public ITemplate perform() {
                 try {
-                    return (ITemplate) m.invoke(getTarget(), delta);
+                    return (ITemplate) finalMethod.invoke(getTarget(), delta);
                 } catch (Throwable e) {
                     return I18n.of(e.getMessage());
                 }
@@ -55,7 +56,7 @@ public abstract class Action<T extends MapObject> {
             @Override
             public ITemplate rollback() {
                 try {
-                    return (ITemplate) m.invoke(getTarget(), -delta);
+                    return (ITemplate) finalMethod.invoke(getTarget(), -delta);
                 } catch (Throwable e) {
                     return I18n.of(e.getMessage());
                 }
