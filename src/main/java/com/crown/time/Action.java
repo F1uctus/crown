@@ -29,17 +29,24 @@ public abstract class Action<T extends MapObject> {
 
     public static Action<Organism> change(Organism target, @NonNls String changerMethodName, int delta) {
         Method method;
-        try {
-            method = Organism.class.getDeclaredMethod(changerMethodName, int.class);
-            method.setAccessible(true);
-        } catch (NoSuchMethodException e) {
+        Class<?> cls = target.getClass();
+        do {
             try {
-                method = target.getClass().getDeclaredMethod(changerMethodName, int.class);
+                method = cls.getDeclaredMethod(changerMethodName, int.class);
                 method.setAccessible(true);
             } catch (NoSuchMethodException e1) {
-                e.printStackTrace();
-                return null;
+                method = null;
             }
+            cls = cls.getSuperclass();
+        } while (cls != null && method == null);
+
+        if (cls == null && method == null) {
+            // failed to get method
+            System.err.println(
+                "Failed to build Action.change for method "
+                    + target.getClass().getTypeName() + "." + changerMethodName
+            );
+            System.exit(-1);
         }
 
         final Method finalMethod = method;
