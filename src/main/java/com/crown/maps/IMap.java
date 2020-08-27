@@ -9,7 +9,7 @@ public interface IMap {
 
     boolean inBounds(Point3D point);
 
-    boolean isObstacle(@NotNull Point3D point);
+    boolean isWalkable(@NotNull Point3D point);
 
     boolean isTransparent(@NotNull Point3D point);
 }
