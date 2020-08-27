@@ -2,6 +2,7 @@ package com.crown.maps;
 
 import com.crown.common.NamedObject;
 import com.crown.common.utils.Random;
+import com.crown.items.InventoryItem;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -26,7 +27,7 @@ public abstract class MapObject extends NamedObject {
 
     /**
      * Creates new map object with size of 1
-     * on the random map point.
+     * on the random map point, and places it on this map.
      */
     public MapObject(
         String name,
@@ -44,7 +45,7 @@ public abstract class MapObject extends NamedObject {
     }
 
     /**
-     * Creates new object with size of 1.
+     * Creates new object with size of 1, and places it on the specified map.
      */
     public MapObject(
         String name,
@@ -64,7 +65,7 @@ public abstract class MapObject extends NamedObject {
 
     /**
      * Creates new "large" object placed
-     * on multiple points of map.
+     * on multiple points of map, and places it on this map.
      */
     public MapObject(
         String name,
@@ -90,12 +91,21 @@ public abstract class MapObject extends NamedObject {
         this.map = map;
     }
 
+    /**
+     * Determines objects that are dropped when some condition is satisfied
+     * (e.g. object destroyed or was hit by something).
+     */
+    public abstract InventoryItem[] drop();
+
     public abstract MapIcon<?> getMapIcon();
 
     public UUID getMapIconId() {
         return mapIconId;
     }
 
+    /**
+     * Returns the weight of the object.
+     */
     public MapWeight getMapWeight() {
         return mapWeight;
     }
@@ -107,11 +117,19 @@ public abstract class MapObject extends NamedObject {
         return points;
     }
 
+    /**
+     * Returns 2D width of this object
+     * (as it can occupy more than 1 point on the map).
+     */
     public int getWidth() {
         var bounds = getBounds();
         return bounds.getRight().x - bounds.getLeft().x + 1;
     }
 
+    /**
+     * Returns 2D height of this object
+     * (as it can occupy more than 1 point on the map).
+     */
     public int getHeight() {
         var bounds = getBounds();
         return bounds.getRight().y - bounds.getLeft().y + 1;
@@ -131,10 +149,17 @@ public abstract class MapObject extends NamedObject {
         return Pair.of(minPt, maxPt);
     }
 
+    /**
+     * Returns the top-left point of this object on the map.
+     */
     public Point3D getPt0() {
         return points[0];
     }
 
+    /**
+     * Returns the last top-left point of this object on the map.
+     * (Point, from which object has moved the last time).
+     */
     public Point3D getLastPt0() {
         return lastPoints[0];
     }
@@ -151,6 +176,34 @@ public abstract class MapObject extends NamedObject {
             part.z += deltaZ;
         }
         getMap().move(this);
+    }
+
+    /**
+     * Determines if this object can be passed-through (used by pathfinding algorithms).
+     */
+    public boolean isWalkable() {
+        return isWalkable;
+    }
+
+    /**
+     * Sets if this object can be passed-through (used by pathfinding algorithms).
+     */
+    public void setWalkable(boolean walkable) {
+        isWalkable = walkable;
+    }
+
+    /**
+     * Determines if this object can be viewed-through (used by vision algorithms).
+     */
+    public boolean isTransparent() {
+        return isTransparent;
+    }
+
+    /**
+     * Sets if this object can be viewed-through (used by vision algorithms).
+     */
+    public void setTransparent(boolean transparent) {
+        isTransparent = transparent;
     }
 
     @Override
