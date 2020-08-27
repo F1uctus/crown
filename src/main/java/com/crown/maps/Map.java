@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class Map extends NamedObject implements Serializable {
+public abstract class Map extends NamedObject implements IMap, Serializable {
     public final int xSize;
     public final int ySize;
     public final int zSize;
@@ -268,7 +268,7 @@ public abstract class Map extends NamedObject implements Serializable {
     }
 
     /**
-     * Removes all MapObject-s from map.
+     * Removes all MapObject-s from the map.
      */
     protected void clear() {
         for (int z = 0; z < zSize; z++) {
@@ -283,25 +283,17 @@ public abstract class Map extends NamedObject implements Serializable {
     /**
      * Used for player movement checks.
      */
-    public boolean isObstacle(@NotNull Point3D point) {
+    public boolean isWalkable(@NotNull Point3D point) {
         MapObject obj = get(point);
-        return obj != null && obj.getMapWeight() == MapWeight.OBSTACLE;
+        return obj != null && obj.isWalkable();
     }
 
     /**
      * Used for player vision logic.
      */
-    public boolean blocksLight(@NotNull Point3D point) {
+    public boolean isTransparent(@NotNull Point3D point) {
         MapObject obj = get(point);
-        return obj != null && obj.getMapWeight() == MapWeight.BLOCKS_LIGHT;
-    }
-
-    /**
-     * Used for player vision logic.
-     */
-    public boolean blocksStep(@NotNull Point3D point) {
-        MapObject obj = get(point);
-        return obj != null && obj.getMapWeight() == MapWeight.BLOCKS_STEP;
+        return obj != null && obj.isTransparent();
     }
 
     /**
