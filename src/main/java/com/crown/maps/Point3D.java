@@ -1,5 +1,7 @@
 package com.crown.maps;
 
+import com.crown.common.utils.MathAux;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -51,7 +53,30 @@ public class Point3D implements Serializable {
     }
 
     /**
-     * Get the distance between this point and another point.
+     * Returns a point representing a MathAux.positiveSign-s of this point.
+     */
+    public Point3D positiveSign() {
+        return new Point3D(
+            MathAux.positiveSign(x),
+            MathAux.positiveSign(y),
+            MathAux.positiveSign(z)
+        );
+    }
+
+
+    /**
+     * Returns a point representing signs of this point coordinates.
+     */
+    public Point3D signum() {
+        return new Point3D(
+            MathAux.signum(x),
+            MathAux.signum(y),
+            MathAux.signum(z)
+        );
+    }
+
+    /**
+     * Get the Euclidean distance between this point and another point.
      */
     public double getDistance(Point3D point) {
         return Math.sqrt(
@@ -90,6 +115,34 @@ public class Point3D implements Serializable {
     }
 
     /**
+     * Returns new point that is the product of this and
+     * another points. The product of two points is another point
+     * whose x, y, and z values are the product of
+     * the two point x, y, and z values.
+     */
+    public Point3D mul(Point3D point) {
+        return new Point3D(
+            x * point.x,
+            y * point.y,
+            z * point.z
+        );
+    }
+
+    /**
+     * Returns new point that is the quotient of this and
+     * another points. The quotient of two points is another point
+     * whose x, y, and z values are the quotient of
+     * the two point x, y, and z values.
+     */
+    public Point3D div(Point3D point) {
+        return new Point3D(
+            x / point.x,
+            y / point.y,
+            z / point.z
+        );
+    }
+
+    /**
      * Returns new point with all coordinates increased by deltas.
      */
     public Point3D plus(int dx, int dy, int dz) {
@@ -112,6 +165,29 @@ public class Point3D implements Serializable {
     }
 
     /**
+     * Returns new point with all coordinates multiplied by x/y/z.
+     */
+    public Point3D mul(int x, int y, int z) {
+        return new Point3D(
+            this.x * x,
+            this.y * y,
+            this.z * z
+        );
+    }
+
+
+    /**
+     * Returns new point with all coordinates divided by x/y/z.
+     */
+    public Point3D div(int x, int y, int z) {
+        return new Point3D(
+            this.x / x,
+            this.y / y,
+            this.z / z
+        );
+    }
+
+    /**
      * Returns new point with all coordinates increased by value.
      */
     public Point3D plus(int value) {
@@ -130,6 +206,29 @@ public class Point3D implements Serializable {
             x - value,
             y - value,
             z - value
+        );
+    }
+
+        /**
+     * Returns new point with all coordinates multiplied by value.
+     */
+    public Point3D mul(int value) {
+        return new Point3D(
+            this.x * value,
+            this.y * value,
+            this.z * value
+        );
+    }
+
+
+    /**
+     * Returns new point with all coordinates divided by value.
+     */
+    public Point3D div(int value) {
+        return new Point3D(
+            this.x / value,
+            this.y / value,
+            this.z / value
         );
     }
 
