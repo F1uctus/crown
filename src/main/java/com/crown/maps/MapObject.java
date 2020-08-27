@@ -18,8 +18,11 @@ public abstract class MapObject extends NamedObject {
     private final UUID mapIconId;
     private final MapWeight mapWeight;
 
-    protected Point3D[] lastParticles;
-    protected Point3D[] particles;
+    private boolean isWalkable;
+    private boolean isTransparent;
+
+    protected Point3D[] lastPoints;
+    protected Point3D[] points;
 
     /**
      * Creates new map object with size of 1
@@ -68,12 +71,12 @@ public abstract class MapObject extends NamedObject {
         Map map,
         MapIcon<?> mapIcon,
         MapWeight mapWeight,
-        Point3D[] particles
+        Point3D[] points
     ) {
         super(name);
         this.mapIconId = mapIcon.getId();
         this.mapWeight = mapWeight;
-        this.particles = lastParticles = particles;
+        this.points = lastPoints = points;
         setMap(map);
     }
 
@@ -97,8 +100,11 @@ public abstract class MapObject extends NamedObject {
         return mapWeight;
     }
 
-    public Point3D[] getParticles() {
-        return particles;
+    /**
+     * Returns all points on the map occupied by this object.
+     */
+    public Point3D[] getPoints() {
+        return points;
     }
 
     public int getWidth() {
@@ -118,7 +124,7 @@ public abstract class MapObject extends NamedObject {
         var map = getMap();
         var minPt = new Point3D(map.xSize, map.ySize, map.zSize);
         var maxPt = Point3D.ZERO;
-        for (var part : particles) {
+        for (var part : points) {
             minPt = Point3D.min(minPt, part);
             maxPt = Point3D.max(maxPt, part);
         }
@@ -126,11 +132,11 @@ public abstract class MapObject extends NamedObject {
     }
 
     public Point3D getPt0() {
-        return particles[0];
+        return points[0];
     }
 
     public Point3D getLastPt0() {
-        return lastParticles[0];
+        return lastPoints[0];
     }
 
     /**
@@ -138,8 +144,8 @@ public abstract class MapObject extends NamedObject {
      * Unsafe, map bounds are not checked.
      */
     public void moveView(int deltaX, int deltaY, int deltaZ) {
-        lastParticles = SerializationUtils.clone(particles);
-        for (Point3D part : particles) {
+        lastPoints = SerializationUtils.clone(points);
+        for (Point3D part : points) {
             part.x += deltaX;
             part.y += deltaY;
             part.z += deltaZ;

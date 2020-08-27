@@ -192,13 +192,13 @@ public abstract class Map extends NamedObject implements Serializable {
     }
 
     public void add(@NotNull MapObject mapObj) {
-        for (var pt : mapObj.particles) {
+        for (var pt : mapObj.points) {
             getRaw(pt).objects.push(mapObj);
         }
     }
 
     public void remove(@NotNull MapObject mapObj) {
-        for (var pt : mapObj.particles) {
+        for (var pt : mapObj.points) {
             getRaw(pt).objects.remove(mapObj);
         }
     }
@@ -210,7 +210,7 @@ public abstract class Map extends NamedObject implements Serializable {
     public void move(@NotNull MapObject mapObj) {
         if (inBounds(mapObj.getPt0())) {
             if (inBounds(mapObj.getLastPt0())) {
-                for (var pt : mapObj.lastParticles) {
+                for (var pt : mapObj.lastPoints) {
                     getRaw(pt).objects.remove(mapObj);
                 }
             }
