@@ -125,7 +125,7 @@ public class AStarPathfinder implements IPathfinder {
 
                 if (target.isInsideOf(minPt, maxPt) && this.map.inBounds(target)) {
                     // the only allowed obstacle is the end point
-                    if (!target.equals(endPt) && this.map.isObstacle(target)) {
+                    if (!target.equals(endPt) && this.map.isWalkable(target)) {
                         continue;
                     }
 
