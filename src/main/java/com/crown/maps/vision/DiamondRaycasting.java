@@ -230,7 +230,8 @@ public class DiamondRaycasting {
         int r2 = maxRadius * maxRadius;
         var perimeter = new ArrayList<Ray3>();
         expandPerimeterFrom(map, perimeter, newRay(map, 0, 0, 0));
-        for (Ray3 ray : perimeter) {
+        for (int i = 0; i < perimeter.size(); i++) {
+            Ray3 ray = perimeter.get(i);
             int distance = 0;
             if (r2 > 0)
                 distance = ray.x * ray.x + ray.y * ray.y + ray.z * ray.z;
