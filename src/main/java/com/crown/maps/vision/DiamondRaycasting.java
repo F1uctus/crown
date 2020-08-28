@@ -221,7 +221,7 @@ public class DiamondRaycasting {
         }
     }
 
-    boolean[][][] computeFov(Map map, int playerX, int playerY, int playerZ, int maxRadius, boolean lightWalls) {
+    public boolean[][][] computeFov(Map map, int playerX, int playerY, int playerZ, int maxRadius, boolean lightWalls) {
         rayMap = new Ray3[map.xSize][map.ySize][map.zSize];
         rayMap2 = new Ray3[map.xSize][map.ySize][map.zSize];
         originX = playerX;
