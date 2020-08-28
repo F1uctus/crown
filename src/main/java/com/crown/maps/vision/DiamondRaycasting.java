@@ -180,7 +180,9 @@ public class DiamondRaycasting {
             ray.ignore = true;
         }
         boolean prop;
-        if (ray.inputZ != null) {
+        if (ray.inputZ == null) {
+            prop = !ray.ignore && obj != null && !obj.isTransparent();
+        } else {
             prop = !ray.ignore;
 //            var prevObj = map.get(ray.inputZ.x + originX, ray.inputZ.y + originY, ray.inputZ.z + originZ);
 //            if (ray.z < ray.inputZ.z) {
@@ -190,8 +192,6 @@ public class DiamondRaycasting {
 //                //dz == +
 //                prop = !ray.ignore && !(obj.floorTransparent && prevObj.ceilingTransparent);
 //            }
-        } else {
-            prop = !ray.ignore && !obj.isTransparent();
         }
         if (prop) {
             ray.errorX = ray.obscurityX = Math.abs(ray.x);
