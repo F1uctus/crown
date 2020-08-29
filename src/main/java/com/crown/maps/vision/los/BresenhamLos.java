@@ -36,7 +36,9 @@ public class BresenhamLos implements ILineOfSight {
             if (savePath) {
                 path.add(point);
             }
-            if (point.equals(end)) {
+            if (point.equals(start)) {
+                continue;
+            } else if (point.equals(end)) {
                 los = true;
                 break;
             }
@@ -46,15 +48,17 @@ public class BresenhamLos implements ILineOfSight {
         }
         if (!los && symmetric) {
             // Direct path failed, try alternate path
-            final var p1 = BresenhamLine.getFor(end, start);
+            final var backwardPath = BresenhamLine.getFor(end, start);
             final Vector<Point3D> oldPath = path;
             path = new Vector<>();
-            for (int i = p1.length - 1; i >= 0; i--) {
-                var point = p1[i];
+            for (int i = backwardPath.length - 1; i >= 0; i--) {
+                var point = backwardPath[i];
                 if (savePath) {
                     path.add(point);
                 }
-                if (point.equals(end)) {
+                if (point.equals(start)) {
+                    continue;
+                } else if (point.equals(end)) {
                     los = true;
                     break;
                 }

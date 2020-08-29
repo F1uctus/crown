@@ -12,6 +12,7 @@ import java.util.ArrayList;
  * libtcod 1.5.1
  * Copyright (c) 2008,2009,2010 Jice & Mingos
  */
+@Deprecated
 public class DiamondRaycasting {
     static class Ray3 {
         int x, y, z; // position
