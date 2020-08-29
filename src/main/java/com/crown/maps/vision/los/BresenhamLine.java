@@ -17,7 +17,7 @@ public final class BresenhamLine {
         points.add(start);
 
         final Point3D d = end.minus(start);
-        final Point3D dSign = d.signum();
+        final Point3D dSign = d.positiveSign();
         final Point3D dAbs = d.abs();
 
         final int px, py, pz, d0, d1, d2, jx1, jy1, jz1, jx2, jy2, jz2;
