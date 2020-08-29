@@ -285,7 +285,7 @@ public abstract class Map extends NamedObject implements IMap, Serializable {
      */
     public boolean isWalkable(@NotNull Point3D point) {
         MapObject obj = get(point);
-        return obj != null && obj.isWalkable();
+        return obj == null || obj.isWalkable();
     }
 
     /**
@@ -293,7 +293,7 @@ public abstract class Map extends NamedObject implements IMap, Serializable {
      */
     public boolean isTransparent(@NotNull Point3D point) {
         MapObject obj = get(point);
-        return obj != null && obj.isTransparent();
+        return obj == null || obj.isTransparent();
     }
 
     /**
