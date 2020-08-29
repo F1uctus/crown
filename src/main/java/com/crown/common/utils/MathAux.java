@@ -23,10 +23,10 @@ public class MathAux {
     }
 
     /**
-     * Returns 1 if value >= 0, and returns 0 otherwise.
+     * Returns 1 if value >= 0, and returns -1 otherwise.
      */
     public static int positiveSign(int value) {
-        return value >= 0 ? 1 : 0;
+        return value >= 0 ? 1 : -1;
     }
 
     /**

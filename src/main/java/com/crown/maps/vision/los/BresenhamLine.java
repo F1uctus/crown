@@ -21,7 +21,7 @@ public final class BresenhamLine {
         final Point3D dAbs = d.abs();
 
         final int px, py, pz, d0, d1, d2, jx1, jy1, jz1, jx2, jy2, jz2;
-        if (dAbs.x >= dAbs.y && dAbs.x >= dAbs.z) {
+        if (dAbs.x > dAbs.y && dAbs.x > dAbs.z) {
             px = dSign.x;
             py = 0;
             pz = 0;
@@ -34,7 +34,7 @@ public final class BresenhamLine {
             d0 = dAbs.x;
             d1 = dAbs.y;
             d2 = dAbs.z;
-        } else if (dAbs.y >= dAbs.x && dAbs.y >= dAbs.z) {
+        } else if (dAbs.y > dAbs.x && dAbs.y > dAbs.z) {
             px = 0;
             py = dSign.y;
             pz = 0;
