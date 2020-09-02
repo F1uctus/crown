@@ -9,7 +9,7 @@ public enum Direction {
     nw(1, 1, 0),
 
     /**
-     * North.
+     * North. ⬆
      */
     n(0, 1, 0),
 
@@ -19,12 +19,12 @@ public enum Direction {
     ne(1, 1, 0),
 
     /**
-     * West.
+     * West. ⬅
      */
     w(-1, 0, 0),
 
     /**
-     * East.
+     * East. ➡
      */
     e(1, 0, 0),
 
@@ -34,7 +34,7 @@ public enum Direction {
     sw(-1, -1, 0),
 
     /**
-     * South.
+     * South. ⬇
      */
     s(0, -1, 0),
 
@@ -69,7 +69,6 @@ public enum Direction {
         }
         if (z > 0 && dir == none) return up;
         if (z < 0 && dir == none) return down;
-        if (z == 0) return none;
         return dir;
     }
 
