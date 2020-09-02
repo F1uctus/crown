@@ -3,9 +3,7 @@ package com.crown.maps.vision.los;
 import com.crown.maps.IMap;
 import com.crown.maps.Point3D;
 import com.crown.maps.vision.ILineOfSight;
-
-import java.util.List;
-import java.util.Vector;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Bresenham LOS class.
@@ -14,28 +12,23 @@ import java.util.Vector;
  * the alternate Bresenham line from destination to source.
  */
 public class BresenhamLos implements ILineOfSight {
-    private final boolean symmetric;
-    private Vector<Point3D> path;
+    private final boolean isSymmetric;
 
-    public BresenhamLos(final boolean symmetric) {
-        this.symmetric = symmetric;
+    public static final BresenhamLos regular = new BresenhamLos(false);
+    public static final BresenhamLos symmetric = new BresenhamLos(true);
+
+    private BresenhamLos(final boolean isSymmetric) {
+        this.isSymmetric = isSymmetric;
     }
 
-    public boolean exists(
+    public Pair<Boolean, Point3D[]> exists(
         final IMap map,
         Point3D start,
-        Point3D end,
-        final boolean savePath
+        Point3D end
     ) {
-        if (savePath) {
-            path = new Vector<>();
-        }
         final var forwardPath = BresenhamLine.getFor(start, end);
         boolean los = false;
         for (Point3D point : forwardPath) {
-            if (savePath) {
-                path.add(point);
-            }
             if (point.equals(start)) {
                 continue;
             } else if (point.equals(end)) {
@@ -46,16 +39,12 @@ public class BresenhamLos implements ILineOfSight {
                 break;
             }
         }
-        if (!los && symmetric) {
+        Point3D[] path = forwardPath;
+        if (!los && isSymmetric) {
             // Direct path failed, try alternate path
             final var backwardPath = BresenhamLine.getFor(end, start);
-            final Vector<Point3D> oldPath = path;
-            path = new Vector<>();
             for (int i = backwardPath.length - 1; i >= 0; i--) {
                 var point = backwardPath[i];
-                if (savePath) {
-                    path.add(point);
-                }
                 if (point.equals(start)) {
                     continue;
                 } else if (point.equals(end)) {
@@ -66,14 +55,10 @@ public class BresenhamLos implements ILineOfSight {
                     break;
                 }
             }
-            if (savePath) {
-                path = oldPath.size() > path.size() ? oldPath : path;
+            if (backwardPath.length > forwardPath.length) {
+                path = backwardPath;
             }
         }
-        return los;
-    }
-
-    public List<Point3D> getPath() {
-        return path;
+        return Pair.of(los, path);
     }
 }

@@ -3,8 +3,8 @@ package com.crown.maps.vision.los;
 import com.crown.maps.IMap;
 import com.crown.maps.Point3D;
 import com.crown.maps.vision.ILineOfSight;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.List;
 import java.util.Vector;
 
 /**
@@ -14,17 +14,12 @@ import java.util.Vector;
  * path again. Fails only if both are blocked at a point.
  */
 public class BresenhamOpportunisticLos implements ILineOfSight {
-    private Vector<Point3D> path;
-
-    public boolean exists(
+    public Pair<Boolean, Point3D[]> exists(
         final IMap map,
         Point3D start,
-        Point3D end,
-        final boolean savePath
+        Point3D end
     ) {
-        if (savePath) {
-            path = new Vector<>();
-        }
+        var path = new Vector<Point3D>();
 
         Point3D[] lineForward = BresenhamLine.getFor(start, end);
         Point3D[] lineBackward = BresenhamLine.getFor(end, start);
@@ -36,9 +31,7 @@ public class BresenhamOpportunisticLos implements ILineOfSight {
             Point3D pointForward = lineForward[i];
             Point3D pointBackward = lineBackward[len - i - 1];
             if (pointForward.equals(end)) {
-                if (savePath) {
-                    path.add(pointForward);
-                }
+                path.add(pointForward);
                 los = true;
                 break;
             }
@@ -47,36 +40,24 @@ public class BresenhamOpportunisticLos implements ILineOfSight {
             boolean forwardVisible = map.isTransparent(pointForward);
 
             if (alternatePath && backwardVisible) {
-                if (savePath) {
-                    path.add(pointBackward);
-                }
+                path.add(pointBackward);
                 continue;
             } else {
                 alternatePath = false;
             }
             if (forwardVisible) {
-                if (savePath) {
-                    path.add(pointForward);
-                }
+                path.add(pointForward);
                 continue;
             }
             if (backwardVisible) {
-                if (savePath) {
-                    path.add(pointBackward);
-                }
+                path.add(pointBackward);
                 alternatePath = true;
                 continue;
             }
-            if (savePath) {
-                path.add(pointBackward);
-            }
+            path.add(pointBackward);
             break;
         }
 
-        return los;
-    }
-
-    public List<Point3D> getPath() {
-        return path;
+        return Pair.of(los, path.toArray(new Point3D[0]));
     }
 }
