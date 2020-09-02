@@ -6,17 +6,17 @@ public enum Direction {
     /**
      * North-West. ⬉
      */
-    nw(1, 1, 0),
+    nw(-1, -1, 0),
 
     /**
      * North. ⬆
      */
-    n(0, 1, 0),
+    n(0, -1, 0),
 
     /**
      * North-East. ⬈
      */
-    ne(1, 1, 0),
+    ne(1, -1, 0),
 
     /**
      * West. ⬅
@@ -31,17 +31,17 @@ public enum Direction {
     /**
      * South-West. ⬋
      */
-    sw(-1, -1, 0),
+    sw(-1, 1, 0),
 
     /**
      * South. ⬇
      */
-    s(0, -1, 0),
+    s(0, 1, 0),
 
     /**
      * South-East. ⬊
      */
-    se(1, -1, 0),
+    se(1, 1, 0),
 
     up(0, 0, 1),
     down(0, 0, -1);
