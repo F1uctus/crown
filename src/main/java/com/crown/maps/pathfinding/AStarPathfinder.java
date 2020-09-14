@@ -4,19 +4,13 @@ import com.crown.maps.Map;
 import com.crown.maps.Point3D;
 import com.crown.maps.pathfinding.heuristics.IAStarHeuristic;
 import com.crown.maps.pathfinding.heuristics.OctileHeuristic;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 /**
  * Famous A* pathfinding implementation for the 3D grid map.
  */
-public class AStarPathfinder implements IPathfinder {
-    private final Map map;
-    private final Point3D mapMaxPoint;
-    private final boolean includeDiagonals;
-    private final IAStarHeuristic heuristic;
-
+public class AStarPathfinder extends IPathfinder {
     /**
      * Initialize a new A* pathfinder for given map.
      * Uses 3D-Octile heuristic by default.
@@ -30,10 +24,7 @@ public class AStarPathfinder implements IPathfinder {
      * You can specify any heuristic from [heuristics] package.
      * Diagonal steps are enabled.
      */
-    public AStarPathfinder(
-        final Map map,
-        IAStarHeuristic heuristic
-    ) {
+    public AStarPathfinder(final Map map, IAStarHeuristic heuristic) {
         this(map, heuristic, true);
     }
 
@@ -47,10 +38,7 @@ public class AStarPathfinder implements IPathfinder {
         final IAStarHeuristic heuristic,
         final boolean includeDiagonals
     ) {
-        this.map = map;
-        mapMaxPoint = new Point3D(map.xSize, map.ySize, map.zSize).minus(1);
-        this.heuristic = heuristic;
-        this.includeDiagonals = includeDiagonals;
+        super(map, heuristic, includeDiagonals);
     }
 
     /**
@@ -90,8 +78,8 @@ public class AStarPathfinder implements IPathfinder {
             [hashSize.x]
             [hashSize.y]
             [hashSize.z];
-        final SimpleHeap<HeapNode> open = new SimpleHeap<>(1000);
-        final PathNode startNode = new PathNode(startPt, 0.0);
+        final var open = new SimpleHeap<>(1000);
+        final var startNode = new PathNode(startPt, 0.0);
         startNode.h = heuristic.apply(startPt, endPt);
         startNode.computeCost();
         open.add(startNode);
@@ -100,9 +88,9 @@ public class AStarPathfinder implements IPathfinder {
             [startPt.y - minPt.y]
             [startPt.z - minPt.z] = startNode;
         while (open.size() > 0) {
-            final PathNode step = (PathNode) open.poll();
+            final var step = (PathNode) open.poll();
             if (step.point.equals(endPt)) {
-                return this.createPath(step);
+                return createPath(step);
             }
 
             // @formatter:off
@@ -129,10 +117,10 @@ public class AStarPathfinder implements IPathfinder {
                         continue;
                     }
 
-                    final double thisCost = isMoveDiagonal ? 1.1 : 1.0;
+                    final double defaultCost = isMoveDiagonal ? 1.1 : 1.0;
                     final Point3D delta = target.minus(minPt);
                     if (nodeHash[delta.x][delta.y][delta.z] == null) {
-                        final PathNode n1 = new PathNode(target, step.g + thisCost);
+                        final PathNode n1 = new PathNode(target, step.g + defaultCost);
                         n1.prev = step;
                         n1.h = heuristic.apply(target, endPt);
                         n1.computeCost();
@@ -140,8 +128,8 @@ public class AStarPathfinder implements IPathfinder {
                         nodeHash[delta.x][delta.y][delta.z] = n1;
                     } else {
                         final PathNode n1 = nodeHash[delta.x][delta.y][delta.z];
-                        if (n1.g > step.g + thisCost) {
-                            n1.g = step.g + thisCost;
+                        if (n1.g > step.g + defaultCost) {
+                            n1.g = step.g + defaultCost;
                             n1.computeCost();
                             n1.prev = step;
                             if (open.contains(n1)) {
@@ -155,55 +143,5 @@ public class AStarPathfinder implements IPathfinder {
             }
         }
         return null;
-    }
-
-    private Point3D[] createPath(PathNode end) {
-        if (end == null)
-            return null;
-
-        final var v = new ArrayList<Point3D>();
-        while (end != null) {
-            v.add(end.point);
-            end = end.prev;
-        }
-        final var result = new Point3D[v.size()];
-        for (int i = v.size() - 1; i >= 0; i--) {
-            result[i] = v.get(i);
-        }
-        return result;
-    }
-
-    private static class PathNode implements HeapNode {
-        double g;
-        double h;
-        Point3D point;
-        double cost;
-        PathNode prev;
-        int heapIndex;
-
-        public PathNode(final Point3D point) {
-            this(point, 0.0);
-        }
-
-        public PathNode(final Point3D point, final double g) {
-            this.point = point;
-            this.g = g;
-        }
-
-        public void computeCost() {
-            this.cost = this.h + this.g;
-        }
-
-        public int compareTo(final @NotNull HeapNode node) {
-            return (int) Math.signum(this.cost - ((PathNode) node).cost);
-        }
-
-        public int getHeapIndex() {
-            return this.heapIndex;
-        }
-
-        public void setHeapIndex(final int heapIndex) {
-            this.heapIndex = heapIndex;
-        }
     }
 }
