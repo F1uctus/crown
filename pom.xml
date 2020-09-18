@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.f1uctus</groupId>
     <artifactId>crown</artifactId>
-    <version>android-0.8.3</version>
+    <version>android-0.8.3b</version>
 
     <properties>
       <junit.jupiter.version>5.4.2</junit.jupiter.version>
