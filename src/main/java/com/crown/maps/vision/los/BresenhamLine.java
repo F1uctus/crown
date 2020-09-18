@@ -19,7 +19,7 @@ public final class BresenhamLine {
         int dy2 = abs.y << 1;
         int dz2 = abs.z << 1;
 
-        var points = new ArrayList<Point3D>();
+        ArrayList<Point3D> points = new ArrayList<>();
 
         if (abs.x >= abs.y && abs.x >= abs.z) {
             int err1 = dy2 - abs.x;

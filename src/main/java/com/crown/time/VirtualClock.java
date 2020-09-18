@@ -70,7 +70,7 @@ public class VirtualClock {
                 if (!paused) {
                     instantValue = instantValue.plusMillis(tickPeriod);
                     tickAction.run();
-                    for (var a : scheduledActions) {
+                    for (TimelineFlowAction a : scheduledActions) {
                         a.run();
                     }
                 }

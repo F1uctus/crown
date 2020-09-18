@@ -33,12 +33,12 @@ public abstract class IPathfinder {
         if (end == null)
             return null;
 
-        final var v = new ArrayList<Point3D>();
+        final ArrayList<Point3D> v = new ArrayList<>();
         while (end != null) {
             v.add(end.point);
             end = end.prev;
         }
-        final var result = new Point3D[v.size()];
+        final Point3D[] result = new Point3D[v.size()];
         for (int i = v.size() - 1; i >= 0; i--) {
             result[i] = v.get(i);
         }

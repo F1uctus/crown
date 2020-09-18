@@ -1,6 +1,7 @@
 package com.crown.maps.vision;
 
 import com.crown.maps.Map;
+import com.crown.maps.MapObject;
 
 import java.util.ArrayList;
 
@@ -41,7 +42,7 @@ public class DiamondRaycasting {
 
     private static Ray3 newRay(Map map, int x, int y, int z) {
         if (!map.inBounds(x + originX, y + originY, z + originZ)) return null;
-        var ray = rayMap2[x + originX][y + originY][z + originZ];
+        Ray3 ray = rayMap2[x + originX][y + originY][z + originZ];
         if (ray == null)
             ray = new Ray3(x, y, z);
         return ray;
@@ -142,7 +143,7 @@ public class DiamondRaycasting {
     }
 
     private static void mergeInput(Map map, Ray3 ray) {
-        var obj = map.get(
+        MapObject obj = map.get(
             ray.x + originX,
             ray.y + originY,
             ray.z + originZ
@@ -229,7 +230,7 @@ public class DiamondRaycasting {
         originY = playerY;
         originZ = playerZ;
         int r2 = maxRadius * maxRadius;
-        var perimeter = new ArrayList<Ray3>();
+        ArrayList<Ray3> perimeter = new ArrayList<>();
         expandPerimeterFrom(map, perimeter, newRay(map, 0, 0, 0));
         for (int i = 0; i < perimeter.size(); i++) {
             Ray3 ray = perimeter.get(i);
@@ -245,11 +246,11 @@ public class DiamondRaycasting {
         }
 
         // set fov data
-        var fov = new boolean[map.xSize][map.ySize][map.zSize];
+        boolean[][][] fov = new boolean[map.xSize][map.ySize][map.zSize];
         for (int x = 0; x < map.xSize; x++) {
             for (int y = 0; y < map.ySize; y++) {
                 for (int z = 0; z < map.zSize; z++) {
-                    var r = rayMap[x][y][z];
+                    Ray3 r = rayMap[x][y][z];
                     fov[x][y][z] = r != null && !r.ignore &&
                         (r.errorX <= 0 || r.errorX > r.obscurityX) &&
                         (r.errorY <= 0 || r.errorY > r.obscurityY) &&

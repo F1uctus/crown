@@ -47,10 +47,10 @@ public abstract class Map extends NamedObject implements IMap, Serializable {
         Point3D centerPoint,
         int inRadius
     ) {
-        var targets = new ArrayList<T>();
-        var rangeObjsMatrix = getRaw2DArea(centerPoint, inRadius);
-        for (var objRow : rangeObjsMatrix) {
-            for (var obj : objRow) {
+        ArrayList<T> targets = new ArrayList<T>();
+        MapObject[][] rangeObjsMatrix = getRaw2DArea(centerPoint, inRadius);
+        for (MapObject[] objRow : rangeObjsMatrix) {
+            for (MapObject obj : objRow) {
                 if (ofType.isInstance(obj)) {
                     // noinspection unchecked
                     targets.add((T) obj);
@@ -104,8 +104,8 @@ public abstract class Map extends NamedObject implements IMap, Serializable {
      * Icons with Z-coordinate <= point.z are returned.
      */
     public MapIcon<?>[][][] get3DArea(Point3D centerPoint, int radius) {
-        var area = getRaw3DArea(centerPoint, radius);
-        var icons = new MapIcon<?>[area.length][area[0].length][area[0][0].length];
+        MapObject[][][] area = getRaw3DArea(centerPoint, radius);
+        MapIcon<?>[][][] icons = new MapIcon<?>[area.length][area[0].length][area[0][0].length];
         for (int z = 0; z < area.length; z++) {
             for (int y = 0; y < area[0].length; y++) {
                 for (int x = 0; x < area[0][0].length; x++) {
@@ -137,7 +137,7 @@ public abstract class Map extends NamedObject implements IMap, Serializable {
                 int areaX = 0;
                 for (int x = centerPoint.x - radius; x <= centerPoint.x + radius; x++) {
                     if (inBounds(x, y)) {
-                        var obj = get(x, y, z);
+                        MapObject obj = get(x, y, z);
                         if (obj != null) {
                             area[areaY][areaX] = obj;
                         }
@@ -161,7 +161,7 @@ public abstract class Map extends NamedObject implements IMap, Serializable {
         int height = MathAux.clamp(point.z + 1, 1, zSize);
         for (int z = 0; z < height; z++) {
             if (inBounds(point.x, point.y)) {
-                var obj = get(point.x, point.y, z);
+                MapObject obj = get(point.x, point.y, z);
                 if (obj != null) {
                     result = obj;
                 }
@@ -177,8 +177,8 @@ public abstract class Map extends NamedObject implements IMap, Serializable {
      * icon of object with the highest z position if it is <= 3.
      */
     public MapIcon<?>[][] get2DArea(Point3D centerPoint, int radius) {
-        var area = getRaw2DArea(centerPoint, radius);
-        var icons = new MapIcon<?>[area.length][area.length];
+        MapObject[][] area = getRaw2DArea(centerPoint, radius);
+        MapIcon<?>[][] icons = new MapIcon<?>[area.length][area.length];
         for (int y = 0; y < area.length; y++) {
             for (int x = 0; x < area.length; x++) {
                 if (area[y][x] == null) {
@@ -192,13 +192,13 @@ public abstract class Map extends NamedObject implements IMap, Serializable {
     }
 
     public void add(@NotNull MapObject mapObj) {
-        for (var pt : mapObj.points) {
+        for (Point3D pt : mapObj.points) {
             getRaw(pt).objects.push(mapObj);
         }
     }
 
     public void remove(@NotNull MapObject mapObj) {
-        for (var pt : mapObj.points) {
+        for (Point3D pt : mapObj.points) {
             getRaw(pt).objects.remove(mapObj);
         }
     }
@@ -210,7 +210,7 @@ public abstract class Map extends NamedObject implements IMap, Serializable {
     public void move(@NotNull MapObject mapObj) {
         if (inBounds(mapObj.getPt0())) {
             if (inBounds(mapObj.getLastPt0())) {
-                for (var pt : mapObj.lastPoints) {
+                for (Point3D pt : mapObj.lastPoints) {
                     getRaw(pt).objects.remove(mapObj);
                 }
             }
@@ -252,7 +252,7 @@ public abstract class Map extends NamedObject implements IMap, Serializable {
         if (!inBounds(x, y, z)) {
             return null;
         }
-        var cont = getRaw(x, y, z);
+        MapCell cont = getRaw(x, y, z);
         if (cont.objects.empty()) {
             return null;
         }
@@ -305,12 +305,12 @@ public abstract class Map extends NamedObject implements IMap, Serializable {
 
     @Override
     public String toString() {
-        var sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         for (int z = 0; z < zSize; z++) {
             sb.append("Layer ").append(z + 1).append(":\n");
             for (int y = 0; y < ySize; y++) {
                 for (int x = 0; x < xSize; x++) {
-                    var c = containers[z][y][x];
+                    MapCell c = containers[z][y][x];
                     if (c.objects.empty()) {
                         sb.append("     ");
                         continue;

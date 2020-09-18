@@ -78,8 +78,8 @@ public class AStarPathfinder extends IPathfinder {
             [hashSize.x]
             [hashSize.y]
             [hashSize.z];
-        final var open = new SimpleHeap<>(1000);
-        final var startNode = new PathNode(startPt, 0.0);
+        final SimpleHeap<PathNode> open = new SimpleHeap<>(1000);
+        final PathNode startNode = new PathNode(startPt, 0.0);
         startNode.h = heuristic.apply(startPt, endPt);
         startNode.computeCost();
         open.add(startNode);
@@ -88,7 +88,7 @@ public class AStarPathfinder extends IPathfinder {
             [startPt.y - minPt.y]
             [startPt.z - minPt.z] = startNode;
         while (open.size() > 0) {
-            final var step = (PathNode) open.poll();
+            final PathNode step = (PathNode) open.poll();
             if (step.point.equals(endPt)) {
                 return createPath(step);
             }

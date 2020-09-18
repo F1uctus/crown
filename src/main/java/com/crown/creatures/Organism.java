@@ -7,6 +7,7 @@ import com.crown.maps.*;
 import com.crown.time.Action;
 import com.crown.time.Timeline;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -302,10 +303,10 @@ public abstract class Organism extends MapObject {
      * Timeline support included.
      */
     public ITemplate moveBy(int deltaX, int deltaY, int deltaZ) {
-        return timeline.perform(new Action<>(this) {
+        return timeline.perform(new Action<Organism>(this) {
             @Override
             public ITemplate perform() {
-                var result = getTarget().move(deltaX, deltaY, deltaZ);
+                ITemplate result = getTarget().move(deltaX, deltaY, deltaZ);
                 if (result == I18n.okMessage) {
                     // SIDE-EFFECT: decrease energy if player moved
                     changeEnergy(-(int) Math.sqrt(
@@ -319,7 +320,7 @@ public abstract class Organism extends MapObject {
 
             @Override
             public ITemplate rollback() {
-                var result = getTarget().move(-deltaX, -deltaY, -deltaZ);
+                ITemplate result = getTarget().move(-deltaX, -deltaY, -deltaZ);
                 if (result == I18n.okMessage) {
                     // SIDE-EFFECT: increase energy if player moved
                     changeEnergy((int) Math.sqrt(
@@ -342,11 +343,11 @@ public abstract class Organism extends MapObject {
         // update icon
         getMapIcon().rotateTo(Direction.fromCoordinates(deltaX, deltaY, deltaZ));
 
-        var tgtPos = getPt0().plus(deltaX, deltaY, deltaZ);
-        var tgtObj = getMap().get(tgtPos);
+        Point3D tgtPos = getPt0().plus(deltaX, deltaY, deltaZ);
+        MapObject tgtObj = getMap().get(tgtPos);
         if (getMap().inBounds(tgtPos)
             && (tgtObj == null || tgtObj.getMapWeight() != MapWeight.OBSTACLE)) {
-            var delta = (int) getPt0().getDistance(tgtPos);
+            int delta = (int) getPt0().getDistance(tgtPos);
             if (getEnergy() < delta) {
                 return I18n.of("move.lowEnergy");
             } else {

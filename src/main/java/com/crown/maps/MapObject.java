@@ -122,7 +122,7 @@ public abstract class MapObject extends NamedObject {
      * (as it can occupy more than 1 point on the map).
      */
     public int getWidth() {
-        var bounds = getBounds();
+        Pair<Point3D, Point3D> bounds = getBounds();
         return bounds.getRight().x - bounds.getLeft().x + 1;
     }
 
@@ -131,7 +131,7 @@ public abstract class MapObject extends NamedObject {
      * (as it can occupy more than 1 point on the map).
      */
     public int getHeight() {
-        var bounds = getBounds();
+        Pair<Point3D, Point3D> bounds = getBounds();
         return bounds.getRight().y - bounds.getLeft().y + 1;
     }
 
@@ -139,10 +139,10 @@ public abstract class MapObject extends NamedObject {
      * Returns pair of min & max points of this map object.
      */
     private Pair<Point3D, Point3D> getBounds() {
-        var map = getMap();
-        var minPt = new Point3D(map.xSize, map.ySize, map.zSize);
-        var maxPt = Point3D.ZERO;
-        for (var part : points) {
+        Map map = getMap();
+        Point3D minPt = new Point3D(map.xSize, map.ySize, map.zSize);
+        Point3D maxPt = Point3D.ZERO;
+        for (Point3D part : points) {
             minPt = Point3D.min(minPt, part);
             maxPt = Point3D.max(maxPt, part);
         }

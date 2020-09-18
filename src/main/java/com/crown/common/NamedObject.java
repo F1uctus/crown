@@ -19,7 +19,7 @@ public abstract class NamedObject {
 
     public NamedObject(@NotNull String keyName) {
         this.id = Random.getId();
-        this.keyName = keyName.strip().toLowerCase();
+        this.keyName = keyName.trim().toLowerCase();
     }
 
     /**
@@ -67,7 +67,7 @@ public abstract class NamedObject {
      * Use {@link com.crown.BaseGameState#rename(Organism, String)} instead.
      */
     public void setKeyName(String value) {
-        keyName = value.strip().toLowerCase();
+        keyName = value.trim().toLowerCase();
     }
 
     /**

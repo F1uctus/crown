@@ -19,7 +19,7 @@ public class BresenhamOpportunisticLos implements ILineOfSight {
         Point3D start,
         Point3D end
     ) {
-        var path = new Vector<Point3D>();
+        Vector<Point3D> path = new Vector<>();
 
         Point3D[] lineForward = BresenhamLine.getFor(start, end);
         Point3D[] lineBackward = BresenhamLine.getFor(end, start);

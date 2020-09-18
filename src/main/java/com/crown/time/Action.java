@@ -50,7 +50,7 @@ public abstract class Action<T extends MapObject> {
         }
 
         final Method finalMethod = method;
-        return new Action<>(target) {
+        return new Action<Organism>(target) {
             @Override
             public ITemplate perform() {
                 try {

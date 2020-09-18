@@ -17,7 +17,7 @@ public class OctileHeuristic implements IAStarHeuristic {
 
     @Override
     public double apply(Point3D startPoint, Point3D endPoint) {
-        var d = startPoint.minus(endPoint).abs();
+        Point3D d = startPoint.minus(endPoint).abs();
         // sort deltas
         int d1 = Math.min(d.x, Math.min(d.y, d.z));
         int d3 = Math.max(d.x, Math.max(d.y, d.z));

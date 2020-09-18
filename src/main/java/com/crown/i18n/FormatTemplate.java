@@ -20,13 +20,13 @@ class FormatTemplate implements ITemplate {
     }
 
     public String getLocalized(String langName) {
-        var result = new StringBuilder();
+        StringBuilder result = new StringBuilder();
         String[] fArgs = new String[formatArgs.length];
         for (int i = 0; i < formatArgs.length; i++) {
             Object part = formatArgs[i];
             if (part instanceof String) {
                 // try to get message from resource
-                var s = (String) part;
+                String s = (String) part;
                 if (I18n.has(langName, s)) {
                     fArgs[i] = I18n.get(langName, s);
                     continue;

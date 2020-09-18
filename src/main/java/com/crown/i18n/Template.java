@@ -8,10 +8,10 @@ class Template implements ITemplate {
     }
 
     public String getLocalized(String langName) {
-        var result = new StringBuilder();
-        for (var part : parts) {
+        StringBuilder result = new StringBuilder();
+        for (Object part : parts) {
             if (part instanceof String) {
-                var s = (String) part;
+                String s = (String) part;
                 if (I18n.has(langName, s)) {
                     result.append(I18n.get(langName, s));
                     continue;

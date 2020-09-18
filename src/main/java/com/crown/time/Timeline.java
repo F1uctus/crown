@@ -79,7 +79,7 @@ public class Timeline {
     }
 
     public <T extends Organism> ITemplate perform(Action<T> action) {
-        var now = clock.now();
+        Instant now = clock.now();
         performedActions.put(now, action);
         return action.perform();
     }
