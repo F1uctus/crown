@@ -26,7 +26,7 @@
 | `com.crown.maps`                | 3D / 2D(tiled) maps logic
 | — `...maps.pathfinding`              | 3D map pathfinding algorithms and heuristics
 | `com.crown.skills`              | `Creature` skills API
-| `com.crown.time`                | `VirtualClock` implementation + `Timeline` (time-travelling API - may be unstable in some cases)
+| `com.crown.time`                | `VirtualClock` implementation + `Timeline` (time-travelling API not implemented on Android)
 | `com.crown.common.utils`        | `Random` class extensions & other utility stuff
 
 ## Usage

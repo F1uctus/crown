@@ -2,11 +2,8 @@ package com.crown.time;
 
 import com.crown.BaseGameState;
 import com.crown.creatures.Organism;
-import com.crown.i18n.I18n;
 import com.crown.i18n.ITemplate;
-import com.crown.maps.Map;
 import com.rits.cloning.Cloner;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -44,13 +41,6 @@ public class Timeline {
      * A game state bound to this timeline.
      */
     final BaseGameState gameState;
-
-    /**
-     * An action performing timeline actions flow.
-     * Invoked automatically when time travelling is performed.
-     * It is repeating actions from future the same way they were performed in the main timeline.
-     */
-    private TimelineFlowAction flowAction;
 
     /**
      * Automatically sorted set, pointing action's perform time to action itself.
@@ -117,157 +107,6 @@ public class Timeline {
             }
         }
         return result;
-    }
-
-    /**
-     * Performs all pending actions up to {@code targetPoint} if
-     * they were not made by creature with {@code originalTravellerName}
-     * (it's actions will be overridden by time traveller).
-     */
-    private void commitAll(String originalTravellerName) {
-        for (Instant actionPoint : pendingActions.keySet()) {
-            var action = pendingActions.get(actionPoint);
-            // skip actions made by original traveller
-            if (action.getTarget().getKeyName().equals(originalTravellerName)) continue;
-            action.perform();
-            performedActions.put(actionPoint, action);
-            pendingActions.remove(actionPoint);
-        }
-    }
-
-    /**
-     * Discards all actions in this timeline made up to {@code targetPoint}.
-     */
-    private void rollbackTo(Instant targetPoint) {
-        for (Instant actionPoint : performedActions.keySet()) {
-            if (actionPoint.isAfter(targetPoint)) {
-                var action = performedActions.get(actionPoint);
-                action.rollback();
-                performedActions.remove(actionPoint);
-                pendingActions.put(actionPoint, action);
-            }
-        }
-    }
-
-    private Organism originalTraveller;
-    private Map originalMap;
-
-    /**
-     * Moves specified creature {@code traveller} back in time
-     * to specified {@code targetPoint} in the new timeline.
-     * Returns a copy of provided creature moved
-     * to the alternative timeline in the past.
-     */
-    public static Pair<ITemplate, Organism> move(Organism traveller, Instant targetPoint) {
-        if (!targetPoint.isBefore(clock.now())) {
-            return Pair.of(I18n.of("time.travel.future"), traveller);
-        }
-        if (traveller.getTimeline() != main) {
-            return Pair.of(I18n.of("time.travel.notFromMain"), traveller);
-        }
-
-        // TODO check parallel travelling
-        if (!alternatives.isEmpty()) {
-            return Pair.of(I18n.of("time.travel.parallel"), traveller);
-        }
-
-        final Organism[] travellerClone = new Organism[1];
-        clock.freeze(() -> {
-            // cloning timeline
-            var cloner = new Cloner();
-            // DEBUG
-            //  cloner.setDumpClonedClasses(true);
-            var timelineClone = cloner.deepClone(main);
-            timelineClone.offsetToMain = Duration.between(targetPoint, clock.now());
-            timelineClone.originalTraveller = traveller;
-            timelineClone.originalMap = traveller.getMap();
-
-            // unbind original traveller from environment
-            traveller.setMap(null);
-            traveller.setTimeline(null);
-            main.gameState.players.remove(traveller);
-
-            // cloning traveller to <name>::clone
-            travellerClone[0] = cloner.deepClone(traveller);
-            var mapClone = timelineClone.gameState.players.get(traveller.getKeyName()).getMap();
-            travellerClone[0].setMap(mapClone);
-            travellerClone[0].setTimeline(timelineClone);
-            travellerClone[0].setKeyName(encodeName(traveller));
-            travellerClone[0].newId();
-            timelineClone.gameState.players.add(travellerClone[0]);
-
-            // rolling timeline back to the past
-            timelineClone.rollbackTo(targetPoint);
-            // scheduling clock to redo actions from future
-            timelineClone.startFlow();
-
-            alternatives.put(traveller.getKeyName(), timelineClone);
-        });
-        return Pair.of(I18n.okMessage, travellerClone[0]);
-    }
-
-    /**
-     * Commits all changes made {@code travellerClone}.
-     * (Makes {@code travellerClone}'s timeline the main one).
-     */
-    public static ITemplate commitChanges(Organism travellerClone) {
-        var tl = travellerClone.getTimeline();
-        if (tl == null || tl == main) {
-            return I18n.of("commit.fromMain");
-        }
-        tl.stopFlow();
-        clock.freeze(() -> {
-            var originalTravellerName = tl.originalTraveller.getKeyName();
-            // instantly moving creature's timeline state to be equal to main
-            tl.commitAll(originalTravellerName);
-            // `originalTraveller` is deleted
-            var originalTravellerInPast = tl.gameState.players.get(originalTravellerName);
-            originalTravellerInPast.setMap(null);
-            originalTravellerInPast.setTimeline(null);
-            tl.gameState.players.remove(originalTravellerName);
-            tl.originalTraveller = null;
-            tl.originalMap = null;
-            // clone renamed to original name
-            tl.gameState.rename(travellerClone, originalTravellerName);
-            main = tl;
-            alternatives.remove(originalTravellerName);
-        });
-
-        return I18n.okMessage;
-    }
-
-    /**
-     * Undoes all changes made by travellerClone in the alternative timeline.
-     * Drops original traveller back to the main timeline.
-     */
-    public static Pair<ITemplate, Organism> rollbackChanges(Organism travellerClone) {
-        var tl = travellerClone.getTimeline();
-        if (tl == null || tl == main) {
-            return Pair.of(I18n.of("rollback.fromMain"), travellerClone);
-        }
-        tl.stopFlow();
-        clock.freeze(() -> {
-            // bind original traveller back to the main timeline
-            tl.originalTraveller.setMap(tl.originalMap);
-            tl.originalTraveller.setTimeline(main);
-            main.gameState.players.add(tl.originalTraveller);
-            // `travellerClone` is deleted
-            travellerClone.setMap(null);
-            travellerClone.setTimeline(null);
-            alternatives.remove(tl.originalTraveller.getKeyName());
-        });
-
-        return Pair.of(I18n.okMessage, tl.originalTraveller);
-    }
-
-    private void startFlow() {
-        flowAction = new TimelineFlowAction(this);
-        clock.schedule(flowAction);
-    }
-
-    private void stopFlow() {
-        clock.cancel(flowAction);
-        flowAction = null;
     }
 
     @SuppressWarnings("HardCodedStringLiteral")
