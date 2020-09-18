@@ -3,11 +3,9 @@ package com.crown.time;
 import com.crown.BaseGameState;
 import com.crown.creatures.Organism;
 import com.crown.i18n.ITemplate;
-import com.rits.cloning.Cloner;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
@@ -20,11 +18,6 @@ public class Timeline {
      * all players are placed by default.
      */
     public static Timeline main;
-
-    /**
-     * Alternative timeline that is getting changed by some player.
-     */
-    public static final HashMap<String, Timeline> alternatives = new HashMap<>();
 
     /**
      * Main game clock, common across all timelines.
@@ -88,29 +81,6 @@ public class Timeline {
     public <T extends Organism> ITemplate perform(Action<T> action) {
         var now = clock.now();
         performedActions.put(now, action);
-        var result = action.perform();
-
-        // mirror actions from main timeline to alternatives
-        if (this == main) {
-            for (var alternative : alternatives.values()) {
-                var cloner = new Cloner();
-                if (action.getTarget() != null) {
-                    // skip cloning performer, it is replaced in alternative timeline
-                    cloner.nullInsteadOfClone(action.getTarget().getClass());
-                }
-                var alternativeAction = cloner.deepClone(action);
-                // player from alternative timeline has exactly
-                // the same type as player from main.
-                // noinspection unchecked
-                alternativeAction.setTarget((T) alternative.gameState.players.get(action.getTarget().getKeyName()));
-                alternative.pendingActions.put(now.minus(offsetToMain), alternativeAction);
-            }
-        }
-        return result;
-    }
-
-    @SuppressWarnings("HardCodedStringLiteral")
-    private static String encodeName(Organism traveller) {
-        return traveller.getKeyName() + "::clone";
+        return action.perform();
     }
 }
