@@ -1,14 +1,10 @@
 <h1 align="center">👑 Crown 👑</h1>
 
 <p align="center">
-    <a href="https://github.com/F1uctus/crown/blob/master/.github/workflows/github-package-publish.yml">
-        <img src="https://github.com/F1uctus/crown/workflows/GitHub%20Package/badge.svg"
-             alt="GitHub Actions status for 'GitHub Package'">
-    </a>
-    <a href="https://github.com/actions/setup-java">
-        <img src="https://github.com/F1uctus/crown/workflows/Maven/badge.svg"
-             alt="GitHub Actions status for 'Maven'">
-    </a>
+    <img src="https://github.com/F1uctus/crown/workflows/GitHub%20Package/badge.svg?branch=android"
+         alt="GitHub Actions status for 'GitHub Package'">
+    <img src="https://github.com/F1uctus/crown/workflows/Build%20&%20Verify/badge.svg?branch=android"
+         alt="GitHub Actions status for 'Build & Verify'">
     <a href="https://gitmoji.carloscuesta.me">
         <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square"
              alt="Gitmoji">
@@ -24,25 +20,21 @@
 | `com.crown.creatures`           | Basic `Creature` API
 | `com.crown.i18n`                | Internationalization helpers
 | `com.crown.maps`                | 3D / 2D(tiled) maps logic
-| — `...maps.pathfinding`              | 3D map pathfinding algorithms and heuristics
+| — `...maps.pathfinding`         | 3D map pathfinding algorithms and heuristics
 | `com.crown.skills`              | `Creature` skills API
-| `com.crown.time`                | `VirtualClock` implementation + `Timeline` (time-travelling API not implemented on Android)
+| `com.crown.time`                | `VirtualClock` implementation
 | `com.crown.common.utils`        | `Random` class extensions & other utility stuff
 
 ## Usage
 
-### Maven dependency (GitHub Packages)
+### Gradle dependency (GitHub Packages)
 
 ```
-<dependency>
-    <groupId>com.github.F1uctus</groupId>
-    <artifactId>crown</artifactId>
-    <version></version>
-</dependency>
+implementation 'com.github.f1uctus:crown:android-VERSION'
 ```
 
-To see the most comprehensive usage overview, see my [demo game](https://github.com/f1uctus/cotfk),
-or [RPGram](https://github.com/zemllia/rpgram) game implementations.
+To see the most comprehensive usage overview,
+see my [demo Android game](https://github.com/f1uctus/escape-from-castilla) implementation.
 
 ### Code
 
@@ -50,7 +42,8 @@ Every game must initialize these base structures at the program beginning:
 
 #### VirtualClock
 
-`VirtualClock` is an abstraction over a fixed-delay timer, to allow your game to perform periodical actions.<br>
+`VirtualClock` is an abstraction over a fixed-delay timer,
+to allow your game to perform periodical actions.<br>
 In general an instance is created that way:
 ```java
 var gameClock = new VirtualClock(
@@ -93,15 +86,11 @@ so you must add at least one resource bundle to store built-in message propertie
 |----------------------------|-------------|
 | `message.ok`               | Action successful. |
 | `delta.outOfBounds`        | Some property (e.g. `hp`) went out of range while executing action. |
-| `time.travel.future`       | Attempt to time-travel to the future. |
-| `time.travel.notFromMain`  | Attempt to time-travel being in the past. |
-| `time.travel.parallel`     | Attempt to time-travel by 2 separate players (not supported yet). |
-| `commit.fromMain`          | Attempt to save time-travel changes being in the main timeine. |
-| `rollback.fromMain`        | Attempt to undo time-travel changes being in the main timeine. |
 | `move.lowEnergy`           | Obvious. |
 | `move.obstacle`            | Obvious. |
 
-To easily interact with your resource bundles there is an `I18n` class with static methods to wrap your messages to the localizable `ITemplate`s.
+To easily interact with your resource bundles there is an `I18n` class with static
+methods to wrap your messages to the localizable `ITemplate`s.
 To translate `ITemplate` to some language, a `ITemplate.getLocalized(String lang)` method is used.
 Of course, you can add your own localizable messages and use them the same way.
 For example:
@@ -119,9 +108,3 @@ bundles.put("en", ResourceBundle.getBundle("gameMessages", new Locale("en_US")))
 // more bundles...
 I18n.init(bundles);
 ```
-
-## Time-travelling API implementation overview
-
-I tried to keep diagram as simple as possible, but feel free to report any inconvenience.
-
-![Crown time travelling API overview](/images/crown-timelines-overview.png)

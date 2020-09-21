@@ -7,7 +7,6 @@ import com.crown.maps.*;
 import com.crown.time.Action;
 import com.crown.time.Timeline;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
