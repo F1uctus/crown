@@ -7,6 +7,14 @@ class Template implements ITemplate {
         this.parts = parts;
     }
 
+    public String getLocalized() {
+        return getLocalized("en");
+    }
+
+    public boolean isRaw() {
+        return false;
+    }
+
     public String getLocalized(String langName) {
         StringBuilder result = new StringBuilder();
         for (Object part : parts) {

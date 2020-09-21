@@ -19,6 +19,14 @@ class FormatTemplate implements ITemplate {
         this.formatArgs = formatArgs;
     }
 
+    public String getLocalized() {
+        return getLocalized("en");
+    }
+
+    public boolean isRaw() {
+        return false;
+    }
+
     public String getLocalized(String langName) {
         StringBuilder result = new StringBuilder();
         String[] fArgs = new String[formatArgs.length];
