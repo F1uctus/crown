@@ -91,12 +91,6 @@ public abstract class MapObject extends NamedObject {
         this.map = map;
     }
 
-    /**
-     * Determines objects that are dropped when some condition is satisfied
-     * (e.g. object destroyed or was hit by something).
-     */
-    public abstract InventoryItem[] drop();
-
     public abstract MapIcon<?> getMapIcon();
 
     public UUID getMapIconId() {
