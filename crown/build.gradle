@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 def githubProperties = new Properties()
@@ -14,7 +14,7 @@ def getArtifactId = { ->
 
 publishing {
     publications {
-        bar(MavenPublication) {
+        aar(MavenPublication) {
             groupId 'com.crown'
             artifactId getArtifactId()
             version getVersionName()
@@ -39,13 +39,14 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.crown"
         minSdkVersion 26
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        setProperty("archivesBaseName", "${archivesBaseName}")
     }
 
     buildTypes {
