@@ -6,7 +6,7 @@
              alt="GitHub Actions status for 'GitHub Package'">
     </a>
     <a href="https://github.com/actions/setup-java">
-        <img src="https://github.com/F1uctus/crown/workflows/Maven/badge.svg"
+        <img src="https://github.com/F1uctus/crown/workflows/Build%20&%20Verify/badge.svg"
              alt="GitHub Actions status for 'Maven'">
     </a>
     <a href="https://gitmoji.carloscuesta.me">
