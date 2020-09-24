@@ -17,7 +17,6 @@ import java.util.UUID;
 public abstract class MapObject extends NamedObject {
     private Map map;
     private final UUID mapIconId;
-    private final MapWeight mapWeight;
 
     private boolean isWalkable;
     private boolean isTransparent;
@@ -32,14 +31,12 @@ public abstract class MapObject extends NamedObject {
     public MapObject(
         String name,
         Map map,
-        MapIcon<?> mapIcon,
-        MapWeight mapWeight
+        MapIcon<?> mapIcon
     ) {
         this(
             name,
             map,
             mapIcon,
-            mapWeight,
             Random.getPoint(map)
         );
     }
@@ -51,14 +48,12 @@ public abstract class MapObject extends NamedObject {
         String name,
         Map map,
         MapIcon<?> mapIcon,
-        MapWeight mapWeight,
         Point3D pt0
     ) {
         this(
             name,
             map,
             mapIcon,
-            mapWeight,
             new Point3D[] { pt0 }
         );
     }
@@ -71,12 +66,10 @@ public abstract class MapObject extends NamedObject {
         String name,
         Map map,
         MapIcon<?> mapIcon,
-        MapWeight mapWeight,
         Point3D[] points
     ) {
         super(name);
         this.mapIconId = mapIcon.getId();
-        this.mapWeight = mapWeight;
         this.points = lastPoints = points;
         setMap(map);
     }
@@ -95,13 +88,6 @@ public abstract class MapObject extends NamedObject {
 
     public UUID getMapIconId() {
         return mapIconId;
-    }
-
-    /**
-     * Returns the weight of the object.
-     */
-    public MapWeight getMapWeight() {
-        return mapWeight;
     }
 
     /**
@@ -205,7 +191,8 @@ public abstract class MapObject extends NamedObject {
         return getName()
             + " [#" + getId()
             + " | " + getMapIcon()
-            + " | w=" + getMapWeight()
+            + " | " + (isWalkable ? "walkable" : "obstacle")
+            + " | " + (isTransparent ? "transparent" : "opaque")
             + " | @ " + getPt0()
             + " map #" + getMap().getId()
             + "]";

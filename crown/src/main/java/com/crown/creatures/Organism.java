@@ -41,14 +41,13 @@ public abstract class Organism extends MapObject {
         String name,
         Map map,
         MapIcon<?> mapIcon,
-        MapWeight mapWeight,
         Point3D position,
         int maxEnergy,
         int maxHp,
         int level,
         int speed
     ) {
-        super(name, map, mapIcon, mapWeight, position);
+        super(name, map, mapIcon, position);
 
         this.maxHp = hp = maxHp;
         this.maxEnergy = energy = maxEnergy;
@@ -345,7 +344,7 @@ public abstract class Organism extends MapObject {
         Point3D tgtPos = getPt0().plus(deltaX, deltaY, deltaZ);
         MapObject tgtObj = getMap().get(tgtPos);
         if (getMap().inBounds(tgtPos)
-            && (tgtObj == null || tgtObj.getMapWeight() != MapWeight.OBSTACLE)) {
+            && (tgtObj == null || tgtObj.isWalkable())) {
             int delta = (int) getPt0().getDistance(tgtPos);
             if (getEnergy() < delta) {
                 return I18n.of("move.lowEnergy");

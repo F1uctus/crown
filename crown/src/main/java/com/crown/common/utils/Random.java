@@ -62,7 +62,7 @@ public class Random {
 
             pt = Random.getPoint(map);
             obj = map.get(pt);
-        } while (obj != null && obj.getMapWeight() == MapWeight.OBSTACLE);
+        } while (obj != null && !obj.isWalkable());
 
         return pt;
     }
@@ -82,7 +82,7 @@ public class Random {
 
             pt = Random.getPoint(map, xSize, ySize);
             obj = map.get(pt);
-        } while (obj != null && obj.getMapWeight() == MapWeight.OBSTACLE);
+        } while (obj != null && !obj.isWalkable());
 
         return pt;
     }
