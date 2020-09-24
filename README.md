@@ -1,8 +1,8 @@
 <h1 align="center">👑 Crown 👑</h1>
 
 <p align="center">
-    <img src="https://github.com/F1uctus/crown/workflows/GitHub%20Package/badge.svg?branch=android"
-         alt="GitHub Actions status for 'GitHub Package'">
+    <img src="https://github.com/F1uctus/crown/workflows/GitHub%20Package%20(Android)/badge.svg"
+         alt="GitHub Actions status for 'GitHub Package (Android)'">
     <img src="https://github.com/F1uctus/crown/workflows/Build%20&%20Verify/badge.svg?branch=android"
          alt="GitHub Actions status for 'Build & Verify'">
     <a href="https://gitmoji.carloscuesta.me">
