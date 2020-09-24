@@ -2,8 +2,7 @@ package com.crown.maps;
 
 import com.crown.common.NamedObject;
 import com.crown.common.utils.Random;
-import com.crown.items.InventoryItem;
-import org.apache.commons.lang3.SerializationUtils;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.UUID;
@@ -149,11 +148,12 @@ public abstract class MapObject extends NamedObject {
      * Unsafe, map bounds are not checked.
      */
     public void moveView(int deltaX, int deltaY, int deltaZ) {
-        lastPoints = SerializationUtils.clone(points);
-        for (Point3D part : points) {
-            part.x += deltaX;
-            part.y += deltaY;
-            part.z += deltaZ;
+        for (int i = 0; i < points.length; i++) {
+            Point3D pt = points[i];
+            lastPoints[i] = new Point3D(pt);
+            pt.x += deltaX;
+            pt.y += deltaY;
+            pt.z += deltaZ;
         }
         getMap().move(this);
     }
