@@ -149,11 +149,10 @@ public abstract class MapObject extends NamedObject {
      */
     public void moveView(int deltaX, int deltaY, int deltaZ) {
         for (int i = 0; i < points.length; i++) {
-            Point3D pt = points[i];
-            lastPoints[i] = new Point3D(pt);
-            pt.x += deltaX;
-            pt.y += deltaY;
-            pt.z += deltaZ;
+            lastPoints[i] = new Point3D(points[i]);
+            points[i].x += deltaX;
+            points[i].y += deltaY;
+            points[i].z += deltaZ;
         }
         getMap().move(this);
     }
