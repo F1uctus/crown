@@ -15,7 +15,7 @@ def getArtifactId = { ->
 publishing {
     publications {
         aar(MavenPublication) {
-            groupId 'com.crown'
+            groupId 'com.github.f1uctus'
             artifactId getArtifactId()
             version getVersionName()
             artifact("$buildDir/outputs/aar/${getArtifactId()}-release.aar")
@@ -25,7 +25,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/F1uctus/crown")
+            url = uri("https://maven.pkg.github.com/f1uctus/crown")
             credentials {
                 username = githubProperties['gpr.usr'] ?: System.getenv("GITHUB_ACTOR")
                 password = githubProperties['gpr.key'] ?: System.getenv("GITHUB_TOKEN")
