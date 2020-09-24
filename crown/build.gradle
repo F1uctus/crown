@@ -1,8 +1,15 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
-def githubProperties = new Properties()
-githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
+def githubPropertiesFile = rootProject.file("github.properties")
+def githubActor = System.getenv("GITHUB_ACTOR")
+def githubToken = System.getenv("GITHUB_TOKEN")
+if (githubPropertiesFile.exists()) {
+    def githubProperties = new Properties()
+    githubProperties.load(new FileInputStream(githubPropertiesFile))
+    githubActor = githubProperties['gpr.usr']
+    githubToken = githubProperties['gpr.key']
+}
 
 def getVersionName = { ->
     return "android-0.8.9"
@@ -27,8 +34,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/f1uctus/crown")
             credentials {
-                username = githubProperties['gpr.usr'] ?: System.getenv("GITHUB_ACTOR")
-                password = githubProperties['gpr.key'] ?: System.getenv("GITHUB_TOKEN")
+                username = githubActor
+                password = githubToken
             }
         }
     }
