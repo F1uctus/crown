@@ -148,6 +148,7 @@ public abstract class MapObject extends NamedObject {
      * Unsafe, map bounds are not checked.
      */
     public void moveView(int deltaX, int deltaY, int deltaZ) {
+        lastPoints = new Point3D[points.length];
         for (int i = 0; i < points.length; i++) {
             lastPoints[i] = new Point3D(points[i]);
             points[i].x += deltaX;
