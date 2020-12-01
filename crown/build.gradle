@@ -12,7 +12,7 @@ if (githubPropertiesFile.exists()) {
 }
 
 def getVersionName = { ->
-    return "android-0.9.4"
+    return "android-0.10.0"
 }
 
 def getArtifactId = { ->
