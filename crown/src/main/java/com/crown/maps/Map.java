@@ -1,7 +1,7 @@
 package com.crown.maps;
 
 import com.crown.common.NamedObject;
-import com.crown.common.utils.MathAux;
+import com.crown.tools.MathAux;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -304,7 +304,7 @@ public abstract class Map extends NamedObject implements IMap, Serializable {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         StringBuilder sb = new StringBuilder();
         for (int z = 0; z < zSize; z++) {
             sb.append("Layer ").append(z + 1).append(":\n");

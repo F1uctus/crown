@@ -1,4 +1,4 @@
-package com.crown.common.utils;
+package com.crown.tools;
 
 public class MathAux {
     /**

@@ -1,6 +1,6 @@
 package com.crown.common;
 
-import com.crown.common.utils.Random;
+import com.crown.tools.Random;
 import com.crown.creatures.Organism;
 import com.crown.i18n.I18n;
 import com.crown.i18n.ITemplate;

@@ -1,7 +1,7 @@
 package com.crown.maps;
 
 import com.crown.common.NamedObject;
-import com.crown.common.utils.Random;
+import com.crown.tools.Random;
 
 import org.apache.commons.lang3.tuple.Pair;
 
