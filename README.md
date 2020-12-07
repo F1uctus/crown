@@ -24,7 +24,7 @@
 | `com.crown.creatures`           | Basic `Creature` API
 | `com.crown.i18n`                | Internationalization helpers
 | `com.crown.maps`                | 3D / 2D(tiled) maps logic
-| — `...maps.pathfinding`              | 3D map pathfinding algorithms and heuristics
+| — `...maps.pathfinding`        | 3D map pathfinding algorithms and heuristics
 | `com.crown.skills`              | `Creature` skills API
 | `com.crown.time`                | `VirtualClock` implementation + `Timeline` (time-travelling API - may be unstable in some cases)
 | `com.crown.common.utils`        | `Random` class extensions & other utility stuff
@@ -50,7 +50,8 @@ Every game must initialize these base structures at the program beginning:
 
 #### VirtualClock
 
-`VirtualClock` is an abstraction over a fixed-delay timer, to allow your game to perform periodical actions.<br>
+`VirtualClock` is an abstraction over a fixed-delay timer,
+to allow your game to perform periodical actions.<br>
 In general an instance is created that way:
 ```java
 var gameClock = new VirtualClock(
@@ -101,7 +102,8 @@ so you must add at least one resource bundle to store built-in message propertie
 | `move.lowEnergy`           | Obvious. |
 | `move.obstacle`            | Obvious. |
 
-To easily interact with your resource bundles there is an `I18n` class with static methods to wrap your messages to the localizable `ITemplate`s.
+To easily interact with your resource bundles there is an `I18n` class with static
+methods to wrap your messages to the localizable `ITemplate`s.
 To translate `ITemplate` to some language, a `ITemplate.getLocalized(String lang)` method is used.
 Of course, you can add your own localizable messages and use them the same way.
 For example:
