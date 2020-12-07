@@ -1,7 +1,7 @@
 name: GitHub Package (Android)
 on:
   release:
-    types: [created]
+    types: [ created ]
 jobs:
   publish:
 
