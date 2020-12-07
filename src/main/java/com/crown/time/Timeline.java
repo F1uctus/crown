@@ -65,22 +65,17 @@ public class Timeline {
      */
     final ConcurrentSkipListMap<Instant, Action<?>> pendingActions = new ConcurrentSkipListMap<>();
 
-    private static boolean initialized = false;
-
     public Timeline(BaseGameState gameState) {
         this.gameState = gameState;
         offsetToMain = Duration.ZERO;
     }
 
     /**
-     * Main initialization function for the game.
-     * Must be invoked only once.
+     * Initialization function for the main timeline.
      */
-    public static void init(VirtualClock clock, BaseGameState state) {
-        if (initialized) return;
+    public static void setMain(VirtualClock clock, BaseGameState state) {
         Timeline.clock = clock;
         main = new Timeline(state);
-        initialized = true;
     }
 
     public static VirtualClock getClock() {
