@@ -12,7 +12,7 @@ import java.util.TimerTask;
  * Abstraction over in-game virtual clock logic.
  */
 public class VirtualClock {
-    private boolean paused = false;
+    private Instant initialValue;
     private Instant instantValue;
     private Timer timer;
 
@@ -20,6 +20,8 @@ public class VirtualClock {
     private final Runnable tickAction;
 
     private final ObjectsMap<TimelineFlowAction> scheduledActions = new ObjectsMap<>();
+
+    public boolean paused = false;
 
     /**
      * Creates new game clock with Earth-like time units.
@@ -33,7 +35,45 @@ public class VirtualClock {
     }
 
     /**
-     * Starts this instance of clock at random time point.
+     * Pauses the clock, performs an action; then resumes the clock.
+     */
+    public void freeze(Runnable action) {
+        paused = true;
+        action.run();
+        paused = false;
+    }
+
+    /**
+     * Schedules an action to execute every {@link VirtualClock#tickPeriod} ms.
+     */
+    public void schedule(TimelineFlowAction action) {
+        scheduledActions.add(action);
+    }
+
+    /**
+     * Removes last action virtual clock timer schedule.
+     */
+    public void cancel(TimelineFlowAction action) {
+        scheduledActions.remove(action);
+    }
+
+    /**
+     * Returns initial value of this clock.
+     */
+    public Instant initial() {
+        return initialValue;
+    }
+
+    /**
+     * Returns instant time of this clock.
+     */
+    public Instant now() {
+        return instantValue;
+    }
+
+    /**
+     * Starts this instance of clock at the random time point
+     * between 0-date and current date.
      */
     public VirtualClock startAtRnd() {
         long begin = Timestamp.valueOf("0001-01-01 00:00:00").getTime();
@@ -63,6 +103,7 @@ public class VirtualClock {
      * running every {@link VirtualClock#tickPeriod} milliseconds of time.
      */
     private void start() {
+        initialValue = instantValue;
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -76,35 +117,5 @@ public class VirtualClock {
                 }
             }
         }, 0, tickPeriod);
-    }
-
-    /**
-     * Pauses the clock, performs an action; then resumes the clock.
-     */
-    void freeze(Runnable action) {
-        paused = true;
-        action.run();
-        paused = false;
-    }
-
-    /**
-     * Schedules an action to execute every {@link VirtualClock#tickPeriod} ms.
-     */
-    void schedule(TimelineFlowAction action) {
-        scheduledActions.add(action);
-    }
-
-    /**
-     * Removes last action virtual clock timer schedule.
-     */
-    void cancel(TimelineFlowAction action) {
-        scheduledActions.remove(action);
-    }
-
-    /**
-     * Returns instant time of this clock.
-     */
-    public Instant now() {
-        return instantValue;
     }
 }
