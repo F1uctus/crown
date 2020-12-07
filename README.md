@@ -1,10 +1,14 @@
 <h1 align="center">👑 Crown 👑</h1>
 
 <p align="center">
-    <img src="https://github.com/F1uctus/crown/workflows/GitHub%20Package%20(Android)/badge.svg"
-         alt="GitHub Actions status for 'GitHub Package (Android)'">
-    <img src="https://github.com/F1uctus/crown/workflows/Build%20&%20Verify/badge.svg?branch=android"
-         alt="GitHub Actions status for 'Build & Verify'">
+    <a href="https://github.com/F1uctus/crown/blob/master/.github/workflows/github-package-publish.yml">
+        <img src="https://github.com/F1uctus/crown/workflows/GitHub%20Package%20(Android)/badge.svg"
+             alt="GitHub Actions status for 'GitHub Package (Android)'">
+    </a>
+    <a href="https://github.com/actions/setup-java">
+        <img src="https://github.com/F1uctus/crown/workflows/Build%20&%20Verify/badge.svg?branch=android"
+             alt="GitHub Actions status for 'Build & Verify'">
+    </a>
     <a href="https://gitmoji.carloscuesta.me">
         <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square"
              alt="Gitmoji">
@@ -20,7 +24,7 @@
 | `com.crown.creatures`           | Basic `Creature` API
 | `com.crown.i18n`                | Internationalization helpers
 | `com.crown.maps`                | 3D / 2D(tiled) maps logic
-| — `...maps.pathfinding`         | 3D map pathfinding algorithms and heuristics
+| — `...maps.pathfinding`        | 3D map pathfinding algorithms and heuristics
 | `com.crown.skills`              | `Creature` skills API
 | `com.crown.time`                | `VirtualClock` implementation
 | `com.crown.common.utils`        | `Random` class extensions & other utility stuff
