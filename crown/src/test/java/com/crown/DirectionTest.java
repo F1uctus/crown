@@ -1,3 +1,5 @@
+package com.crown;
+
 import com.crown.maps.Direction;
 import com.crown.maps.Point3D;
 import org.junit.jupiter.api.Test;

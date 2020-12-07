@@ -1,2 +1,0 @@
-include ':crown'
-rootProject.name = "Crown"
