@@ -1,11 +1,12 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.junit.jupiter.api.Test;
+package com.crown;
 
 import java.time.Duration;
 import java.time.Instant;
 
 import com.crown.time.VirtualClock;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class VirtualClockTest {
     @Test

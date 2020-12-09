@@ -21,7 +21,7 @@ dependencies {
     implementation("de.articdive:jnoise:2.0.0-SNAPSHOT")
     implementation("org.mini2Dx:gdx-math:1.9.11")
     implementation("org.jetbrains:annotations:20.1.0")
-    implementation("org.junit.jupiter:junit-jupiter:5.4.2")
+    implementation("junit:junit:4.12")
 }
 
 tasks.test {

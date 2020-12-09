@@ -1,8 +1,10 @@
+package com.crown;
+
 import com.crown.maps.Direction;
 import com.crown.maps.Point3D;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class DirectionTest {
     @Test
@@ -14,7 +16,7 @@ public class DirectionTest {
         assertEquals(Direction.fromPoint(Point3D.ZERO.withZ(-1)), Direction.down);
 
         // north
-        var point = new Point3D(0, -10, 0);
+        Point3D point = new Point3D(0, -10, 0);
         assertEquals(Direction.fromPoint(point), Direction.n);
 
         point = new Point3D(0, -1, 0);
