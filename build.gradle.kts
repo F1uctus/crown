@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.github.f1uctus"
-version = "0.9.3"
+version = "0.10.0"
 description = "crown"
 
 repositories {
