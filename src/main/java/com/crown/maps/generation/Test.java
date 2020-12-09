@@ -1,6 +1,6 @@
 package com.crown.maps.generation;
 
-import com.crown.common.utils.Random;
+import com.crown.tools.Random;
 import de.articdive.jnoise.JNoise;
 import org.jetbrains.annotations.NotNull;
 import org.mini2Dx.gdx.math.Vector2;

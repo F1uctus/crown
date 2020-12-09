@@ -1,6 +1,6 @@
 package com.crown.maps;
 
-import com.crown.common.utils.MathAux;
+import com.crown.tools.MathAux;
 
 import java.io.Serializable;
 import java.util.Objects;

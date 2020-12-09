@@ -1,7 +1,7 @@
 package com.crown.maps;
 
 import com.crown.common.NamedObject;
-import com.crown.common.utils.MathAux;
+import com.crown.tools.MathAux;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
