@@ -16,7 +16,6 @@ repositories {
     mavenCentral()
     jcenter()
     maven { url = uri("https://repo.minestom.com/repository/maven-public/") }
-    maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
