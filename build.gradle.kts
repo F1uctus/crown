@@ -7,6 +7,11 @@ group = "com.github.f1uctus"
 version = "0.10.0"
 description = "crown"
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
 repositories {
     mavenCentral()
     jcenter()
