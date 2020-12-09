@@ -2,9 +2,9 @@ package com.crown;
 
 import com.crown.maps.Direction;
 import com.crown.maps.Point3D;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DirectionTest {
     @Test
