@@ -50,6 +50,9 @@ public class Random {
 
     /**
      * Returns a random point of map not occupied by obstacle.
+     * TODO: Add point selection strategy, e.g.
+     * () -> Random.getPoint(map) or
+     * (map, xs, ys, zs) -> Random.getPoint(map, xs, ys)
      */
     public static Point3D getFreePoint(Map map) {
         Point3D pt;
